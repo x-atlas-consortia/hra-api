@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { getSimilarCellSources } from '../library/get-x-from-cell-summary';
+import { getSimilarCellSources } from '../utils/get-x-from-cell-summary';
 
 export async function getSimilarCellSourcesReport(csvString) {
   const data = Papa.parse(csvString, { header: true, skipEmptyLines: true }).data;

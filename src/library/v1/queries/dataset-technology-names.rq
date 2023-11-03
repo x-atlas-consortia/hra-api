@@ -1,0 +1,24 @@
+#  * This SELECT SPARQL query retrieves distinct technology types associated with datasets
+#    from the HubMap Consortium's data source.
+#  
+#  * Query Structure:
+#    The query retrieves distinct technology types (?technology) used in datasets generated
+#    by samples from the specified data source.
+#  
+#  * Data Source:
+#       - The query fetches data from the HubMap Consortium's data source specified in the FROM clause.
+#       - The data source is available at <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>.
+#  
+#  * @param ?technology - The distinct technology types used in datasets.
+# 
+
+
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?technology
+FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>
+WHERE {
+    ?sample ccf:generates_dataset ?allTech .
+    ?allTech ccf:technology ?technology .
+}

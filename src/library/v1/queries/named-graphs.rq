@@ -1,0 +1,17 @@
+#  * This SPARQL query counts the number of triples in each named graph within a dataset.
+#  
+#  * Query Structure:
+#     The query selects ?graph and counts the number of triples within each named graph using the COUNT(*) function.
+#     It retrieves this information from the dataset where triples are organized into named graphs.
+#     The result is grouped by ?graph and ordered in ascending order of graph names.
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?graph (COUNT(*) as ?triples) WHERE {
+  GRAPH ?graph {
+    ?s ?p ?o .
+  }
+}
+GROUP BY ?graph
+ORDER BY ?graph

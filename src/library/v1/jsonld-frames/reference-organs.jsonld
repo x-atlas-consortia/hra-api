@@ -1,0 +1,31 @@
+{
+  "@context": [
+    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+    {
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "ccf": "http://purl.org/ccf/",
+      "dcterms": "http://purl.org/dc/terms/",
+      "x_dimension": {
+        "@id": "ccf:x_dimension",
+        "@type": "xsd:decimal"
+      },
+      "y_dimension": {
+        "@id": "ccf:y_dimension",
+        "@type": "xsd:decimal"
+      },
+      "z_dimension": {
+        "@id": "ccf:z_dimension",
+        "@type": "xsd:decimal"
+      },
+      "rui_rank": {
+        "@id": "ccf:rui_rank",
+        "@type": "xsd:integer"
+      },
+      "creation_date": {
+        "@id": "dcterms:created",
+        "@type": "xsd:date"
+      }
+    }
+  ],
+  "@type": "http://purl.org/ccf/spatial_entity"
+}

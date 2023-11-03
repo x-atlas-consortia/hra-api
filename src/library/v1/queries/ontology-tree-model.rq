@@ -1,0 +1,39 @@
+#  * This SPARQL query constructs a result set representing the hierarchical structure of body parts and their synonyms.
+#       It operates on data related to body parts and their relationships within the CCF ontology.
+#       The query constructs a tree-like structure with parent-child relationships between body parts.
+#  
+#  * Query Structure:
+#       The query uses the CONSTRUCT statement to build a result set representing body parts and their relationships.
+#       It retrieves data from the CCF ontology.
+#       The main part of the query constructs nodes for body parts and their hierarchy, including labels and synonyms.
+#       It ensures that only direct parent-child relationships are included in the result set.
+#
+#  @param ?bodyLabel - The label of the body part.
+#  @param ?child - A child body part.
+#  @param ?parent - The parent body part.
+#  @param ?label - The label of a body part.
+#  @param ?synonymLabel - A synonym label for a body part.
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
+
+CONSTRUCT {
+    body: rdfs:label ?bodyLabel .
+    body: rdf:type ccf:OntologyTreeNode .
+    body: ccf:is_root_for "AS" .
+
+    ?child rdf:type ccf:OntologyTreeNode .
+    ?child ccf:parent ?parent .
+    ?child rdfs:label ?label .
+    ?child ccf:synonymLabels ?synonymLabel .
+}
+WHERE {
+    body: ^ccf:ccf_part_of* ?child .
+    body: rdfs:label ?bodyLabel .
+    ?child ccf:ccf_part_of ?parent .
+    ?child rdfs:label ?label .
+    ?child ccf:ccf_pref_label ?synonymLabel .
+}

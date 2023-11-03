@@ -1,0 +1,33 @@
+#  This SPARQL query constructs a result set that associates annotations with their respective counts.
+#  It operates on data from multiple sources: the CCF ontology (CCF.OWL) and experimental data (rui_locations.jsonld).
+#  The query counts the occurrences of annotations and groups them by annotation type.
+#  
+#  * Query Structure:
+#  The query uses the CONSTRUCT statement to build a result set with the ?annotation and ?count variables.
+#  It retrieves data from multiple sources, including the CCF ontology and experimental data.
+#  The results are grouped by annotation and ordered in descending order of count.
+#  
+#  @param ?annotation - The annotation being counted.
+#  @param ?count - The count of occurrences for each annotation.
+#  @param <https://purl.org/ccf/releases/2.2.1/ccf.owl> - The CCF ontology.
+#  @param <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> - Experimental data source.
+#  @param <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld> - Another experimental data source.
+#  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
+#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
+#          when used in the API call.
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+
+  SELECT *
+  WHERE {
+
+    ?sample #ccf:has_registration_location ?rui_location ;
+            #ccf:generates_dataset ?allTech ;
+          ccf:comes_from ?tissueDonor ;
+          ccf:ccf_biomarker_type ?biomarkerType .
+
+    #{{FILTER}}
+}

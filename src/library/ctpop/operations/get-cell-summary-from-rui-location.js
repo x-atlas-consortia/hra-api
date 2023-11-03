@@ -1,6 +1,6 @@
-import { getCollisions } from './utils/collisions.js';
-import { select } from './utils/sparql.js';
-import asWeightedCellSummariesQuery from './queries/as-weighted-cell-summaries.rq'
+import { getCollisions } from '../utils/collisions.js';
+import { select } from '../../utils/sparql.js';
+import asWeightedCellSummariesQuery from '../queries/as-weighted-cell-summaries.rq'
 
 function getAnatomicalStructureWeights(collisions) {
   return collisions.reduce((asWeights, c) => {

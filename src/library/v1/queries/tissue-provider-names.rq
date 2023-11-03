@@ -1,0 +1,18 @@
+#  * This SPARQL query retrieves distinct tissue provider names from the CCF dataset.
+#  
+#  * Query Structure:
+#       The query uses the SELECT DISTINCT statement to retrieve distinct tissue provider names.
+#       It specifies the variables ?providerName to store the retrieved tissue provider names.
+#       The query searches for relationships between samples, tissue donors, and tissue provider names in the CCF dataset.
+#  
+#  * @param ?providerName - The distinct tissue provider names.
+
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+
+SELECT DISTINCT ?providerName
+WHERE {
+    ?sample ccf:comes_from ?tissueDonor .
+    ?tissueDonor ccf:tissue_provider_name ?providerName .
+}

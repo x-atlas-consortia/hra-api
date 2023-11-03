@@ -1,0 +1,15 @@
+{
+  "@context": [
+    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+    {
+      "parent": {
+        "@type": "@id"
+      }
+    }
+  ],
+  "@type": "http://purl.org/ccf/OntologyTreeNode",
+  "@explicit": true,
+  "parent": {},
+  "label": {},
+  "synonymLabels": {}
+}

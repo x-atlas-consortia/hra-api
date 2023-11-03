@@ -1,0 +1,69 @@
+# #  This CONSTRUCT SPARQL query constructs an ontology tree model for a specific cell type (CL_0000000) 
+# #  and its hierarchical structure based on the CCF ontology.
+# #  
+# #  * Query Structure:
+# #       The query constructs an RDF graph representing the ontology tree structure for a specific cell type.
+# #       It includes information such as the cell type's label, type, parent-child relationships, and synonym labels.
+# #  
+# #  * Data Sources:
+# #       - The query retrieves data from the CCF ontology specified in the FROM clause.
+# #       - The CCF ontology is available at <https://purl.org/ccf/releases/2.2.1/ccf.owl>
+# #  
+# #  * @param ?cellLabel     - The label of the specified cell type.
+# #  * @param ?child         - The child node in the ontology tree.
+# #  * @param ?parent        - The parent node in the ontology tree.
+# #  * @param ?label         - The label of each node in the ontology tree.
+# #  * @param ?synonymLabel  - Synonym labels for nodes in the ontology tree.
+# #  
+# #  * Note: Replace "cell:" with the IRI of the specific cell type you want to retrieve the ontology tree for.
+# #          The query constructs the ontology tree starting from the specified cell type and traversing its subClassOf relationships.
+# #  
+# prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+# prefix ccf:<http://purl.org/ccf/>
+# prefix cell:<http://purl.obolibrary.org/obo/CL_0000000>
+# CONSTRUCT {
+#     cell: rdfs:label ?cellLabel .
+#     cell: rdf:type ccf:OntologyTreeNode .
+#     cell: ccf:is_root_for "AS" .
+
+#     ?child rdf:type ccf:OntologyTreeNode .
+#     ?child ccf:parent ?parent .
+#     ?child rdfs:label ?label .
+#     ?child ccf:synonymLabels ?synonymLabel .
+# }
+# FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
+# WHERE {
+#     cell: ^rdfs:subClassOf* ?child .
+#     cell: rdfs:label ?cellLabel .
+#     ?child rdfs:subClassOf ?parent .
+#     ?child rdfs:label ?label .
+#     ?child ccf:ccf_pref_label ?synonymLabel .
+
+#     FILTER(!isBLANK(?child) && !isBLANK(?parent))
+# }
+
+# prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+# prefix ccf:<http://purl.org/ccf/>
+# prefix biomarker:<http://purl.org/ccf/ccf_biomarkers>
+
+# SELECT *
+# where {
+#   biomarker: ccf:ccf_biomarker_type ?child .
+#   #biomarker: rdfs:label ?biomarkerLabel .
+#   #?child rdfs:subClassOf ?parent .
+# }
+prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+prefix ccf:<http://purl.org/ccf/>
+PREFIX biomarker:<http://purl.org/ccf/ccf_biomarkers>
+
+SELECT DISTINCT ?sample ?child
+WHERE {
+
+    ?sample ccf:ccf_biomarker_type ?child ;
+            ccf:ccf_pref_label ?label .
+    biomarker: rdfs:label ?biomarkerLabel .
+    #?child rdfs:subClassOf ?parent .
+}

@@ -1,0 +1,83 @@
+#   This SPARQL query constructs a result set representing spatial entities and their associated information.
+#   It operates on data related to spatial entities, including their dimensions, creators, labels, and file references.
+#   The query combines data from the CCF ontology and experimental data sources.
+#  
+#  * Query Structure:
+#       The query uses the CONSTRUCT statement to build a result set representing spatial entities and their details.
+#       It retrieves data from the CCF ontology and external data sources.
+#       The query constructs nodes for spatial entities, including their types, dimensions, creators, labels, and file references.
+# * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
+#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
+#          when used in the API call.
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX dcterms:<http://purl.org/dc/terms/>
+
+CONSTRUCT {
+    ?refOrgan rdf:type ccf:spatial_entity ;
+        ccf:has_reference_organ ?refOrgan ;
+        ccf:representation_of ?representation_of;
+        dcterms:creator ?creator ;
+        ccf:creator_first_name ?creator_first_name;
+        ccf:creator_last_name ?creator_last_name;
+        dcterms:created ?created;
+        ccf:x_dimension ?x_dimension;
+        ccf:y_dimension ?y_dimension;
+        ccf:z_dimension ?z_dimension;
+        ccf:dimension_unit ?dimension_units ;
+        rdfs:label ?label;
+        ccf:sex ?sex;
+        ccf:rui_rank ?rui_rank ;
+        ccf:has_object_reference ?object.
+    ?object rdf:type ccf:spatial_object_reference ;
+        ccf:file_url ?file;
+        ccf:file_format ?file_format;
+        ccf:file_subpath ?file_subpath .
+
+
+}
+FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
+FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> # Experimental data / data sets / rui locations
+FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
+
+WHERE
+{
+    ?sample ccf:has_registration_location ?rui_location ;
+            ccf:generates_dataset ?allTech ;
+          ccf:comes_from ?tissueDonor .  
+    ?rui_location a ccf:SpatialEntity ;
+                  ccf:collides_with ?annotation .
+    ?cell_type ccf:ccf_located_in ?annotation .    
+    
+    ?refOrgan rdf:type ccf:spatial_entity ;
+        ccf:has_reference_organ ?refOrgan ;
+        ccf:representation_of ?representation_of;
+        dcterms:creator ?creator ;
+        ccf:creator_first_name ?creator_first_name;
+        ccf:creator_last_name ?creator_last_name;
+        dcterms:created ?created;
+        ccf:x_dimension ?x_dimension;
+        ccf:y_dimension ?y_dimension;
+        ccf:z_dimension ?z_dimension;
+        ccf:dimension_unit ?dimension_units ;
+        ccf:organ_side ?organ_side;
+        rdfs:label ?label;
+        ccf:organ_owner_sex ?sex;
+        ccf:rui_rank ?rui_rank ;
+        ccf:has_object_reference ?object.
+    ?object rdf:type ccf:spatial_object_reference ;
+        ccf:file_url ?file;
+        ccf:file_format ?file_format;
+        ccf:file_subpath ?file_subpath .
+    
+    ?tissueDonor ccf:sex ?sex ;
+                ccf:age ?age ;
+                ccf:bmi ?bmi ;
+                ccf:tissue_provider_name ?tmc .
+    
+    ?allTech ccf:technology ?technology .
+
+	  #{{FILTER}}
+
+} 

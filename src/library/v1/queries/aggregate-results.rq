@@ -1,0 +1,58 @@
+#  * This SPARQL query retrieves counts for different categories related to tissue data.
+#  * It counts the number of:
+#     - Tissue Donors
+#     - Tissue Providers
+#     - Tissue Blocks
+#     - Tissue Sections
+#     - Datasets
+#  
+#  * Each count is presented with a corresponding label.
+#
+#  * @param ?label - The label for the category (e.g., "Tissue Donor").
+#  * @param ?count - The count of items in the category.
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+SELECT ?label ?count 
+WHERE {
+    {
+        SELECT ("Tissue Donor" as ?label) (COUNT(DISTINCT ?tissueDonor) AS ?count)
+        WHERE {
+            ?sample ccf:comes_from ?tissueDonor .
+        }
+    }
+    UNION
+    {
+        SELECT ("Tissue Providers" as ?label) (COUNT(DISTINCT ?providerName) AS ?count)
+        WHERE {
+            ?sample ccf:comes_from ?tissueDonor .
+            ?tissueDonor ccf:tissue_provider_name ?providerName .
+        }
+    }
+    UNION
+    {
+        SELECT ("Tissue Blocks" as ?label) (COUNT(DISTINCT ?sample) AS ?count)
+        WHERE {
+            ?sample rdf:type ccf:Sample .
+            ?sample ccf:sample_type ?sampleType .
+            FILTER (?sampleType = "Tissue Block")
+        }
+    }
+    UNION
+    {
+        SELECT ("Tissue Sections" as ?label) (COUNT(DISTINCT ?sections) AS ?count)
+        WHERE {
+            ?sections ccf:sample_type ?sectionType .
+            FILTER (?sectionType = "Tissue Section")
+        }
+    }
+    UNION
+    {
+        SELECT ("Dataset" as ?label) (COUNT(DISTINCT ?dataset) AS ?count)
+        WHERE {
+            ?sample rdf:type ccf:Sample .
+            ?sample ccf:generates_dataset ?dataset .
+        }
+    }
+}

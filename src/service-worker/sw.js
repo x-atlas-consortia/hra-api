@@ -1,6 +1,6 @@
 import { Wayne } from '@jcubic/wayne';
-import { getCellSummary } from '../library/get-cell-summary-from-rui-location';
-import { getSimilarCellSourcesReport } from '../library/get-similar-cell-sources';
+import { getCellSummary } from '../library/ctpop/operations/get-cell-summary-from-rui-location';
+import { getSimilarCellSourcesReport } from '../library/ctpop/operations/get-similar-cell-sources';
 
 // Tell the service worker to start using immediately
 self.skipWaiting();

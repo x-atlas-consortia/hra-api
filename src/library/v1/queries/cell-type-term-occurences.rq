@@ -1,0 +1,50 @@
+#  * This CONSTRUCT SPARQL query retrieves information about cell types and their counts based on specific criteria.
+#  * It constructs a new RDF graph with cell types and their associated counts. We can add all other filters to the query. 
+#  
+#  * Query Structure:
+#  * The query performs the following steps:
+#  * 1. Selects distinct cell types and counts how many times they appear in the data.
+#  * 2. Constructs RDF triples where each cell type is linked to its count using the ccf:count predicate.
+#  
+#  * Data Sources:
+#  * - The query retrieves data from multiple sources specified using the FROM clause.
+#  *   - The CCF ontology from <https://purl.org/ccf/releases/2.2.1/ccf.owl>
+#  *   - Experimental data sets from RUI locations (e.g., <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>)
+#  *   - GTEx data from RUI locations (e.g., <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>)
+#  
+#  * @param ?cell_type - The cell type.
+#  * @param ?count     - The count of occurrences for each cell type.
+#  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
+#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
+#          when used in the API call.
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+CONSTRUCT {
+    ?cell_type ccf:count ?count .
+}
+FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
+FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> # Experimental data / data sets / rui locations
+FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
+WHERE {
+    SELECT DISTINCT ?cell_type (COUNT(?cell_type) as ?count)
+    WHERE {
+        ?sample ccf:has_registration_location ?rui_location ;
+                ccf:generates_dataset ?dataset ;
+                ccf:comes_from ?tissueDonor .
+
+        ?rui_location a ccf:SpatialEntity ;
+                    ccf:collides_with ?annotation .
+        ?cell_type ccf:ccf_located_in ?annotation .
+
+        ?tissueDonor ccf:sex ?sex ;
+                     ccf:age ?age ;
+                     ccf:bmi ?bmi ; 
+                     ccf:tissue_provider_name ?tmc .
+        ?dataset ccf:technology ?technology .
+            #{{FILTER}}
+    }
+    GROUP BY ?cell_type
+    ORDER BY DESC(?count)
+}
