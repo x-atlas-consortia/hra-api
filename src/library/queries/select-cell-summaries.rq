@@ -1,0 +1,39 @@
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX ctpop: <https://cns-iu.github.io/hra-cell-type-populations-supporting-information/data/enriched_rui_locations.jsonld#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREfIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cell_source ?cell_source_label ?modality ?cell_id ?percentage
+WHERE {
+  GRAPH ctpop:graph {
+    SELECT DISTINCT ?cell_source
+    WHERE {
+      #{{VALUES}}
+      ?cell_source ccf:has_cell_summary [
+        ccf:has_cell_summary_row [
+          ccf:cell_id ?cell_id ;
+        ] ;
+      ] .
+    }
+  }
+  GRAPH ctpop:graph {
+    ?cell_source ccf:has_cell_summary [
+        ccf:has_cell_summary_row [
+          ccf:cell_id ?cell_id ;
+          ccf:cell_label ?cell_label ;
+          ccf:percentage_of_total ?percentage ;
+        ] ;
+      ] .
+  }
+  OPTIONAL {
+    ?cell_source ccf:has_cell_summary [
+      ccf:modality ?modality ;
+    ] .
+  }
+  OPTIONAL {
+    ?cell_source rdfs:label ?cell_source_label .
+  }
+}
+ORDER BY ?modality DESC(?similarity)

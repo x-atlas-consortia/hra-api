@@ -1,0 +1,45 @@
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX ctpop: <https://cns-iu.github.io/hra-cell-type-populations-supporting-information/data/enriched_rui_locations.jsonld#>
+PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?modality ?cell_id ?cell_label 
+  (?predicted_cell_count as ?count)
+  (?predicted_cell_count / ?total_cell_count as ?percentage)
+WHERE {
+  GRAPH ctpop:graph {
+    SELECT ?modality ?cell_id
+        (SAMPLE(?cell_label) as ?cell_label)
+        (SUM(?weighted_cell_count) as ?predicted_cell_count)
+    WHERE {
+      #{{AS_WEIGHT_VALUES}}
+      ?as ccf:has_cell_summary [
+        ccf:modality ?modality ;
+        ccf:has_cell_summary_row [
+          ccf:cell_id ?cell_id ;
+          ccf:cell_label ?cell_label ;
+          ccf:cell_count ?cell_count ;
+        ] ;
+      ] .
+
+      BIND(xsd:decimal(?cell_count) * xsd:decimal(?weight) as ?weighted_cell_count)
+    }
+    GROUP BY ?modality ?cell_id
+  }
+  
+  GRAPH ctpop:graph {
+    SELECT ?modality (SUM(?weighted_cell_count) as ?total_cell_count)
+    WHERE {
+      #{{AS_WEIGHT_VALUES}}
+      ?as ccf:has_cell_summary [
+        ccf:modality ?modality ;
+        ccf:has_cell_summary_row [
+          ccf:cell_count ?cell_count ;
+        ] ;
+      ] .
+      BIND(xsd:decimal(?cell_count) * xsd:decimal(?weight) as ?weighted_cell_count)
+    }
+    GROUP BY ?modality
+  }
+}
+ORDER BY DESC(?predicted_cell_count)
