@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import { getSimilarCellSources } from '../utils/get-x-from-cell-summary';
 
-export async function getSimilarCellSourcesReport(csvString) {
+export async function getSimilarCellSourcesReport(csvString, endpoint = 'https://lod.humanatlas.io/sparql') {
   const data = Papa.parse(csvString, { header: true, skipEmptyLines: true }).data;
   if (data?.length > 0) {
     // Compute cell weights from input csv
@@ -16,7 +16,7 @@ export async function getSimilarCellSourcesReport(csvString) {
     }
 
     if (Object.keys(cellWeights).length > 0) {
-      const { sources, rui_locations, error } = await getSimilarCellSources(cellWeights);
+      const { sources, rui_locations, error } = await getSimilarCellSources(cellWeights, endpoint);
       return { sources, rui_locations, error };
     } else {
       return { source: [], rui_locations: [] };

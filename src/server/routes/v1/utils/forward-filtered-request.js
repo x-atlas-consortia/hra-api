@@ -1,4 +1,4 @@
-import { queryParametersToFilter } from "./parse-filter.js";
+import { queryParametersToFilter } from '../../../../library/v1/utils/parse-filter.js';
 
 /**
  * Creates an Express middleware function that forwards a SPARQL query based on a provided method.
@@ -6,7 +6,7 @@ import { queryParametersToFilter } from "./parse-filter.js";
  * @param {Function} method - The method to execute the SPARQL query.
  * @returns {Function} An Express middleware function.
  */
-export function forwardSparqlQuery(method) {
+export function forwardFilteredRequest(method) {
   return async (req, res) => {
     try {
       const { query } = req;
@@ -15,8 +15,8 @@ export function forwardSparqlQuery(method) {
       res.json(result);
     } catch (error) {
       // Handle errors here
-      console.error("Error:", error.message);
-      res.status(500).send("Internal Server Error");
+      console.error('Error:', error.message);
+      res.status(500).send('Internal Server Error');
     }
   };
 }
