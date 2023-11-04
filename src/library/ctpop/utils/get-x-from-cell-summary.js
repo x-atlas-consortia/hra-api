@@ -2,11 +2,11 @@ import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
 import { getRuiLocationsQuery } from './rui-locations-query.js';
 import { construct, select } from '../../shared/utils/sparql.js';
 import ruiLocationsFrame from '../../v1/frames/rui-locations.jsonld';
-import cellSummariesQuery from '../queries/select-cell-summaries.rq'
+import cellSummariesQuery from '../queries/select-cell-summaries.rq';
 
 function getCellSummariesQuery(cellWeights) {
   const values = Object.keys(cellWeights).reduce((vals, iri) => vals + ` (<${iri}>)`, '');
-  const valString = `VALUES (?cell_id) { ${values} }`
+  const valString = `VALUES (?cell_id) { ${values} }`;
   return cellSummariesQuery.replaceAll('#{{VALUES}}', valString);
 }
 
@@ -39,10 +39,10 @@ export async function getSimilarCellSources(cellWeights, endpoint = 'https://lod
   const summaries = await select(query, endpoint);
   const sources = getSourceSimilarities(cellWeights, summaries);
   const datasets = sources
-    .filter((row) =>
-      row.cell_source.startsWith(
-        'https://cns-iu.github.io/hra-cell-type-populations-supporting-information/data/datasets.jsonld#'
-      )
+    .filter(
+      (row) =>
+        !row.cell_source.startsWith('http://purl.org/ccf/1.5/') &&
+        !row.cell_source.startsWith('http://purl.obolibrary.org/obo/')
     )
     .map((row) => row.cell_source)
     .slice(0, 10);

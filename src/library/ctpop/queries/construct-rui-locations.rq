@@ -14,7 +14,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX dcterms:<http://purl.org/dc/terms/>
-PREFIX ctpop: <https://cns-iu.github.io/hra-cell-type-populations-supporting-information/data/enriched_rui_locations.jsonld#>
+PREFIX ctpop: <https://purl.humanatlas.io/graph/ctpop>
 
 CONSTRUCT {
     ?tissueDonor rdf:type ccf:donor;
@@ -73,7 +73,7 @@ CONSTRUCT {
             rdfs:label ?datasetLabel .
 }
 FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-FROM ctpop:graph
+FROM ctpop:
 WHERE
 {
     {
