@@ -30,9 +30,19 @@ const library = {
   ...sharedBuildOptions,
   entryPoints: ['src/library/operations/v1.js', 'src/library/operations/ctpop.js'],
   outdir: 'dist/operations',
+  platform: 'node',
+  packages: 'external',
 };
 
-const all = [server, serviceWorker, library];
+const mainLibrary = {
+  ...sharedBuildOptions,
+  entryPoints: ['src/library/index.js'],
+  outdir: 'dist',
+  platform: 'node',
+  packages: 'external',
+};
+
+const all = [server, serviceWorker, library, mainLibrary];
 
 let ops;
 if (watch) {
