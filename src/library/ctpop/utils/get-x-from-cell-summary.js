@@ -1,7 +1,7 @@
 import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
 import { getRuiLocationsQuery } from './rui-locations-query.js';
 import { construct, select } from '../../shared/utils/sparql.js';
-import ruiLocationsFrame from '../frames/rui-locations-frame.json';
+import ruiLocationsFrame from '../../v1/frames/rui-locations.jsonld';
 import cellSummariesQuery from '../queries/select-cell-summaries.rq'
 
 function getCellSummariesQuery(cellWeights) {
