@@ -1,6 +1,6 @@
 import { getCollisions } from '../utils/collisions.js';
 import { select } from '../../shared/utils/sparql.js';
-import asWeightedCellSummariesQuery from '../queries/as-weighted-cell-summaries.rq'
+import asWeightedCellSummariesQuery from '../queries/as-weighted-cell-summaries.rq';
 
 function getAnatomicalStructureWeights(collisions) {
   return collisions.reduce((asWeights, c) => {
@@ -13,7 +13,7 @@ function getAnatomicalStructureWeights(collisions) {
 
 function getCellSummaryQuery(asWeights) {
   const values = Object.entries(asWeights).reduce((vals, [iri, weight]) => vals + ` (<${iri}> ${weight})`, '');
-  const asWeightVals = `VALUES (?as ?weight) { ${values} }`
+  const asWeightVals = `VALUES (?as ?weight) { ${values} }`;
   return asWeightedCellSummariesQuery.replaceAll('#{{AS_WEIGHT_VALUES}}', asWeightVals);
 }
 
@@ -25,6 +25,6 @@ export async function getCellSummary(ruiLocation, endpoint = 'https://lod.humana
     const asWeights = getAnatomicalStructureWeights(collisions);
     const query = getCellSummaryQuery(asWeights);
     const summary = await select(query, endpoint);
-    return summary;  
+    return summary;
   }
 }

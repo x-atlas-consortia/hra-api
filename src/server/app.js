@@ -3,7 +3,8 @@ import qs from 'qs';
 import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import sparqlProxy from './routes/sparql.js';
-import v1Routes from './routes/v1/index.js';
+import v1Routes from './routes/v1';
+import ctpopRoutes from './routes/ctpop.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/', browserRoute);
 app.use('/', euiRoute);
 app.use('/v1', v1Routes);
 app.use('/v1/sparql', sparqlProxy);
+app.use('/ctpop', ctpopRoutes);
 
 // app.use(function (err, req, res, next) {
 //   const debugMode = req.app.get('env') === 'development';
