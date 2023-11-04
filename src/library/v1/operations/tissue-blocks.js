@@ -8,6 +8,6 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
  * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Promise<Object>} - A promise that resolves to tissue block data
  */
-export async function getTissueBlocks(filter) {
+export async function getTissueBlocks(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   return await executeFilteredConstructQuery(query, filter, frame, endpoint);
 }
