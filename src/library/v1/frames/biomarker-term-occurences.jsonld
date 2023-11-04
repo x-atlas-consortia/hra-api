@@ -1,0 +1,12 @@
+{
+  "@context": [
+    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+    {
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "count": {
+        "@id": "ccf:count",
+        "@type": "xsd:integer"
+      }
+    }
+  ]
+}

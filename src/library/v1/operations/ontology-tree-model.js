@@ -1,13 +1,13 @@
-import query from '../queries/reference-organs.rq';
-import frame from '../frames/reference-organs.jsonld';
+import query from '../queries/ontology-tree-model.rq';
+import frame from '../frames/ontology-tree-model.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**
- * Retrieves reference organs
+ * Retrieves the ontology tree model
  * @param {Object} filter - An object containing query filters
  * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Promise<Object>} - A promise that resolves to reference organ data
  */
-export async function getReferenceOrgans(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+export async function getOntologyTreeModel(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   return await executeFilteredConstructQuery(query, filter, frame, endpoint);
 }
