@@ -12,7 +12,9 @@ const sharedBuildOptions = {
     '.jsonld': 'json',
   },
   format: 'esm',
+  lineLimit: 120,
   outdir: 'dist',
+  logLevel: 'info'
 };
 
 const server = {
@@ -28,6 +30,9 @@ const server = {
 const serviceWorker = {
   ...sharedBuildOptions,
   entryPoints: ['src/service-worker/sw.js', 'src/service-worker/sw-loader.js'],
+  platform: 'browser',
+  minify: true,
+  sourcemap: 'linked'
 };
 
 const library = {

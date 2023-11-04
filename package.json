@@ -2,6 +2,14 @@
   "name": "hra-api",
   "version": "0.1.0",
   "description": "HRA API deployed to https://apps.humanatlas.io/api/",
+  "keywords": [
+    "hra",
+    "human-reference-atlas"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/x-atlas-consortia/hra-api#readme",
+  "bugs": "https://github.com/x-atlas-consortia/hra-api/issues",
+  "repository": "github:x-atlas-consortia/hra-api",
   "main": "dist/index.js",
   "bin": {
     "hra-api": "./dist/server.js"
@@ -12,8 +20,17 @@
     "build": "node ./scripts/build.js",
     "start:server": "nodemon ./dist/server.js"
   },
-  "author": "",
-  "license": "MIT",
+  "author": {
+    "name": "Bruce W. Herr II",
+    "email": "bh2@bh2.net",
+    "url": "https://github.com/bherr2"
+  },
+  "contributors": [
+    {
+      "name": "Aishwarya Vijay Sinhasane",
+      "url": "https://github.com/aishwaryavijaysinhasane"
+    }
+  ],
   "dependencies": {
     "@jcubic/wayne": "^0.11.2",
     "express": "^4.18.2",
