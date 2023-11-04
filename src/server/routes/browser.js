@@ -23,7 +23,7 @@ const browserRoute = (_req, res, _next) => {
 };
 
 const openApiRoute = (_req, res, _next) => {
-  res.send(apiSpec, { 'Content-Type': 'application/yaml' });
+  res.send(apiSpec);
 };
 
 const routes = Router().get('/', browserRoute).get('/index.html', browserRoute).get('/hra-api-spec.yaml', openApiRoute);
