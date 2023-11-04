@@ -1,17 +1,6 @@
 export function filterSparqlQuery(sparqlQuery, filter = {}) {
-  const {
-    ontologyTerms,
-    cellTypeTerms,
-    minAge,
-    maxAge,
-    minBMI,
-    maxBMI,
-    sex,
-    technology,
-    tmc,
-    consortiums,
-  } = filter;
-  let sparqlFilter = "";
+  const { ontologyTerms, cellTypeTerms, minAge, maxAge, minBMI, maxBMI, sex, technology, tmc, consortiums } = filter;
+  let sparqlFilter = '';
   if (sex != undefined) {
     sparqlFilter += `
         FILTER(?sex = "${sex}")
@@ -50,34 +39,34 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
     }
   }
   if (ontologyTerms?.length > 0) {
-    const terms = ontologyTerms.map((s) => `<${s}>`).join(" ");
+    const terms = ontologyTerms.map((s) => `<${s}>`).join(' ');
     sparqlFilter += `
         FILTER(?annotation IN (${terms}))
       `;
   }
   if (cellTypeTerms?.length > 0) {
-    const terms = cellTypeTerms.map((s) => `<${s}>`).join(" ");
+    const terms = cellTypeTerms.map((s) => `<${s}>`).join(' ');
     sparqlFilter += `
         FILTER(?cell_type IN (${terms}))
       `;
   }
   if (tmc?.length > 0) {
-    const providers = tmc.map((s) => `"${s}"`).join(",");
+    const providers = tmc.map((s) => `"${s}"`).join(',');
     sparqlFilter += `
         FILTER(?tmc IN (${providers}))
       `;
   }
   if (technology?.length > 0) {
-    const technologies = technology.map((s) => `"${s}"`).join(",");
+    const technologies = technology.map((s) => `"${s}"`).join(',');
     sparqlFilter += `
         FILTER(?technology IN (${technologies}))
       `;
   }
   if (consortiums?.length > 0) {
-    const terms = consortiums.map((s) => `"${s}"`).join(" ");
+    const terms = consortiums.map((s) => `"${s}"`).join(' ');
     sparqlFilter += `
         FILTER(?consortiums IN (${terms}))
       `;
   }
-  return sparqlQuery.replace("#{{FILTER}}", sparqlFilter);
+  return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { resolve } from 'path';
+import apiSpec from '../../../hra-api-spec.yaml';
 
 const browserRoute = (_req, res, _next) => {
   res.send(`<!doctype html>
@@ -10,7 +10,7 @@ const browserRoute = (_req, res, _next) => {
     </head>
     <body>
       <rapi-doc
-        spec-url="ccf-api-spec.yaml"
+        spec-url="hra-api-spec.yaml"
         fill-request-fields-with-example="false"
         theme="light"
         show-header="false"
@@ -22,9 +22,8 @@ const browserRoute = (_req, res, _next) => {
   </html>`);
 };
 
-const openApiRoute = (req, res, next) => {
-  const apiFile = resolve('hra-api-spec.yaml');
-  res.sendFile(apiFile);
+const openApiRoute = (_req, res, _next) => {
+  res.send(apiSpec, { 'Content-Type': 'application/yaml' });
 };
 
 const routes = Router().get('/', browserRoute).get('/index.html', browserRoute).get('/hra-api-spec.yaml', openApiRoute);

@@ -1,6 +1,6 @@
 import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
 import { getRuiLocationsQuery } from './rui-locations-query.js';
-import { construct, select } from '../../utils/sparql.js';
+import { construct, select } from '../../shared/utils/sparql.js';
 import ruiLocationsFrame from '../frames/rui-locations-frame.json';
 import cellSummariesQuery from '../queries/select-cell-summaries.rq'
 

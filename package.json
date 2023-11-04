@@ -7,7 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm-run-all build:service-worker",
-    "build:service-worker": "npx esbuild src/service-worker/sw.js src/service-worker/sw-loader.js --bundle --loader:.rq=text --format=esm --outdir=dist"
+    "build:server": "npx esbuild src/server/server.js --platform=node --bundle --loader:.rq=text --loader:.yaml=text --format=esm --packages=external --outfile=dist/server.js",
+    "build:service-worker": "npx esbuild src/service-worker/sw.js src/service-worker/sw-loader.js --bundle --loader:.rq=text --format=esm --outdir=dist",
+    "start:server": "node ./dist/server.js"
   },
   "author": "",
   "license": "MIT",

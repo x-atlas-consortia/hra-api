@@ -1,10 +1,11 @@
-import { construct, select } from '../../utils/sparql';
+import { construct, select } from '../../shared/utils/sparql';
 import { filterSparqlQuery } from './filter-sparql-query';
 
 /**
- * Executes a filtered SPARQL query.
- * @param {string} query - The path to the SPARQL query file.
- * @param {Object} filter - An object containing query filters.
+ * Executes a filtered SPARQL query
+ * @param {string} query - The path to the SPARQL query file
+ * @param {Object} filter - An object containing query filters
+ * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Promise<Array>} - A promise that resolves to an array of query results.
  */
 export async function executeFilteredQuery(query, filter, endpoint = 'https://lod.humanatlas.io/sparql') {
@@ -19,10 +20,12 @@ export async function executeFilteredQuery(query, filter, endpoint = 'https://lo
 }
 
 /**
- * Executes a filtered SPARQL construct query and applies JSON-LD framing.
- * @param {string} query - The path to the SPARQL query file.
- * @param {Object} filter - An object containing query filters.
- * @param {string} frame - The path to the JSON-LD framing configuration file.
+ * Executes a filtered SPARQL construct query and applies JSON-LD framing
+ * @param {string} query - The path to the SPARQL query file
+ * @param {Object} filter - An object containing query filters
+ * @param {string} frame - The path to the JSON-LD framing configuration file
+ * @param {string} endpoint - The SPARQL endpoint to connect to
+ *
  * @returns {Promise<Object>} - A promise that resolves to the constructed JSON-LD data.
  */
 export async function executeFilteredConstructQuery(

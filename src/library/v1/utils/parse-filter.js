@@ -53,8 +53,8 @@ function setIfDefined(obj, prop, value) {
  * @returns {string|undefined} The parsed sex value.
  */
 function parseSex(value) {
-  const values = ["Female", "Male"];
-  value = typeof value === "string" ? value.toLowerCase() : value;
+  const values = ['Female', 'Male'];
+  value = typeof value === 'string' ? value.toLowerCase() : value;
   return values.find((v) => v.toLowerCase() === value);
 }
 
@@ -67,13 +67,13 @@ function parseSex(value) {
  * @returns {number[]|undefined} The parsed range as [min, max].
  */
 function parseRange(value, min, max) {
-  if (typeof value === "string") {
-    value = value.includes(",") ? value.split(",") : [value, value];
+  if (typeof value === 'string') {
+    value = value.includes(',') ? value.split(',') : [value, value];
   }
 
   if (Array.isArray(value)) {
-    let low = Number(value[0] || "NaN");
-    let high = Number(value[1] || "NaN");
+    let low = Number(value[0] || 'NaN');
+    let high = Number(value[1] || 'NaN');
 
     if (isNaN(low) && isNaN(high)) {
       return undefined;
@@ -102,11 +102,11 @@ function parseRange(value, min, max) {
  * @returns {number[]|undefined} The parsed range as [min, max].
  */
 function parseMinMaxRange(value, min, max) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return undefined;
   }
 
-  return parseRange([value?.["min"], value?.["max"]], min, max);
+  return parseRange([value?.['min'], value?.['max']], min, max);
 }
 
 /**
@@ -116,20 +116,18 @@ function parseMinMaxRange(value, min, max) {
  * @returns {object[]|undefined} The parsed spatial value.
  */
 function parseSpatial(value) {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     try {
       return JSON.parse(value);
     } catch {
       return undefined;
     }
   }
-  if (typeof value === "object") {
-    const numericSpatialAttributes = new Set(["x", "y", "z", "radius"]);
+  if (typeof value === 'object') {
+    const numericSpatialAttributes = new Set(['x', 'y', 'z', 'radius']);
     let searches = undefined;
     for (const [key, valueOrValues] of Object.entries(value)) {
-      const values = Array.isArray(valueOrValues)
-        ? valueOrValues
-        : [valueOrValues];
+      const values = Array.isArray(valueOrValues) ? valueOrValues : [valueOrValues];
       if (Array.isArray(values)) {
         if (!searches) {
           searches = values.map((_) => ({}));
@@ -157,8 +155,8 @@ function parseSpatial(value) {
  * @returns {string[]|undefined} The parsed array.
  */
 function parseArray(value, excludeValue) {
-  if (typeof value === "string") {
-    const values = value.includes(",") ? value.split(",") : [value];
+  if (typeof value === 'string') {
+    const values = value.includes(',') ? value.split(',') : [value];
     const filteredValues = values.filter((val) => val !== excludeValue);
     return filteredValues.length > 0 ? filteredValues : undefined;
   }
@@ -175,69 +173,61 @@ function parseArray(value, excludeValue) {
 function processParameter(result, key, value) {
   let minAge, maxAge, minBMI, maxBMI;
   switch (key.toLowerCase()) {
-    case "sex":
-      setIfDefined(result, "sex", parseSex(value));
+    case 'sex':
+      setIfDefined(result, 'sex', parseSex(value));
       break;
 
-    case "agerange":
-    case "age-range":
+    case 'agerange':
+    case 'age-range':
       [minAge, maxAge] = parseRange(value, 1, 110);
-      setIfDefined(result, "minAge", minAge);
-      setIfDefined(result, "maxAge", maxAge);
+      setIfDefined(result, 'minAge', minAge);
+      setIfDefined(result, 'maxAge', maxAge);
       break;
 
-    case "age":
+    case 'age':
       [minAge, maxAge] = parseRange(value, 1, 110);
-      setIfDefined(result, "minAge", minAge);
-      setIfDefined(result, "maxAge", maxAge);
+      setIfDefined(result, 'minAge', minAge);
+      setIfDefined(result, 'maxAge', maxAge);
       break;
 
-    case "bmirange":
-    case "bmi-range":
+    case 'bmirange':
+    case 'bmi-range':
       [minBMI, maxBMI] = parseRange(value, 13, 83);
-      setIfDefined(result, "minBMI", minBMI);
-      setIfDefined(result, "maxBMI", maxBMI);
+      setIfDefined(result, 'minBMI', minBMI);
+      setIfDefined(result, 'maxBMI', maxBMI);
       break;
 
-    case "bmi":
+    case 'bmi':
       [minBMI, maxBMI] = parseMinMaxRange(value, 13, 83);
-      setIfDefined(result, "minBMI", minBMI);
-      setIfDefined(result, "maxBMI", maxBMI);
+      setIfDefined(result, 'minBMI', minBMI);
+      setIfDefined(result, 'maxBMI', maxBMI);
       break;
 
-    case "spatial":
-      setIfDefined(result, "spatialSearches", parseSpatial(value));
+    case 'spatial':
+      setIfDefined(result, 'spatialSearches', parseSpatial(value));
       break;
 
-    case "tmc":
-    case "providers":
-      setIfDefined(result, "tmc", parseArray(value));
+    case 'tmc':
+    case 'providers':
+      setIfDefined(result, 'tmc', parseArray(value));
       break;
 
-    case "technologies":
-      setIfDefined(result, "technologies", parseArray(value));
+    case 'technologies':
+      setIfDefined(result, 'technologies', parseArray(value));
       break;
 
-    case "ontologyterms":
-    case "ontology-terms":
-      setIfDefined(
-        result,
-        "ontologyTerms",
-        parseArray(value, "http://purl.obolibrary.org/obo/UBERON_0013702"),
-      );
+    case 'ontologyterms':
+    case 'ontology-terms':
+      setIfDefined(result, 'ontologyTerms', parseArray(value, 'http://purl.obolibrary.org/obo/UBERON_0013702'));
       break;
 
-    case "celltypeterms":
-    case "cell-type-terms":
-      setIfDefined(
-        result,
-        "cellTypeTerms",
-        parseArray(value, "http://purl.obolibrary.org/obo/CL_0000000"),
-      );
+    case 'celltypeterms':
+    case 'cell-type-terms':
+      setIfDefined(result, 'cellTypeTerms', parseArray(value, 'http://purl.obolibrary.org/obo/CL_0000000'));
       break;
 
-    case "consortiums":
-      setIfDefined(result, "consortiums", parseArray(value));
+    case 'consortiums':
+      setIfDefined(result, 'consortiums', parseArray(value));
       break;
   }
 }

@@ -1,9 +1,9 @@
-import { readFileSync } from "fs";
-import { filterSparqlQuery } from "../utils/filter-sparql-query.js";
-import { constructJsonLd, selectRemoteObjects } from "./sparql.js";
+import { readFileSync } from 'fs';
+import { construct, select } from '../shared/utils/sparql.js';
+import { filterSparqlQuery } from './utils/filter-sparql-query.js';
 
 // SPARQL endpoint to query
-const sparqlEndpoint = "https://lod.humanatlas.io/sparql";
+const sparqlEndpoint = 'https://lod.humanatlas.io/sparql';
 
 /**
  * Executes a filtered SPARQL query.
@@ -16,10 +16,10 @@ async function executeFilteredQuery(sparqlFile, filter) {
   try {
     // Get results as an array of objects
     const sparqlQuery = filterSparqlQuery(sparqlQueryTemplate, filter);
-    const results = await selectRemoteObjects(sparqlQuery, sparqlEndpoint);
+    const results = await select(sparqlQuery, sparqlEndpoint);
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -37,14 +37,10 @@ async function executeFilteredConstructQuery(sparqlFile, filter, jsonFrame) {
   try {
     // Get results as an array of objects
     const sparqlQuery = filterSparqlQuery(sparqlQueryTemplate, filter);
-    const results = await constructJsonLd(
-      sparqlQuery,
-      sparqlEndpoint,
-      frameObj,
-    );
+    const results = await construct(sparqlQuery, sparqlEndpoint, frameObj);
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -54,7 +50,7 @@ async function executeFilteredConstructQuery(sparqlFile, filter, jsonFrame) {
  * @returns {string} - The full path to the query file.
  */
 function getSparqlFilePath(filename) {
-  return `routes/v1/queries/${filename}`;
+  return `src/library/v1/queries/${filename}`;
 }
 
 /**
@@ -65,8 +61,8 @@ function getSparqlFilePath(filename) {
 export async function getDbStatus(filter) {
   try {
     const results = {
-      status: "Ready",
-      message: "Database successfully loaded",
+      status: 'Ready',
+      message: 'Database successfully loaded',
       checkback: 3600000,
       loadTime: 22594,
       timestamp: new Date().toISOString(),
@@ -74,7 +70,7 @@ export async function getDbStatus(filter) {
 
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -85,11 +81,11 @@ export async function getDbStatus(filter) {
  */
 export async function getDatasetTechnologyNames(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("dataset-technology-names.rq");
+    const queryFilePath = getSparqlFilePath('dataset-technology-names.rq');
     const results = await executeFilteredQuery(queryFilePath, filter);
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -100,11 +96,11 @@ export async function getDatasetTechnologyNames(filter) {
  */
 export async function getTissueProviderNames(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("tissue-provider-names.rq");
+    const queryFilePath = getSparqlFilePath('tissue-provider-names.rq');
     const results = await executeFilteredQuery(queryFilePath, filter);
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -115,21 +111,21 @@ export async function getTissueProviderNames(filter) {
  */
 export async function getOntologyTermOccurences(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("ontology-term-occurences.rq");
+    const queryFilePath = getSparqlFilePath('ontology-term-occurences.rq');
     const jsonFrame = getSparqlFilePath(
-      "jsonld-frames/ontology-term-occurences.jsonld",
+      '../frames/ontology-term-occurences.jsonld'
     );
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
-    return results["@graph"].reduce(
-      (acc, row) => ((acc[row["@id"]] = parseInt(row["count"])), acc),
-      {},
+    return results['@graph'].reduce(
+      (acc, row) => ((acc[row['@id']] = parseInt(row['count'])), acc),
+      {}
     );
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -140,22 +136,22 @@ export async function getOntologyTermOccurences(filter) {
  */
 export async function getCellTypeTermOccurences(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("cell-type-term-occurences.rq");
+    const queryFilePath = getSparqlFilePath('cell-type-term-occurences.rq');
     const jsonFrame = getSparqlFilePath(
-      "jsonld-frames/cell-type-term-occurences.jsonld",
+      '../frames/cell-type-term-occurences.jsonld'
     );
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
 
-    return results["@graph"].reduce(
-      (acc, row) => ((acc[row["@id"]] = parseInt(row["count"])), acc),
-      {},
+    return results['@graph'].reduce(
+      (acc, row) => ((acc[row['@id']] = parseInt(row['count'])), acc),
+      {}
     );
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -165,21 +161,21 @@ export async function getCellTypeTermOccurences(filter) {
  */
 export async function getBiomarkerTermOccurences(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("biomarker-term-occurences.rq");
+    const queryFilePath = getSparqlFilePath('biomarker-term-occurences.rq');
     const jsonFrame = getSparqlFilePath(
-      "jsonld-frames/biomarker-term-occurences.jsonld",
+      '../frames/biomarker-term-occurences.jsonld'
     );
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
-    return results["@graph"].reduce(
-      (acc, row) => ((acc[row["@id"]] = parseInt(row["count"])), acc),
-      {},
+    return results['@graph'].reduce(
+      (acc, row) => ((acc[row['@id']] = parseInt(row['count'])), acc),
+      {}
     );
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -189,18 +185,18 @@ export async function getBiomarkerTermOccurences(filter) {
  */
 export async function getReferenceOrgans(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("reference-organs.rq");
+    const queryFilePath = getSparqlFilePath('reference-organs.rq');
     const jsonFrame = getSparqlFilePath(
-      "jsonld-frames/reference-organs.jsonld",
+      '../frames/reference-organs.jsonld'
     );
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -211,18 +207,22 @@ export async function getReferenceOrgans(filter) {
  */
 export async function getTissueBlocks(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("tissue-blocks.rq");
-    const jsonFrame = getSparqlFilePath("jsonld-frames/tissue-blocks.jsonld");
+    const queryFilePath = getSparqlFilePath('tissue-blocks.rq');
+    const jsonFrame = getSparqlFilePath('../frames/tissue-blocks.jsonld');
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
+
+
+
+
 /**
  * Retrieves the ontology tree model.
  *
@@ -231,16 +231,16 @@ export async function getTissueBlocks(filter) {
  */
 export async function getOntologyTreeModel(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("ontology-tree-model.rq");
-    const jsonFrame = getSparqlFilePath("jsonld-frames/ontology-frame.jsonld");
+    const queryFilePath = getSparqlFilePath('ontology-tree-model.rq');
+    const jsonFrame = getSparqlFilePath('../frames/ontology-frame.jsonld');
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -251,16 +251,16 @@ export async function getOntologyTreeModel(filter) {
  */
 export async function getBiomarkerTreeModel(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("biomarker-tree-model.rq");
-    const jsonFrame = getSparqlFilePath("jsonld-frames/biomarker-frame.jsonld");
+    const queryFilePath = getSparqlFilePath('biomarker-tree-model.rq');
+    const jsonFrame = getSparqlFilePath('../frames/biomarker-frame.jsonld');
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -271,16 +271,16 @@ export async function getBiomarkerTreeModel(filter) {
  */
 export async function getCellTypeTreeModel(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("celltype-tree-model.rq");
-    const jsonFrame = getSparqlFilePath("jsonld-frames/celltype-frame.jsonld");
+    const queryFilePath = getSparqlFilePath('celltype-tree-model.rq');
+    const jsonFrame = getSparqlFilePath('../frames/celltype-frame.jsonld');
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -292,16 +292,16 @@ export async function getCellTypeTreeModel(filter) {
  */
 export async function getRuiLocations(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("rui-locations.rq");
-    const jsonFrame = getSparqlFilePath("jsonld-frames/rui-locations.jsonld");
+    const queryFilePath = getSparqlFilePath('rui-locations.rq');
+    const jsonFrame = getSparqlFilePath('../frames/rui-locations.jsonld');
     const results = await executeFilteredConstructQuery(
       queryFilePath,
       filter,
-      jsonFrame,
+      jsonFrame
     );
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 
@@ -312,11 +312,11 @@ export async function getRuiLocations(filter) {
  */
 export async function getAggregateResults(filter) {
   try {
-    const queryFilePath = getSparqlFilePath("aggregate-results.rq");
+    const queryFilePath = getSparqlFilePath('aggregate-results.rq');
     const results = await executeFilteredQuery(queryFilePath, filter);
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -329,7 +329,7 @@ export async function getScene(filter) {
     const results = [];
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -342,7 +342,7 @@ export async function getReferenceOrganScene(filter) {
     const results = [];
     return results;
   } catch (error) {
-    console.error("Error executing SPARQL query:", error.message);
+    console.error('Error executing SPARQL query:', error.message);
   }
 }
 /**
@@ -351,7 +351,7 @@ export async function getReferenceOrganScene(filter) {
  * @returns {Promise<Object>} - A promise that resolves to HuBMAP RUI location data.
  */
 export async function getHubmapRuiLocations(filter) {
-  return getRuiLocations({ ...filter, consortiums: ["HuBMAP"] });
+  return getRuiLocations({ ...filter, consortiums: ['HuBMAP'] });
 }
 
 /**
@@ -360,5 +360,5 @@ export async function getHubmapRuiLocations(filter) {
  * @returns {Promise<Object>} - A promise that resolves to GTEx RUI location data.
  */
 export async function getGtexRuiLocations(filter) {
-  return getRuiLocations({ ...filter, consortiums: ["GTEx"] });
+  return getRuiLocations({ ...filter, consortiums: ['GTEx'] });
 }
