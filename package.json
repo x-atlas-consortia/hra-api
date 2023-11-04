@@ -1,7 +1,7 @@
 {
   "name": "hra-api",
   "version": "0.1.0",
-  "description": "HRA API deployed to https://apps.humanatlas.io/api/",
+  "description": "The Human Reference Atlas (HRA) API deployed to https://apps.humanatlas.io/api/",
   "keywords": [
     "hra",
     "human-reference-atlas"
