@@ -16,7 +16,7 @@ import {
   getScene,
   getTissueBlocks,
   getTissueProviderNames,
-} from '../../../library/v1/index.js';
+} from '../../../library/operations/v1.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getSpatialPlacement } from './utils/get-spatial-placement.js';
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCellSummary, getSimilarCellSourcesReport } from '../../library/ctpop';
+import { getCellSummary, getSimilarCellSourcesReport } from '../../library/operations/ctpop.js';
 
 const routes = Router()
   .post('/rui-location-cell-summary', async function (req, res) {
