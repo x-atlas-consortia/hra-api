@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { build, context } from 'esbuild';
+import { chmodSync } from 'fs';
 
 const watch = process.argv.slice(-1)[0] === '--watch';
 
@@ -19,6 +20,9 @@ const server = {
   entryPoints: ['src/server/server.js'],
   platform: 'node',
   packages: 'external',
+  banner: {
+    'js': '#!/usr/bin/env node'
+  }
 };
 
 const serviceWorker = {
@@ -52,3 +56,4 @@ if (watch) {
 }
 
 await Promise.all(ops);
+chmodSync('dist/server.js', '755');

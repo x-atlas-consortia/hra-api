@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "HRA API deployed to https://apps.humanatlas.io/api/",
   "main": "dist/index.js",
+  "bin": {
+    "hra-api": "./dist/server.js"
+  },
   "type": "module",
   "scripts": {
     "start": "npm-run-all build start:server",
