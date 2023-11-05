@@ -6,6 +6,8 @@ info:
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
   version: 2.0.0
 servers:
+  - description: HRA 2.0 Production
+    url: https://apps.humanatlas.io/api/v1
   - description: Production
     url: https://apps.humanatlas.io/hra-api/v1
   - description: Staging
