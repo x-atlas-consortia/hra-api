@@ -1,13 +1,15 @@
+import cors from 'cors';
 import express from 'express';
 import qs from 'qs';
 import browserRoute from './routes/browser.js';
+import ctpopRoutes from './routes/ctpop.js';
 import euiRoute from './routes/eui.js';
 import sparqlProxy from './routes/sparql.js';
 import v1Routes from './routes/v1';
-import ctpopRoutes from './routes/ctpop.js';
 
 const app = express();
 
+app.use(cors());
 app.use(express.text());
 app.use(express.json());
 app.set('json spaces', 2);
