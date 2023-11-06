@@ -8,6 +8,7 @@ import ctpopRoutes from './routes/ctpop.js';
 
 const app = express();
 
+app.use(express.text());
 app.use(express.json());
 app.set('json spaces', 2);
 
