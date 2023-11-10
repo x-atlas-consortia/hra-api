@@ -1,0 +1,15 @@
+title: Common Tissue Data Properties
+description: Properties available in all tissue data objects.
+type: object
+required:
+  - label
+  - link
+properties:
+  label:
+    type: string
+  description:
+    type: string
+  link:
+    title: Associated URL
+    type: string
+    format: uri

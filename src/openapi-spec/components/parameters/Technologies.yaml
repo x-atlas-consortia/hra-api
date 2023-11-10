@@ -1,0 +1,9 @@
+name: technologies
+description: Filter result by technologies.
+in: query
+required: false
+schema:
+  title: Technologies
+  type: array
+  items:
+    type: string

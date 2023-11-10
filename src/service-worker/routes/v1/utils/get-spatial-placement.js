@@ -29,7 +29,7 @@ export function getSpatialPlacement() {
       x_translation: 0,
       y_translation: 0,
       z_translation: 0,
-      translation_units: 'millimeters',
+      translation_units: 'millimeter',
       x_rotation: 0,
       y_rotation: 0,
       z_rotation: 0,

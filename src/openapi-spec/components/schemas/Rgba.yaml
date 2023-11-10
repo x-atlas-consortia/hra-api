@@ -1,0 +1,9 @@
+title: RGBA Color Tuple
+type: array
+minItems: 4
+maxItems: 4
+items:
+  title: 8-Bit Value
+  type: number
+  minimum: 0
+  maximum: 255

@@ -1,0 +1,6 @@
+name: organ-iri
+description: Filter result by organ.
+in: query
+required: true
+schema:
+  type: string

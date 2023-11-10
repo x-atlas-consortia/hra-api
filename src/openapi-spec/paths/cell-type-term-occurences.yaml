@@ -1,0 +1,23 @@
+get:
+  summary: Get number of cell type term occurrences for a search
+  operationId: cell-type-term-occurences
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Age.yaml
+    - $ref: ../components/parameters/AgeRange.yaml
+    - $ref: ../components/parameters/Bmi.yaml
+    - $ref: ../components/parameters/BmiRange.yaml
+    - $ref: ../components/parameters/Cache.yaml
+    - $ref: ../components/parameters/OntologyTerms.yaml
+    - $ref: ../components/parameters/CellTypeTerms.yaml
+    - $ref: ../components/parameters/Consortiums.yaml
+    - $ref: ../components/parameters/Providers.yaml
+    - $ref: ../components/parameters/Sex.yaml
+    - $ref: ../components/parameters/SpatialSearches.yaml
+    - $ref: ../components/parameters/Technologies.yaml
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/TermOccurences.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

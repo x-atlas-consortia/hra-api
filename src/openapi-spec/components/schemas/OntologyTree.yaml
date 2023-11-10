@@ -1,0 +1,17 @@
+title: Ontology Tree
+description: An ontology tree.
+type: object
+required:
+  - root
+  - nodes
+properties:
+  root:
+    title: Root Node
+    description: Reference to the root node.
+    type: string
+    format: url
+  nodes:
+    title: All Nodes
+    description: A mapping of identifiers to each node object.
+    additionalProperties:
+      $ref: ./OntologyTreeNode.yaml

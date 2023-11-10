@@ -1,0 +1,20 @@
+title: Spatial Entity Creator
+description: Describes by whom and when an entity object was created.
+type: object
+properties:
+  creator:
+    title: Full Name
+    type: string
+  creator_first_name:
+    title: First Name
+    type: string
+  creator_last_name:
+    title: Last Name
+    type: string
+  creator_orcid:
+    title: Creator's Identifier
+    type: string
+  creation_date:
+    title: Creation Date
+    type: string
+    format: date

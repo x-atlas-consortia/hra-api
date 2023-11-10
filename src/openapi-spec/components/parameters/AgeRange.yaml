@@ -1,0 +1,8 @@
+name: age-range
+description: Filter result by age.
+in: query
+deprecated: true
+required: false
+schema:
+  type: string
+  example: 10,100

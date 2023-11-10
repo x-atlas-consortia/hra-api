@@ -1,0 +1,7 @@
+name: cache
+description: Hint to cache (or not) the response of this request
+in: query
+required: false
+schema:
+  type: boolean
+  default: true

@@ -1,0 +1,22 @@
+title: Spatial Placement
+description: >-
+  A Spatial Placement defines how to place a Spatial Entity or Spatial Object
+  Reference relative to another Spatial Entity. It says how to scale, rotate,
+  and translate (in that order) a Spatial Entity or Spatial Object Reference so
+  that it is placed relative to another Spatial Entity.
+type: object
+allOf:
+  - $ref: ./SpatialPlacementCommon.yaml
+properties:
+  source:
+    oneOf:
+      - $ref: ./SpatialEntity.yaml
+      - $ref: ./SpatialObjectReference.yaml
+    x-preprocessor-delete: oneOf
+  target:
+    oneOf:
+      - title: Target Sptial Entity IRI
+        type: string
+        format: uri
+        example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
+      - $ref: ./SpatialEntity.yaml

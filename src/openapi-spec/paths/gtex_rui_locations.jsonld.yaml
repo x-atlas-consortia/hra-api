@@ -1,0 +1,17 @@
+get:
+  summary: Get all GTEx rui locations (if enabled)
+  description: This option is only enabled if GTEX_ROUTES=true in the environment
+  operationId: gtex-rui-locations
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Cache.yaml
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+    '404':
+      description: Not found due to option being disabled
+  

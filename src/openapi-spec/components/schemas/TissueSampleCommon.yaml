@@ -1,0 +1,22 @@
+title: Common Tissue Sample Properties
+description: Properties available in all tissue sample objects.
+type: object
+required:
+  - '@type'
+  - sampleType
+  - datasets
+properties:
+  '@type':
+    type: string
+    enum:
+      - Sample
+  sampleType:
+    title: Object Type
+    type: string
+  datasets:
+    title: Associated Datasets
+    type: array
+    items:
+      $ref: ./TissueDataset.yaml
+x-preprocessor-delete:
+  - properties/@type

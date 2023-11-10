@@ -1,0 +1,44 @@
+title: Tissue Block
+description: Information about a collection of tissue sections.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./TissueCommon.yaml
+  - $ref: ./TissueSampleCommon.yaml
+required:
+  - sampleType
+properties:
+  sampleType:
+    type: string
+    enum:
+      - Tissue Block
+      - Non-Standard
+    x-preprocessor-delete: enum
+  spatialEntityId:
+    title: Associated Spatial Entity
+    description: The associated spatial entity (rui_location) for the block.
+    type: string
+    format: uri
+  donor:
+    $ref: ./TissueDonor.yaml
+  sectionCount:
+    title: Number of Sections
+    description: Number of sections contained in the block.
+    type: integer
+    minimum: 0
+  sectionSize:
+    title: Section Size
+    description: Size of each section in the block.
+    type: number
+    minimum: 0
+  sectionUnits:
+    title: Section Size Unit
+    description: Length unit `sectionSize` is in (generally, millimeters)
+    type: string
+    default: millimeter
+  sections:
+    title: Contained Sections
+    description: All sections in the block.
+    type: array
+    items:
+      $ref: ./TissueSection.yaml

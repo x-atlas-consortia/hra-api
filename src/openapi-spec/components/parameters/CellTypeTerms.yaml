@@ -1,0 +1,9 @@
+name: cell-type-terms
+description: Filter result by ontology terms.
+in: query
+required: false
+schema:
+  title: Terms
+  type: array
+  items:
+    type: string

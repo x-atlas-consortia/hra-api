@@ -1,0 +1,26 @@
+title: Spatial Placement Translation
+description: The properties to define the Translation aspect of Spatial Placements.
+type: object
+required:
+  - x_translation
+  - y_translation
+  - z_translation
+  - translation_units
+properties:
+  x_translation:
+    title: X-Translation
+    type: number
+  y_translation:
+    title: Y-Translation
+    type: number
+  z_translation:
+    title: Z-Translation
+    type: number
+  translation_units:
+    title: Translation Units
+    description: Length units of translation values.
+    type: string
+    default: millimeter
+    enum:
+      - millimeter
+    x-preprocessor-delete: enum

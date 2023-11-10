@@ -1,0 +1,21 @@
+title: Tissue Section
+description: A single section sample.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./TissueCommon.yaml
+  - $ref: ./TissueSampleCommon.yaml
+required:
+  - sampleType
+properties:
+  sampleType:
+    type: string
+    enum:
+      - Tissue Section
+      - Non-Standard
+    x-preprocessor-delete: enum
+  sectionNumber:
+    title: Section Index
+    description: Index of the section in the parent block.
+    type: integer
+    minimum: 0

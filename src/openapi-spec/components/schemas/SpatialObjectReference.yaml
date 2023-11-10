@@ -1,0 +1,27 @@
+title: Spatial Object Reference
+description: >-
+  A Spatial Object Reference provides a reference to an external representation
+  of a Spatial Entity.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+required:
+  - '@type'
+properties:
+  '@type':
+    type: string
+    enum:
+      - SpatialObjectReference
+  file:
+    title: File
+    type: string
+    format: uri
+  file_format:
+    title: File Format
+    type: string
+    example: model/gltf-binary
+  file_subpath:
+    title: File Subpath
+    type: string
+x-preprocessor-delete:
+  - properties/@type

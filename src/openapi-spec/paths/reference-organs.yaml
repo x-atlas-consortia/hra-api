@@ -1,0 +1,12 @@
+get:
+  summary: Get all reference organs
+  operationId: reference-organs
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Cache.yaml
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/SpatialEntities.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

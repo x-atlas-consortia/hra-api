@@ -1,0 +1,26 @@
+title: Spatial Placement Rotation
+description: The properties to define the Rotation aspect of Spatial Placements.
+type: object
+required:
+  - x_rotation
+  - y_rotation
+  - z_rotation
+  - rotation_units
+properties:
+  x_rotation:
+    title: X-Rotation
+    type: number
+  y_rotation:
+    title: Y-Rotation
+    type: number
+  z_rotation:
+    title: Z-Rotation
+    type: number
+  rotation_units:
+    title: Rotation Units
+    description: Units of rotation values.
+    type: string
+    default: degree
+    enum:
+      - degree
+    x-preprocessor-delete: enum

@@ -1,0 +1,64 @@
+title: Spatial Entity
+description: >-
+  A Spatial Entity defines a bounded cartesian space and the units it is
+  measured in. It typically represents a real world thing, e.g., a human body, a
+  human kidney, a tissue section, or an individual cell.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./SpatialEntityCommon.yaml
+  - $ref: ./SpatialEntityCreator.yaml
+  - $ref: ./SpatialEntityDimensions.yaml
+required:
+  - '@type'
+properties:
+  '@type':
+    type: string
+    enum:
+      - SpatialEntity
+  label:
+    title: Label
+    type: string
+  comment:
+    title: Comment
+    type: string
+  rui_rank:
+    title: RUI Rank
+    description: Ranking used to order lists in the RUI.
+    type: integer
+  sex:
+    title: Sex
+    type: string
+    enum:
+      - Female
+      - Male
+    x-preprocessor-delete: enum
+  side:
+    title: Side
+    description: >-
+      Used for organs that come in pairs to distinguish between them, i.e.
+      kidneys, etc.
+    type: string
+    enum:
+      - Left
+      - Right
+    x-preprocessor-delete: enum
+  slice_count:
+    title: Slice Count
+    type: integer
+  slice_thickness:
+    title: Slice Thickness
+    type: number
+  placement:
+    oneOf:
+      - $ref: ./SpatialPlacement.yaml
+      - type: array
+        items:
+          $ref: ./SpatialPlacement.yaml
+    x-preprocessor-delete: oneOf
+  object:
+    $ref: ./SpatialObjectReference.yaml
+  color:
+    $ref: ./Rgba.yaml
+x-preprocessor-delete:
+  - properties/@type

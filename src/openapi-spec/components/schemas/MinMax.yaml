@@ -1,0 +1,14 @@
+title: Number Range
+description: >
+  Represents a range of numbers using a minimum and maximum.
+
+  Either end may be omitted to indicate an unlimited/infinite range in that
+  direction.
+
+  `min` should be less than or equal to `max` but this is not strictly enforced.
+type: object
+properties:
+  min:
+    type: number
+  max:
+    type: number

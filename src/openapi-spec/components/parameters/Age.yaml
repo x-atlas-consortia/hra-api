@@ -1,0 +1,6 @@
+name: age
+description: Filter result by age.
+in: query
+required: false
+schema:
+  $ref: ../schemas/MinMax.yaml

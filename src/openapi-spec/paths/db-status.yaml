@@ -1,0 +1,11 @@
+get:
+  summary: Get current status of database
+  operationId: db-status
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/DatabaseStatus.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

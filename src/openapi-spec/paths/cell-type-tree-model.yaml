@@ -1,0 +1,12 @@
+get:
+  summary: Get cell type tree nodes
+  operationId: cell-type-tree-model
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Cache.yaml
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/OntologyTree.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

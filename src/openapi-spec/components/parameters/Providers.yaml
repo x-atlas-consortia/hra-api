@@ -1,0 +1,9 @@
+name: providers
+description: Filter result by providers.
+in: query
+required: false
+schema:
+  title: Providers
+  type: array
+  items:
+    type: string

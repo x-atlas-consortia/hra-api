@@ -1,0 +1,8 @@
+name: bmi-range
+description: Filter result by bmi.
+in: query
+deprecated: true
+required: false
+schema:
+  type: string
+  example: 0,40

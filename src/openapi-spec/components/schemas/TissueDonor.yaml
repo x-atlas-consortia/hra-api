@@ -1,0 +1,18 @@
+title: Tissue Donor
+description: Contains generic information about a tissue donor.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./TissueCommon.yaml
+required:
+  - '@type'
+properties:
+  '@type':
+    type: string
+    enum:
+      - Donor
+  providerName:
+    title: Provider of Donor
+    type: string
+x-preprocessor-delete:
+  - properties/@type

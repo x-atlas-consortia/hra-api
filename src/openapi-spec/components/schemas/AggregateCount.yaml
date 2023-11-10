@@ -1,0 +1,17 @@
+title: Aggregated Count \w Label
+type: object
+required:
+  - label
+  - count
+properties:
+  label:
+    title: Aggregate Name/Field
+    type: string
+  count:
+    title: Aggregated Count
+    oneOf:
+      - type: number
+        nullable: false
+      - type: string
+        nullable: false
+    x-preprocessor-delete: oneOf

@@ -1,0 +1,7 @@
+name: query
+description: SPARQL query to use
+in: query
+required: true
+schema:
+  type: string
+example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10

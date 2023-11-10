@@ -1,0 +1,21 @@
+title: JSON-LD Object
+description: Base object for all json-ld objects.
+type: object
+required:
+  - '@id'
+  - '@type'
+additionalProperties: true
+properties:
+  '@id':
+    title: Unique Identifier
+    type: string
+    format: uri
+    example: http://purl.obolibrary.org/obo/UBERON_0013702
+  '@type':
+    title: Object Type
+    description: Contains the name of object class/interface
+    type: string
+    example: Sample
+x-preprocessor-delete:
+  - properties/@id
+  - properties/@type

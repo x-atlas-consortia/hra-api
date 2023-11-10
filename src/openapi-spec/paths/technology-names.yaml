@@ -1,0 +1,12 @@
+get:
+  summary: Get technology names (for filtering)
+  operationId: technology-names
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Cache.yaml
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/Strings.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

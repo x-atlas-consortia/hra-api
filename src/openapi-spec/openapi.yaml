@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: HRA-API
+  description: >
+    This API provides programmatic access to data registered to the Human
+    Reference Atlas (HRA).
+
+    See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
+  version: 2.0.0
+  contact:
+    name: "HuBMAP Help Desk"
+    email: "help@hubmapconsortium.org"
+  license:
+    name: MIT License
+    url: https://spdx.org/licenses/MIT.html
+externalDocs:
+  description: API Documentation
+  url: https://github.com/x-atlas-consortia/hra-api#readme
+servers:
+  - description: HRA 2.0 Production
+    url: https://apps.humanatlas.io/api
+  - description: HRA 1.x Production
+    url: https://apps.humanatlas.io/hra-api
+  - description: HRA 1.x Staging
+    url: https://apps.humanatlas.io/hra-api--staging
+  - description: Local Server
+    url: .
+security: []
+
+tags:
+  - name: v1
+    description: HRA-API v1.x Routes
+  - name: ctpop
+    description: HRApop (Paper Version) Routes
+
+x-preprocessor:
+  description: |
+    For some openapi-generator-cli generators our custom preprocessor
+    has to be employed to "fix" this specification to circumvent
+    inconsistencies/bugs in the generated code.
+    The preprocessor uses `x-preprocessor-` properties to determine
+    which operation to apply and where to apply it.
+  operations:
+    delete: |
+      Delete one or more properties at the specified paths.
+      Will also delete the property from the `required` list if applicable.
+paths:
+  /v1/db-status:
+    $ref: paths/db-status.yaml
+  /v1/sparql:
+    $ref: paths/sparql.yaml
+  /v1/aggregate-results:
+    $ref: paths/aggregate-results.yaml
+  /v1/get-spatial-placement:
+    $ref: paths/get-spatial-placement.yaml
+  /v1/hubmap/rui_locations.jsonld:
+    $ref: paths/hubmap_rui_locations.jsonld.yaml
+  /v1/sennet/rui_locations.jsonld:
+    $ref: paths/sennet_rui_locations.jsonld.yaml
+  /v1/ontology-term-occurences:
+    $ref: paths/ontology-term-occurences.yaml
+  /v1/cell-type-term-occurences:
+    $ref: paths/cell-type-term-occurences.yaml
+  /v1/biomarker-term-occurences:
+    $ref: paths/biomarker-term-occurences.yaml
+  /v1/ontology-tree-model:
+    $ref: paths/ontology-tree-model.yaml
+  /v1/cell-type-tree-model:
+    $ref: paths/cell-type-tree-model.yaml
+  /v1/biomarker-tree-model:
+    $ref: paths/biomarker-tree-model.yaml
+  /v1/provider-names:
+    $ref: paths/provider-names.yaml
+  /v1/reference-organs:
+    $ref: paths/reference-organs.yaml
+  /v1/reference-organ-scene:
+    $ref: paths/reference-organ-scene.yaml
+  /v1/scene:
+    $ref: paths/scene.yaml
+  /v1/technology-names:
+    $ref: paths/technology-names.yaml
+  /v1/tissue-blocks:
+    $ref: paths/tissue-blocks.yaml
+  /v1/gtex/rui_locations.jsonld:
+    $ref: paths/gtex_rui_locations.jsonld.yaml

@@ -17,8 +17,11 @@
   "type": "module",
   "scripts": {
     "start": "npm-run-all build start:server",
-    "build": "node ./scripts/build.js",
-    "start:server": "nodemon ./dist/server.js"
+    "build": "npm-run-all build:openapi-spec build:code",
+    "build:openapi-spec": "npx @redocly/cli bundle ./src/openapi-spec/openapi.yaml -o hra-api-spec.yaml",
+    "build:code": "node ./scripts/build.js",
+    "start:server": "nodemon ./dist/server.js",
+    "lint:openapi-spec": "npx @redocly/cli lint ./src/openapi-spec/openapi.yaml --format stylish"
   },
   "author": {
     "name": "Bruce W. Herr II",

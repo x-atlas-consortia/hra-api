@@ -1,0 +1,41 @@
+title: Ontology Node
+description: A node in the ontology tree.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+required:
+  - '@type'
+properties:
+  '@type':
+    type: string
+    enum:
+      - OntologyTreeNode
+  id:
+    title: Identifier
+    description: Unique identifier for the node.
+    type: string
+    format: uri
+  label:
+    title: Label
+    description: Main descriptive label for the node.
+    type: string
+  synonymLabels:
+    title: Synonym Labels
+    description: Additional label for the node.
+    type: array
+    items:
+      type: string
+  parent:
+    title: Parent Node Identifier
+    description: Reference to the parent node.
+    type: string
+    format: uri
+  children:
+    title: Child Node Identifiers
+    description: References to all child nodes.
+    type: array
+    items:
+      type: string
+      format: uri
+x-preprocessor-delete:
+  - properties/@type

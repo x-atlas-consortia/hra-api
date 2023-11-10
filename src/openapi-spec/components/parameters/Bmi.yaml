@@ -1,0 +1,6 @@
+name: bmi
+description: Filter result by bmi.
+in: query
+required: false
+schema:
+  $ref: ../schemas/MinMax.yaml

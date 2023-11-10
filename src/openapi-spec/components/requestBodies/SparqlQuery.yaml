@@ -1,0 +1,11 @@
+description: Request format for a SPARQL query
+required: true
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/SparqlQueryRequest.yaml
+    example:
+      query: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
+  application/x-www-form-urlencoded:
+    schema:
+      $ref: ../schemas/SparqlQueryRequest.yaml

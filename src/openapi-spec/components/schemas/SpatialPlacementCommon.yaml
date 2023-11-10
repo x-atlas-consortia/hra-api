@@ -1,0 +1,26 @@
+title: Spatial Placement common fields
+description: >-
+  A Spatial Placement defines how to place a Spatial Entity or Spatial Object
+  Reference relative to another Spatial Entity. It says how to scale, rotate,
+  and translate (in that order) a Spatial Entity or Spatial Object Reference so
+  that it is placed relative to another Spatial Entity.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./SpatialPlacementTranslation.yaml
+  - $ref: ./SpatialPlacementRotation.yaml
+  - $ref: ./SpatialPlacementScaling.yaml
+required:
+  - '@type'
+  - target
+properties:
+  '@type':
+    type: string
+    enum:
+      - SpatialPlacement
+  placement_date:
+    title: Date placement was made
+    type: string
+    format: date
+x-preprocessor-delete:
+  - properties/@type

@@ -1,0 +1,22 @@
+title: Tissue Dataset
+description: Describes a single tissue dataset.
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./TissueCommon.yaml
+required:
+  - '@type'
+properties:
+  '@type':
+    type: string
+    enum:
+      - Dataset
+  technology:
+    title: Technology Used
+    type: string
+  thumbnail:
+    title: Representative Thumbnail URL
+    type: string
+    format: uri
+x-preprocessor-delete:
+  - properties/@type

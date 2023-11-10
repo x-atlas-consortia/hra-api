@@ -1,0 +1,7 @@
+title: SPARQL query request body
+type: object
+required:
+  - query
+properties:
+  query:
+    type: string

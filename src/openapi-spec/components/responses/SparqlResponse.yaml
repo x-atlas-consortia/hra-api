@@ -1,0 +1,10 @@
+description: Successful operation. SPARQL responses vary by format/content negotiation.
+content:
+  application/json:
+    schema:
+      type: array
+      items:
+        type: object
+  text/csv:
+    schema:
+      type: string

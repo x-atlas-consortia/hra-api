@@ -1,0 +1,9 @@
+name: consortiums
+description: Filter result by consortiums.
+in: query
+required: false
+schema:
+  title: Consortiums
+  type: array
+  items:
+    type: string

@@ -1,0 +1,6 @@
+name: token
+description: Authentication token to use for authenticated searches
+in: query
+required: false
+schema:
+  type: string

@@ -1,0 +1,10 @@
+name: sex
+description: Filter result by sex.
+in: query
+required: false
+schema:
+  type: string
+  enum:
+    - both
+    - female
+    - male

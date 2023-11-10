@@ -1,0 +1,26 @@
+title: Spatial Placement Scaling
+description: The properties to define the Scaling aspect of Spatial Placements.
+type: object
+required:
+  - x_scaling
+  - y_scaling
+  - z_rotation
+  - scaling_units
+properties:
+  x_scaling:
+    title: X-Scaling
+    type: number
+  y_scaling:
+    title: Y-Scaling
+    type: number
+  z_scaling:
+    title: Z-Scaling
+    type: number
+  scaling_units:
+    title: Scaling Units
+    description: Units of scaling values.
+    type: string
+    default: ratio
+    enum:
+      - ratio
+    x-preprocessor-delete: enum

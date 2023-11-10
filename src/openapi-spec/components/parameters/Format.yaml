@@ -1,0 +1,24 @@
+name: format
+description: >-
+  Override SPARQL response format (Note that not all formats are supported for
+  all SPARQL query types)
+in: query
+required: false
+schema:
+  type: string
+  enum:
+    - application/json
+    - application/ld+json
+    - application/n-quads
+    - application/n-triples
+    - application/sparql-results+json
+    - application/sparql-results+xml
+    - application/trig
+    - simple
+    - stats
+    - table
+    - text/csv
+    - text/n3
+    - text/tab-separated-values
+    - text/turtle
+    - tree

@@ -1,0 +1,33 @@
+title: Spatial Entity Common
+description: Properties available in all spatial entity objects.
+type: object
+properties:
+  entityId:
+    title: Entity Identifier
+    description: Identifier of the entity the spatial object represents.
+    type: string
+    format: uri
+  ccf_annotations:
+    title: Annotations
+    description: Annotations attached to the entity.
+    type: array
+    items:
+      type: string
+      format: uri
+  representation_of:
+    title: Representation
+    description: Identifier for the item the spatial object represents.
+    type: string
+    format: uri
+  reference_organ:
+    title: Organ
+    description: Identifier for the organ the spatial object represents.
+    type: string
+    format: uri
+  sex:
+    title: Sex
+    type: string
+    enum:
+      - Female
+      - Male
+    x-preprocessor-delete: enum

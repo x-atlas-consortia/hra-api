@@ -1,0 +1,8 @@
+title: Error Message
+type: object
+required:
+  - error
+properties:
+  message:
+    title: Human readable description of the error
+    type: string

@@ -1,0 +1,23 @@
+title: Spatial Entity Dimensions
+description: The dimensions of a spatial entity.
+type: object
+required:
+  - x_dimension
+  - y_dimension
+  - z_dimension
+  - dimension_units
+properties:
+  x_dimension:
+    title: X-Dimension
+    type: number
+  y_dimension:
+    title: Y-Dimension
+    type: number
+  z_dimension:
+    title: Z-Dimension
+    type: number
+  dimension_units:
+    title: Dimension Units
+    description: Length units of dimensional values.
+    type: string
+    default: millimeter

@@ -1,0 +1,63 @@
+title: Spatial Scene Node
+description: ''
+type: object
+allOf:
+  - $ref: ./JsonLdObject.yaml
+  - $ref: ./SpatialEntityCommon.yaml
+properties:
+  name:
+    title: Label
+    type: string
+  tooltip:
+    title: Tooltip Label
+    type: string
+  unpickable:
+    title: Unpickable
+    description: Whether the node should selectable by the user in interfaces.
+    type: boolean
+  geometry:
+    title: Geometry
+    description: Geometry to draw, if it is not using a GLTF file.
+    type: string
+    enum:
+      - sphere
+      - cube
+      - wireframe
+      - text
+      - cone
+      - cylinder
+    x-preprocessor-delete: enum
+  _lighting:
+    title: Lighting
+    type: string
+  zoomBasedOpacity:
+    title: Zoom Based Opacity
+    description: Whether the opacity of the node changes based on the zoom level.
+    type: boolean
+  zoomToOnLoad:
+    title: Focus
+    description: Focus this node when loaded in an interface.
+    type: boolean
+  scenegraph:
+    title: Scenegraph
+    type: string
+    format: uri
+  scenegraphNode:
+    title: Scenegraph Node
+    type: string
+  color:
+    $ref: ./Rgba.yaml
+  opacity:
+    title: Opacity
+    type: number
+  transformMatrix:
+    title: Transformation
+    description: Additional transformations to be applied.
+    type: array
+    minItems: 16
+    maxItems: 16
+    items:
+      type: number
+  priority:
+    title: Priority
+    type: number

@@ -1,0 +1,15 @@
+post:
+  summary: >-
+    Given a SpatialEntity already placed relative to a reference SpatialEntity,
+    retrieve a new direct SpatialPlacement to the given SpatialEntity IRI
+  operationId: get-spatial-placement
+  tags: [v1]
+  requestBody:
+    $ref: ../components/requestBodies/GetSpatialPlacement.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/SpatialPlacement.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../components/responses/ErrorMessage.yaml

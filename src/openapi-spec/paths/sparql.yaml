@@ -1,0 +1,27 @@
+get:
+  summary: Run a SPARQL query
+  operationId: sparql
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Query.yaml
+    - $ref: ../components/parameters/Token.yaml
+    - $ref: ../components/parameters/Format.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/SparqlResponse.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml
+post:
+  summary: Run a SPARQL query (POST)
+  operationId: sparql-post
+  tags: [v1]
+  requestBody:
+    $ref: ../components/requestBodies/SparqlQuery.yaml
+  parameters:
+    - $ref: ../components/parameters/Token.yaml
+    - $ref: ../components/parameters/Format.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/SparqlResponse.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

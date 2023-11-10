@@ -1,0 +1,11 @@
+title: get-spatial-placement request body
+type: object
+required:
+  - target_iri
+  - rui_location
+properties:
+  target_iri:
+    type: string
+    format: uri
+  rui_location:
+    $ref: ./SpatialEntity.yaml
