@@ -7,7 +7,7 @@ const routes = Router()
     const summary = await getCellSummary(ruiLocation);
     res.json(summary);
   })
-  .post('/cell-summary-rui-location', async function (req, res) {
+  .post('/cell-summary-report', async function (req, res) {
     const cellSummarySheet = req.body;
     const report = await getSimilarCellSourcesReport(cellSummarySheet);
     res.json(report);

@@ -7,7 +7,7 @@ function routes(app) {
       const summary = await getCellSummary(ruiLocation);
       res.json(summary);
     })
-    .post('/api/ctpop/cell-summary-rui-location', async function (req, res) {
+    .post('/api/ctpop/cell-summary-report', async function (req, res) {
       const cellSummarySheet = await req.text();
       const report = await getSimilarCellSourcesReport(cellSummarySheet);
       res.json(report);
