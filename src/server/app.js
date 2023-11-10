@@ -15,7 +15,7 @@ app.set('query parser', function (str) {
 
 app.use(cors());
 app.use(express.urlencoded());
-app.use(express.text());
+app.use(express.text({ type: 'text/*' }));
 app.use(express.json());
 app.set('json spaces', 2);
 

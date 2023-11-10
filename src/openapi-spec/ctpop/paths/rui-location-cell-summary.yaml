@@ -1,0 +1,15 @@
+post:
+  summary: >-
+    Given a SpatialEntity already placed relative to a reference SpatialEntity,
+    retrieve a predicted cell summary from HRApop (Paper Version)
+  operationId: get-rui-location-cell-summary
+  tags: [ctpop]
+  requestBody:
+    $ref: ../components/requestBodies/GetRuiLocationCellSummary.yaml
+  responses:
+    '200':
+      type: object
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

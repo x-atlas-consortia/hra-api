@@ -1,0 +1,16 @@
+post:
+  summary: >-
+    Given a cell summary in csv format, retrieve a predicted cell summary report
+    from HRApop (Paper Version) showing relative anatomical structures, datasets,
+    and rui locations.
+  operationId: get-rui-location-cell-summary
+  tags: [ctpop]
+  requestBody:
+    $ref: ../components/requestBodies/GetCellSummaryReport.yaml
+  responses:
+    '200':
+      type: object
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

@@ -24,7 +24,7 @@ servers:
   - description: HRA 1.x Staging
     url: https://apps.humanatlas.io/hra-api--staging
   - description: Local Server
-    url: .
+    url: /
 security: []
 
 tags:
@@ -83,3 +83,8 @@ paths:
     $ref: v1/paths/tissue-blocks.yaml
   /v1/gtex/rui_locations.jsonld:
     $ref: v1/paths/gtex_rui_locations.jsonld.yaml
+
+  /ctpop/rui-location-cell-summary:
+    $ref: ctpop/paths/rui-location-cell-summary.yaml
+  /ctpop/cell-summary-report:
+    $ref: ctpop/paths/cell-summary-report.yaml
