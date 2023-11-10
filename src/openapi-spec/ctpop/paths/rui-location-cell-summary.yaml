@@ -8,7 +8,11 @@ post:
     $ref: ../components/requestBodies/GetRuiLocationCellSummary.yaml
   responses:
     '200':
-      type: object
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
     '404':
       $ref: ../../v1/components/responses/ErrorMessage.yaml
     '500':

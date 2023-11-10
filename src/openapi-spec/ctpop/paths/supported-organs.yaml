@@ -1,0 +1,28 @@
+get:
+  summary: >-
+    Get all organs supported by HRApop (Paper Version). Returns an array of organ_iri, organ_label objects.
+  operationId: get-supported-organs
+  tags: [ctpop]
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              - type: object
+                required:
+                  - organ_iri
+                  - organ_label
+                properties:
+                  organ_iri:
+                    title: Organ IRI
+                    type: string
+                  organ_label:
+                    title: Organ Label
+                    type: string
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

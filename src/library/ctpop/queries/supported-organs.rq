@@ -1,0 +1,29 @@
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX ctpop: <https://purl.humanatlas.io/graph/ctpop>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREfIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
+
+SELECT DISTINCT ?organ_iri ?organ_label
+FROM ctpop:
+FROM <https://purl.org/ccf/ccf.owl>
+WHERE {
+  ?as ccf:has_cell_summary [] .
+  ?as rdfs:label ?as_label .
+
+  ?as_entity ccf:representation_of ?as ;
+    ccf:has_reference_organ ?refOrgan .
+
+  ?refOrgan ccf:representation_of ?refOrganTerm .
+
+  ?organ_iri ccf:ccf_part_of body: .
+  ?organ_iri ccf:ccf_pref_label ?organ_label .
+
+  ?refOrganTerm ccf:ccf_part_of* ?organ_iri
+
+  # Remove redundant 'respiratory system'
+  FILTER(?organ_iri != UBERON:0001004)
+}
+ORDER BY ?organ_label

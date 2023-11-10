@@ -84,7 +84,9 @@ paths:
   /v1/gtex/rui_locations.jsonld:
     $ref: v1/paths/gtex_rui_locations.jsonld.yaml
 
-  /ctpop/rui-location-cell-summary:
-    $ref: ctpop/paths/rui-location-cell-summary.yaml
   /ctpop/cell-summary-report:
     $ref: ctpop/paths/cell-summary-report.yaml
+  /ctpop/rui-location-cell-summary:
+    $ref: ctpop/paths/rui-location-cell-summary.yaml
+  /ctpop/supported-organs:
+    $ref: ctpop/paths/supported-organs.yaml
