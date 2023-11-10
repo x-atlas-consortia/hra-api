@@ -46,40 +46,40 @@ x-preprocessor:
       Will also delete the property from the `required` list if applicable.
 paths:
   /v1/db-status:
-    $ref: paths/db-status.yaml
+    $ref: v1/paths/db-status.yaml
   /v1/sparql:
-    $ref: paths/sparql.yaml
+    $ref: v1/paths/sparql.yaml
   /v1/aggregate-results:
-    $ref: paths/aggregate-results.yaml
+    $ref: v1/paths/aggregate-results.yaml
   /v1/get-spatial-placement:
-    $ref: paths/get-spatial-placement.yaml
+    $ref: v1/paths/get-spatial-placement.yaml
   /v1/hubmap/rui_locations.jsonld:
-    $ref: paths/hubmap_rui_locations.jsonld.yaml
+    $ref: v1/paths/hubmap_rui_locations.jsonld.yaml
   /v1/sennet/rui_locations.jsonld:
-    $ref: paths/sennet_rui_locations.jsonld.yaml
+    $ref: v1/paths/sennet_rui_locations.jsonld.yaml
   /v1/ontology-term-occurences:
-    $ref: paths/ontology-term-occurences.yaml
+    $ref: v1/paths/ontology-term-occurences.yaml
   /v1/cell-type-term-occurences:
-    $ref: paths/cell-type-term-occurences.yaml
+    $ref: v1/paths/cell-type-term-occurences.yaml
   /v1/biomarker-term-occurences:
-    $ref: paths/biomarker-term-occurences.yaml
+    $ref: v1/paths/biomarker-term-occurences.yaml
   /v1/ontology-tree-model:
-    $ref: paths/ontology-tree-model.yaml
+    $ref: v1/paths/ontology-tree-model.yaml
   /v1/cell-type-tree-model:
-    $ref: paths/cell-type-tree-model.yaml
+    $ref: v1/paths/cell-type-tree-model.yaml
   /v1/biomarker-tree-model:
-    $ref: paths/biomarker-tree-model.yaml
+    $ref: v1/paths/biomarker-tree-model.yaml
   /v1/provider-names:
-    $ref: paths/provider-names.yaml
+    $ref: v1/paths/provider-names.yaml
   /v1/reference-organs:
-    $ref: paths/reference-organs.yaml
+    $ref: v1/paths/reference-organs.yaml
   /v1/reference-organ-scene:
-    $ref: paths/reference-organ-scene.yaml
+    $ref: v1/paths/reference-organ-scene.yaml
   /v1/scene:
-    $ref: paths/scene.yaml
+    $ref: v1/paths/scene.yaml
   /v1/technology-names:
-    $ref: paths/technology-names.yaml
+    $ref: v1/paths/technology-names.yaml
   /v1/tissue-blocks:
-    $ref: paths/tissue-blocks.yaml
+    $ref: v1/paths/tissue-blocks.yaml
   /v1/gtex/rui_locations.jsonld:
-    $ref: paths/gtex_rui_locations.jsonld.yaml
+    $ref: v1/paths/gtex_rui_locations.jsonld.yaml
