@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import qs from 'qs';
 import browserRoute from './routes/browser.js';
 import ctpopRoutes from './routes/ctpop.js';
@@ -13,8 +14,20 @@ app.set('query parser', function (str) {
   return qs.parse(str, { allowDots: true });
 });
 
+// http://expressjs.com/en/advanced/best-practice-security.html
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        'script-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com'],
+        'connect-src': ['*'],
+      },
+    },
+  })
+);
 app.use(cors());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.text({ type: 'text/*' }));
 app.use(express.json());
 app.set('json spaces', 2);
