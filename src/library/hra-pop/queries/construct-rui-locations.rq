@@ -13,11 +13,12 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX dcterms:<http://purl.org/dc/terms/>
-PREFIX ctpop: <https://purl.humanatlas.io/graph/ctpop>
+PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 
 CONSTRUCT {
-    ?tissueDonor rdf:type ccf:donor;
+    ?tissueDonor rdf:type ccf:Donor;
             ccf:sex ?sex;
         ccf:age ?age;
         ccf:bmi ?bmi;
@@ -26,7 +27,7 @@ CONSTRUCT {
             rdfs:label ?donorLabel;
             rdfs:comment ?donorDescription;
             ccf:url ?link .  	
-    ?sample rdf:type ccf:sample;
+    ?sample rdf:type ccf:Sample;
         ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?rui_location ;
         ccf:subdivided_into_sections ?sections ;
@@ -60,20 +61,20 @@ CONSTRUCT {
         ccf:placement_relative_to ?target ;
         ccf:placement_for ?rui_location .
 
-    ?sections rdf:type ccf:sample;
+    ?sections rdf:type ccf:Sample;
             ccf:sample_type "Tissue Section";
           ccf:section_number ?sectionNumber ;
             rdfs:label ?sectionLabel ;
             rdfs:comment ?sectionDescription ;
             ccf:url ?link .
-    ?dataset rdf:type ccf:dataset ;
+    ?dataset rdf:type ccf:Dataset ;
             ccf:dataset ?technology ;
             ccf:thumbnail ?thumbnail ;
             rdfs:comment ?datasetDescription ;
             rdfs:label ?datasetLabel .
 }
-FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-FROM ctpop:
+FROM CCF:
+FROM HRApop:
 WHERE
 {
     {
@@ -147,7 +148,7 @@ WHERE
             rdfs:label ?sectionLabel ;
             rdfs:comment ?sectionDescription ;
             ccf:url ?link .
-        ?tissueDonor rdf:type ?donorType ;
+        ?tissueDonor rdf:type ccf:Donor ;
             ccf:age ?age;
             ccf:bmi ?bmi;
     }

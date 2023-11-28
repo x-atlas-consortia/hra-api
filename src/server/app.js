@@ -3,7 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import qs from 'qs';
 import browserRoute from './routes/browser.js';
-import ctpopRoutes from './routes/ctpop.js';
+import hraPopRoutes from './routes/hra-pop.js';
 import euiRoute from './routes/eui.js';
 import sparqlProxy from './routes/sparql.js';
 import v1Routes from './routes/v1';
@@ -36,7 +36,7 @@ app.use('/', browserRoute);
 app.use('/', euiRoute);
 app.use('/v1', v1Routes);
 app.use('/v1/sparql', sparqlProxy);
-app.use('/ctpop', ctpopRoutes);
+app.use('/hra-pop', hraPopRoutes);
 
 // app.use(function (err, req, res, next) {
 //   const debugMode = req.app.get('env') === 'development';

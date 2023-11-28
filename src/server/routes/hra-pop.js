@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans } from '../../library/operations/ctpop.js';
+import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans } from '../../library/operations/hra-pop.js';
 
 const routes = Router()
   .get('/supported-organs', async function (_req, res) {

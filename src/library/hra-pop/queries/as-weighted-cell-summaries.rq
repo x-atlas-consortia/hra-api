@@ -1,13 +1,16 @@
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX ctpop: <https://purl.humanatlas.io/graph/ctpop>
+PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
 SELECT ?modality ?cell_id ?cell_label 
   (?predicted_cell_count as ?count)
   (?predicted_cell_count / ?total_cell_count as ?percentage)
+FROM CCF:
+FROM HRApop:
 WHERE {
-  GRAPH ctpop: {
+  {
     SELECT ?modality ?cell_id
         (SAMPLE(?cell_label) as ?cell_label)
         (SUM(?weighted_cell_count) as ?predicted_cell_count)
@@ -27,7 +30,7 @@ WHERE {
     GROUP BY ?modality ?cell_id
   }
   
-  GRAPH ctpop: {
+  {
     SELECT ?modality (SUM(?weighted_cell_count) as ?total_cell_count)
     WHERE {
       #{{AS_WEIGHT_VALUES}}

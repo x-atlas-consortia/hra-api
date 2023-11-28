@@ -24,8 +24,8 @@ security: []
 tags:
   - name: v1
     description: HRA-API v1.x Routes
-  - name: ctpop
-    description: HRApop (Paper Version) Routes
+  - name: hra-pop
+    description: HRApop Routes
 externalDocs:
   description: API Documentation
   url: https://github.com/x-atlas-consortia/hra-api#readme
@@ -404,12 +404,12 @@ paths:
                 type: object
         '404':
           description: Not found due to option being disabled
-  /ctpop/cell-summary-report:
+  /hra-pop/cell-summary-report:
     post:
-      summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop (Paper Version) showing relative anatomical structures, datasets, and rui locations.
+      summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.
       operationId: get-cell-summary-report
       tags:
-        - ctpop
+        - hra-pop
       requestBody:
         $ref: '#/components/requestBodies/GetCellSummaryReport'
       responses:
@@ -423,12 +423,12 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
-  /ctpop/rui-location-cell-summary:
+  /hra-pop/rui-location-cell-summary:
     post:
-      summary: Given a SpatialEntity already placed relative to a reference SpatialEntity, retrieve a predicted cell summary from HRApop (Paper Version)
+      summary: Given a SpatialEntity already placed relative to a reference SpatialEntity, retrieve a predicted cell summary from HRApop
       operationId: get-rui-location-cell-summary
       tags:
-        - ctpop
+        - hra-pop
       requestBody:
         $ref: '#/components/requestBodies/GetRuiLocationCellSummary'
       responses:
@@ -442,12 +442,12 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
-  /ctpop/supported-organs:
+  /hra-pop/supported-organs:
     get:
-      summary: Get all organs supported by HRApop (Paper Version)
+      summary: Get all organs supported by HRApop
       operationId: get-supported-organs
       tags:
-        - ctpop
+        - hra-pop
       responses:
         '200':
           description: Successful operation
@@ -459,12 +459,12 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
-  /ctpop/supported-reference-organs:
+  /hra-pop/supported-reference-organs:
     get:
-      summary: Get all reference organs supported by HRApop (Paper Version)
+      summary: Get all reference organs supported by HRApop
       operationId: get-supported-reference-organs
       tags:
-        - ctpop
+        - hra-pop
       responses:
         '200':
           description: Successful operation

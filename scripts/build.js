@@ -37,7 +37,7 @@ const serviceWorker = {
 
 const library = {
   ...sharedBuildOptions,
-  entryPoints: ['src/library/operations/v1.js', 'src/library/operations/ctpop.js'],
+  entryPoints: ['src/library/operations/v1.js', 'src/library/operations/hra-pop.js'],
   outdir: 'dist/operations',
   platform: 'node',
   packages: 'external',

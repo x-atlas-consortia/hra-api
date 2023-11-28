@@ -76,9 +76,9 @@
       }
     }
   ],
-  "@type": "ccf:donor",
+  "@type": "ccf:Donor",
   "samples": {
-    "@type": "ccf:sample",
+    "@type": "ccf:Sample",
     "rui_location": {
       "@type": "ccf:SpatialEntity",
       "placement": {
@@ -86,10 +86,13 @@
       }
     },
     "sections": {
-      "@type": "ccf:sample",
+      "@type": "ccf:Sample",
       "datasets": {
-        "@type": "ccf:dataset"
+        "@type": "ccf:Dataset"
       }
+    },
+    "datasets": {
+      "@type": "ccf:Dataset"
     }
   }
 }

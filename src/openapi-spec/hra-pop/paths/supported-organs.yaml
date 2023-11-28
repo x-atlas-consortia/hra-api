@@ -1,8 +1,8 @@
 get:
   summary: >-
-    Get all reference organs supported by HRApop (Paper Version)
-  operationId: get-supported-reference-organs
-  tags: [ctpop]
+    Get all organs supported by HRApop
+  operationId: get-supported-organs
+  tags: [hra-pop]
   responses:
     '200':
       description: Successful operation

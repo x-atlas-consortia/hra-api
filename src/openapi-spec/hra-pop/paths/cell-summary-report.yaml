@@ -1,11 +1,12 @@
 post:
   summary: >-
-    Given a SpatialEntity already placed relative to a reference SpatialEntity,
-    retrieve a predicted cell summary from HRApop (Paper Version)
-  operationId: get-rui-location-cell-summary
-  tags: [ctpop]
+    Given a cell summary in csv format, retrieve a predicted cell summary report
+    from HRApop showing relative anatomical structures, datasets,
+    and rui locations.
+  operationId: get-cell-summary-report
+  tags: [hra-pop]
   requestBody:
-    $ref: ../components/requestBodies/GetRuiLocationCellSummary.yaml
+    $ref: ../components/requestBodies/GetCellSummaryReport.yaml
   responses:
     '200':
       description: Successful operation

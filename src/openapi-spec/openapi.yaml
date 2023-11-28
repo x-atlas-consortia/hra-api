@@ -30,8 +30,8 @@ security: []
 tags:
   - name: v1
     description: HRA-API v1.x Routes
-  - name: ctpop
-    description: HRApop (Paper Version) Routes
+  - name: hra-pop
+    description: HRApop Routes
 
 x-preprocessor:
   description: |
@@ -84,11 +84,11 @@ paths:
   /v1/gtex/rui_locations.jsonld:
     $ref: v1/paths/gtex_rui_locations.jsonld.yaml
 
-  /ctpop/cell-summary-report:
-    $ref: ctpop/paths/cell-summary-report.yaml
-  /ctpop/rui-location-cell-summary:
-    $ref: ctpop/paths/rui-location-cell-summary.yaml
-  /ctpop/supported-organs:
-    $ref: ctpop/paths/supported-organs.yaml
-  /ctpop/supported-reference-organs:
-    $ref: ctpop/paths/supported-reference-organs.yaml
+  /hra-pop/cell-summary-report:
+    $ref: hra-pop/paths/cell-summary-report.yaml
+  /hra-pop/rui-location-cell-summary:
+    $ref: hra-pop/paths/rui-location-cell-summary.yaml
+  /hra-pop/supported-organs:
+    $ref: hra-pop/paths/supported-organs.yaml
+  /hra-pop/supported-reference-organs:
+    $ref: hra-pop/paths/supported-reference-organs.yaml

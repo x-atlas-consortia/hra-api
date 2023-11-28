@@ -1,8 +1,8 @@
-import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
-import { getRuiLocationsQuery } from './rui-locations-query.js';
 import { construct, select } from '../../shared/utils/sparql.js';
 import ruiLocationsFrame from '../../v1/frames/rui-locations.jsonld';
 import cellSummariesQuery from '../queries/select-cell-summaries.rq';
+import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
+import { getRuiLocationsQuery } from './rui-locations-query.js';
 
 function getCellSummariesQuery(cellWeights, organIri) {
   const values = Object.keys(cellWeights).reduce((vals, iri) => vals + ` (<${iri}>)`, '');
@@ -21,6 +21,7 @@ function getSourceSimilarities(cellWeights, summaries) {
     if (!lookup[id]) {
       lookup[id] = {
         cell_source: row.cell_source,
+        cell_source_type: row.cell_source_type,
         cell_source_label: row.cell_source_label,
         modality: row.modality,
         cellWeights: {},
@@ -44,15 +45,11 @@ export async function getSimilarCellSources(cellWeights, organIri, endpoint = 'h
   const summaries = await select(query, endpoint);
   const sources = getSourceSimilarities(cellWeights, summaries);
   const datasets = sources
-    .filter(
-      (row) =>
-        !row.cell_source.startsWith('http://purl.org/ccf/1.5/') &&
-        !row.cell_source.startsWith('http://purl.obolibrary.org/obo/')
-    )
+    .filter((row) => row.cell_source_type === 'http://purl.org/ccf/Dataset')
     .map((row) => row.cell_source)
     .slice(0, 10);
   const ruiLocations = sources
-    .filter((row) => row.cell_source.startsWith('http://purl.org/ccf/1.5/'))
+    .filter((row) => row.cell_source_type === 'http://purl.org/ccf/SpatialEntity')
     .map((row) => row.cell_source)
     .slice(0, 10);
   const ruiLocationQuery = getRuiLocationsQuery(datasets, ruiLocations);
