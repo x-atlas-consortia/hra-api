@@ -40,7 +40,7 @@ function routes(app) {
     .get('/api/v1/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
     .get('/api/v1/reference-organ-scene', forwardFilteredRequest(getReferenceOrganScene))
     .get('/api/v1/scene', forwardFilteredRequest(getScene))
-    .post('/get-spatial-placement', getSpatialPlacement())
+    .post('/api/v1/get-spatial-placement', getSpatialPlacement())
     .get('/api/v1/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
     .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences));
 }

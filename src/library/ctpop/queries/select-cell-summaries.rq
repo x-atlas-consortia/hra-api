@@ -35,5 +35,43 @@ WHERE {
   OPTIONAL {
     ?cell_source rdfs:label ?cell_source_label .
   }
+
+  #{{ORGAN_IRIs}}
+
+  # Anatomical Structure cell sources
+  {
+    [] ccf:representation_of ?cell_source ;
+      ccf:has_reference_organ ?refOrgan .
+  }
+  UNION 
+  # Dataset cell sources
+  {
+    {
+      ?sample ccf:generates_dataset ?cell_source .
+    } UNION {
+      [] ccf:subdivided_into_sections ?sample .
+      ?sample ccf:generates_dataset ?cell_source .
+    }
+    ?sample ccf:has_registration_location ?rui_location .
+
+    [] a ccf:SpatialPlacement ;
+      ccf:placement_for ?rui_location ;
+      ccf:placement_relative_to ?refOrgan .
+  }
+  UNION
+  # RUI Location cell sources
+  {
+    [] a ccf:SpatialPlacement ;
+      ccf:placement_for ?cell_source ;
+      ccf:placement_relative_to ?refOrgan .
+  }
+
+  {
+    ?refOrgan ccf:representation_of ?organ_iri .
+  }
+  UNION
+  {
+    ?refOrgan ccf:part_of* ?organ_iri
+  }
 }
 ORDER BY ?modality DESC(?similarity)

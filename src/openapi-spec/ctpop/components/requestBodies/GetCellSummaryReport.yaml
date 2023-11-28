@@ -3,34 +3,36 @@ description: >-
   Must provide a minimum of cell_id and percentage columns.
 required: true
 content:
-  text/csv:
+  application/json:
     schema:
-      type: string
-    example: |-
-      cell_id,cell_label,count,percentage
-      http://purl.obolibrary.org/obo/CL_0002131,regular ventricular cardiac myocyte,49273.09543,0.332091136333487
-      http://purl.obolibrary.org/obo/CL_0000669,pericyte,24587.941957,0.16571797475566
-      http://purl.obolibrary.org/obo/CL_0002144,capillary endothelial cell,20134.675085,0.13570381706955
-      http://purl.obolibrary.org/obo/CL_0000057,fibroblast,14931.592835,0.10063604871118
-      http://purl.obolibrary.org/obo/CL_0000003,native cell,11003.040295,0.0741583641701745
-      http://purl.obolibrary.org/obo/CL_1000413,endothelial cell of artery,6976.051286,0.0470172368606237
-      http://purl.obolibrary.org/obo/CL_0000192,smooth muscle cell,4553.526495,0.0306898881601113
-      http://purl.obolibrary.org/obo/CL_0000235,macrophage,3870.474525,0.0260862499491858
-      http://purl.obolibrary.org/obo/CL_0000115,endothelial cell,2564.473475,0.0172840553851487
-      http://purl.obolibrary.org/obo/CL_0002543,vein endothelial cell,1949.697045,0.0131405811128699
-      http://purl.obolibrary.org/obo/CL_0000623,natural killer cell,1175.948771,0.00792566734895222
-      http://purl.obolibrary.org/obo/CL_0002397,"CD14-positive, CD16-positive monocyte",939.527765,0.00633223548009011
-      http://purl.obolibrary.org/obo/CL_0000934,"CD4-positive, alpha-beta cytotoxic T cell",893.222763,0.00602014871959927
-      http://purl.obolibrary.org/obo/CL_0002319,neural cell,826.561462,0.00557086443970238
-      http://purl.obolibrary.org/obo/CL_0000906,"activated CD8-positive, alpha-beta T cell",603.03561,0.00406434341554534
-      http://purl.obolibrary.org/obo/CL_0000794,"CD8-positive, alpha-beta cytotoxic T cell",598.710396,0.00403519230945772
-      http://purl.obolibrary.org/obo/CL_1000309,epicardial adipocyte,576.599013,0.003886165863234
-      http://purl.obolibrary.org/obo/CL_0001054,CD14-positive monocyte,512.948563,0.00345717413693446
-      http://purl.obolibrary.org/obo/CL_0000097,mast cell,507.054682,0.00341745051856579
-      http://purl.obolibrary.org/obo/CL_0000576,monocyte,437.848941,0.00295101720503181
-      http://purl.obolibrary.org/obo/CL_0000814,mature NK T cell,428.888686,0.00289062681878106
-      http://purl.obolibrary.org/obo/CL_0000896,"activated CD4-positive, alpha-beta T cell",314.404462,0.00211902528434063
-      http://purl.obolibrary.org/obo/CL_0002138,endothelial cell of lymphatic vessel,253.169304,0.00170631215912871
-      http://purl.obolibrary.org/obo/CL_0000236,B cell,239.189975,0.00161209418454692
-      http://purl.obolibrary.org/obo/CL_0000451,dendritic cell,200.812358,0.0013534364662104
-      http://purl.obolibrary.org/obo/CL_0000077,mesothelial cell,19.717649,0.000132893141887896
+      type: object
+    example: 
+      organ: http://purl.obolibrary.org/obo/UBERON_0000948
+      csvString: |-
+        cell_id,cell_label,count,percentage
+        http://purl.obolibrary.org/obo/CL_0002131,regular ventricular cardiac myocyte,49273.09543,0.332091136333487
+        http://purl.obolibrary.org/obo/CL_0000669,pericyte,24587.941957,0.16571797475566
+        http://purl.obolibrary.org/obo/CL_0002144,capillary endothelial cell,20134.675085,0.13570381706955
+        http://purl.obolibrary.org/obo/CL_0000057,fibroblast,14931.592835,0.10063604871118
+        http://purl.obolibrary.org/obo/CL_0000003,native cell,11003.040295,0.0741583641701745
+        http://purl.obolibrary.org/obo/CL_1000413,endothelial cell of artery,6976.051286,0.0470172368606237
+        http://purl.obolibrary.org/obo/CL_0000192,smooth muscle cell,4553.526495,0.0306898881601113
+        http://purl.obolibrary.org/obo/CL_0000235,macrophage,3870.474525,0.0260862499491858
+        http://purl.obolibrary.org/obo/CL_0000115,endothelial cell,2564.473475,0.0172840553851487
+        http://purl.obolibrary.org/obo/CL_0002543,vein endothelial cell,1949.697045,0.0131405811128699
+        http://purl.obolibrary.org/obo/CL_0000623,natural killer cell,1175.948771,0.00792566734895222
+        http://purl.obolibrary.org/obo/CL_0002397,"CD14-positive, CD16-positive monocyte",939.527765,0.00633223548009011
+        http://purl.obolibrary.org/obo/CL_0000934,"CD4-positive, alpha-beta cytotoxic T cell",893.222763,0.00602014871959927
+        http://purl.obolibrary.org/obo/CL_0002319,neural cell,826.561462,0.00557086443970238
+        http://purl.obolibrary.org/obo/CL_0000906,"activated CD8-positive, alpha-beta T cell",603.03561,0.00406434341554534
+        http://purl.obolibrary.org/obo/CL_0000794,"CD8-positive, alpha-beta cytotoxic T cell",598.710396,0.00403519230945772
+        http://purl.obolibrary.org/obo/CL_1000309,epicardial adipocyte,576.599013,0.003886165863234
+        http://purl.obolibrary.org/obo/CL_0001054,CD14-positive monocyte,512.948563,0.00345717413693446
+        http://purl.obolibrary.org/obo/CL_0000097,mast cell,507.054682,0.00341745051856579
+        http://purl.obolibrary.org/obo/CL_0000576,monocyte,437.848941,0.00295101720503181
+        http://purl.obolibrary.org/obo/CL_0000814,mature NK T cell,428.888686,0.00289062681878106
+        http://purl.obolibrary.org/obo/CL_0000896,"activated CD4-positive, alpha-beta T cell",314.404462,0.00211902528434063
+        http://purl.obolibrary.org/obo/CL_0002138,endothelial cell of lymphatic vessel,253.169304,0.00170631215912871
+        http://purl.obolibrary.org/obo/CL_0000236,B cell,239.189975,0.00161209418454692
+        http://purl.obolibrary.org/obo/CL_0000451,dendritic cell,200.812358,0.0013534364662104
+        http://purl.obolibrary.org/obo/CL_0000077,mesothelial cell,19.717649,0.000132893141887896

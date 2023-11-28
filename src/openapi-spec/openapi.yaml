@@ -90,3 +90,5 @@ paths:
     $ref: ctpop/paths/rui-location-cell-summary.yaml
   /ctpop/supported-organs:
     $ref: ctpop/paths/supported-organs.yaml
+  /ctpop/supported-reference-organs:
+    $ref: ctpop/paths/supported-reference-organs.yaml

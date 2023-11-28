@@ -4,10 +4,15 @@ import { construct, select } from '../../shared/utils/sparql.js';
 import ruiLocationsFrame from '../../v1/frames/rui-locations.jsonld';
 import cellSummariesQuery from '../queries/select-cell-summaries.rq';
 
-function getCellSummariesQuery(cellWeights) {
+function getCellSummariesQuery(cellWeights, organIri) {
   const values = Object.keys(cellWeights).reduce((vals, iri) => vals + ` (<${iri}>)`, '');
   const valString = `VALUES (?cell_id) { ${values} }`;
-  return cellSummariesQuery.replaceAll('#{{VALUES}}', valString);
+  let query = cellSummariesQuery.replaceAll('#{{VALUES}}', valString);
+  if (organIri) {
+    const organValues = `VALUES (?organ_iri) { (<${organIri}>) }`;
+    query = query.replaceAll('#{{ORGAN_IRIs}}', organValues);
+  }
+  return query;
 }
 
 function getSourceSimilarities(cellWeights, summaries) {
@@ -34,8 +39,8 @@ function getSourceSimilarities(cellWeights, summaries) {
   return Object.values(sources).sort((a, b) => b.similarity - a.similarity);
 }
 
-export async function getSimilarCellSources(cellWeights, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const query = getCellSummariesQuery(cellWeights);
+export async function getSimilarCellSources(cellWeights, organIri, endpoint = 'https://lod.humanatlas.io/sparql') {
+  const query = getCellSummariesQuery(cellWeights, organIri);
   const summaries = await select(query, endpoint);
   const sources = getSourceSimilarities(cellWeights, summaries);
   const datasets = sources

@@ -28,7 +28,7 @@ export async function select(query, endpoint) {
   const resp = await fetchSparql(query, endpoint, 'text/csv');
   const text = await resp.text();
   const { data } = Papa.parse(text, { header: true, skipEmptyLines: true });
-  return data;
+  return data || [];
 }
 
 export async function construct(query, endpoint, frame = undefined) {

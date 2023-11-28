@@ -1,0 +1,14 @@
+title: A list of ID - Label pairs
+type: array
+items:
+- type: object
+  required:
+    - id
+    - label
+  properties:
+    id:
+      title: ID (iri) of the entity
+      type: iri
+    label:
+      title: Label of the entity
+      type: string
