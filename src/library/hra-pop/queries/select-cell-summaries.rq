@@ -10,17 +10,8 @@ SELECT ?cell_source_type ?cell_source ?cell_source_label ?modality ?cell_id ?per
 FROM CCF:
 FROM HRApop:
 WHERE {
-  {
-    SELECT DISTINCT ?cell_source
-    WHERE {
-      #{{VALUES}}
-      ?cell_source ccf:has_cell_summary [
-        ccf:has_cell_summary_row [
-          ccf:cell_id ?cell_id ;
-        ] ;
-      ] .
-    }
-  }
+  #{{VALUES}}
+
   {
     ?cell_source ccf:has_cell_summary [
         ccf:has_cell_summary_row [
@@ -86,7 +77,8 @@ WHERE {
   }
   UNION
   {
-    ?refOrgan ccf:part_of* ?organ_iri
+    ?refOrgan ccf:representation_of ?refOrganTerm .
+    ?refOrganTerm ccf:ccf_part_of* ?organ_iri .
   }
 }
 ORDER BY ?modality DESC(?similarity)
