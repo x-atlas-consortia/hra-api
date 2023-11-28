@@ -444,7 +444,7 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ctpop/supported-organs:
     get:
-      summary: Get all organs supported by HRApop (Paper Version). Returns an array of organ_iri, organ_label objects.
+      summary: Get all organs supported by HRApop (Paper Version)
       operationId: get-supported-organs
       tags:
         - ctpop
@@ -461,7 +461,7 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ctpop/supported-reference-organs:
     get:
-      summary: Get all reference organs supported by HRApop (Paper Version). Returns an array of organ_iri, organ_label objects.
+      summary: Get all reference organs supported by HRApop (Paper Version)
       operationId: get-supported-reference-organs
       tags:
         - ctpop

@@ -1,6 +1,6 @@
 get:
   summary: >-
-    Get all organs supported by HRApop (Paper Version). Returns an array of organ_iri, organ_label objects.
+    Get all organs supported by HRApop (Paper Version)
   operationId: get-supported-organs
   tags: [ctpop]
   responses:
