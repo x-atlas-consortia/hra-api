@@ -1,0 +1,16 @@
+get:
+  summary: >-
+    Get all tools supported by HRApop
+  operationId: get-supported-tools
+  tags: [hra-pop]
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/IdLabelListing.yaml
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

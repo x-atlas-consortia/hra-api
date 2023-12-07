@@ -6,11 +6,12 @@ PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
-SELECT ?cell_source_type ?cell_source ?cell_source_label ?modality ?cell_id ?percentage
+SELECT ?cell_source_type ?cell_source ?cell_source_label ?tool ?modality ?cell_id ?percentage
 FROM CCF:
 FROM HRApop:
 WHERE {
   #{{VALUES}}
+  #{{TOOLS}}
 
   {
     ?cell_source ccf:has_cell_summary [
@@ -23,6 +24,7 @@ WHERE {
   }
   OPTIONAL {
     ?cell_source ccf:has_cell_summary [
+      ccf:cell_annotation_method ?tool ;
       ccf:modality ?modality ;
     ] .
   }
@@ -81,4 +83,4 @@ WHERE {
     ?refOrganTerm ccf:ccf_part_of* ?organ_iri .
   }
 }
-ORDER BY ?modality DESC(?similarity)
+ORDER BY ?tool ?modality DESC(?similarity)

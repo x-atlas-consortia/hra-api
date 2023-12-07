@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans } from '../../library/operations/hra-pop.js';
+import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans, getSupportedTools } from '../../library/operations/hra-pop.js';
 
 const routes = Router()
   .get('/supported-organs', async function (_req, res) {
@@ -9,6 +9,10 @@ const routes = Router()
   .get('/supported-reference-organs', async function (_req, res) {
     const organs = await getSupportedReferenceOrgans();
     res.json(organs);
+  })
+  .get('/supported-tools', async function (_req, res) {
+    const tools = await getSupportedTools();
+    res.json(tools);
   })
   .post('/rui-location-cell-summary', async function (req, res) {
     const ruiLocation = req.body;

@@ -4,7 +4,7 @@ import cellSummariesQuery from '../queries/select-cell-summaries.rq';
 import { getCellDistributionSimilarity } from './cell-summary-similarity.js';
 import { getRuiLocationsQuery } from './rui-locations-query.js';
 
-function getCellSummariesQuery(cellWeights, organIri) {
+function getCellSummariesQuery(cellWeights, organIri, tool) {
   const values = Object.keys(cellWeights).reduce((vals, iri) => vals + ` (<${iri}>)`, '');
   const valString = `VALUES (?cell_id) { ${values} }`;
   let query = cellSummariesQuery.replaceAll('#{{VALUES}}', valString);
@@ -12,17 +12,22 @@ function getCellSummariesQuery(cellWeights, organIri) {
     const organValues = `VALUES (?organ_iri) { (<${organIri}>) }`;
     query = query.replaceAll('#{{ORGAN_IRIs}}', organValues);
   }
+  if (tool) {
+    const toolValues = `VALUES (?tool) { ("${tool}") }`;
+    query = query.replaceAll('#{{TOOLS}}', toolValues);
+  }
   return query;
 }
 
 function getSourceSimilarities(cellWeights, summaries) {
   const sources = summaries.reduce((lookup, row) => {
-    const id = `${row.cell_source}$${row.modality}`;
+    const id = `${row.cell_source}$${row.tool}$${row.modality}`;
     if (!lookup[id]) {
       lookup[id] = {
         cell_source: row.cell_source,
         cell_source_type: row.cell_source_type,
         cell_source_label: row.cell_source_label,
+        tool: row.tool,
         modality: row.modality,
         cellWeights: {},
       };
@@ -40,8 +45,8 @@ function getSourceSimilarities(cellWeights, summaries) {
   return Object.values(sources).sort((a, b) => b.similarity - a.similarity);
 }
 
-export async function getSimilarCellSources(cellWeights, organIri, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const query = getCellSummariesQuery(cellWeights, organIri);
+export async function getSimilarCellSources(cellWeights, organIri, tool, endpoint = 'https://lod.humanatlas.io/sparql') {
+  const query = getCellSummariesQuery(cellWeights, organIri, tool);
   const summaries = await select(query, endpoint);
   const sources = getSourceSimilarities(cellWeights, summaries);
   const datasets = sources

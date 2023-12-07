@@ -92,3 +92,5 @@ paths:
     $ref: hra-pop/paths/supported-organs.yaml
   /hra-pop/supported-reference-organs:
     $ref: hra-pop/paths/supported-reference-organs.yaml
+  /hra-pop/supported-tools:
+    $ref: hra-pop/paths/supported-tools.yaml

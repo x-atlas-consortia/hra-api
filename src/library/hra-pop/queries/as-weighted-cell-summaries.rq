@@ -4,19 +4,20 @@ PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
-SELECT ?modality ?cell_id ?cell_label 
+SELECT ?tool ?modality ?cell_id ?cell_label 
   (?predicted_cell_count as ?count)
   (?predicted_cell_count / ?total_cell_count as ?percentage)
 FROM CCF:
 FROM HRApop:
 WHERE {
   {
-    SELECT ?modality ?cell_id
+    SELECT ?tool ?modality ?cell_id
         (SAMPLE(?cell_label) as ?cell_label)
         (SUM(?weighted_cell_count) as ?predicted_cell_count)
     WHERE {
       #{{AS_WEIGHT_VALUES}}
       ?as ccf:has_cell_summary [
+        ccf:cell_annotation_method ?tool ;
         ccf:modality ?modality ;
         ccf:has_cell_summary_row [
           ccf:cell_id ?cell_id ;
@@ -27,14 +28,15 @@ WHERE {
 
       BIND(xsd:decimal(?cell_count) * xsd:decimal(?weight) as ?weighted_cell_count)
     }
-    GROUP BY ?modality ?cell_id
+    GROUP BY ?tool ?modality ?cell_id
   }
   
   {
-    SELECT ?modality (SUM(?weighted_cell_count) as ?total_cell_count)
+    SELECT ?tool ?modality (SUM(?weighted_cell_count) as ?total_cell_count)
     WHERE {
       #{{AS_WEIGHT_VALUES}}
       ?as ccf:has_cell_summary [
+        ccf:cell_annotation_method ?tool ;
         ccf:modality ?modality ;
         ccf:has_cell_summary_row [
           ccf:cell_count ?cell_count ;
@@ -42,7 +44,7 @@ WHERE {
       ] .
       BIND(xsd:decimal(?cell_count) * xsd:decimal(?weight) as ?weighted_cell_count)
     }
-    GROUP BY ?modality
+    GROUP BY ?tool ?modality
   }
 }
 ORDER BY DESC(?predicted_cell_count)

@@ -1,4 +1,4 @@
-import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans } from '../../library/operations/hra-pop.js';
+import { getCellSummary, getSimilarCellSourcesReport, getSupportedOrgans, getSupportedReferenceOrgans, getSupportedTools } from '../../library/operations/hra-pop.js';
 
 function routes(app) {
   return app
@@ -9,6 +9,10 @@ function routes(app) {
     .get('/api/hra-pop/supported-reference-organs', async function (_req, res) {
       const organs = await getSupportedReferenceOrgans();
       res.json(organs);
+    })
+    .get('/supported-tools', async function (_req, res) {
+      const tools = await getSupportedTools();
+      res.json(tools);
     })
     .post('/api/hra-pop/rui-location-cell-summary', async function (req, res) {
       const ruiLocation = await req.json();
