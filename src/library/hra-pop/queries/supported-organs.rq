@@ -24,7 +24,7 @@ WHERE {
 
   ?refOrganTerm ccf:ccf_part_of* ?organ_iri
 
-  # Remove redundant 'respiratory system'
-  FILTER(?organ_iri != UBERON:0001004)
+  # Remove redundant 'respiratory system' and 'anatomical systems'
+  FILTER(?organ_iri != UBERON:0001004 && ?organ_iri != UBERON:0000467)
 }
 ORDER BY ?organ_label
