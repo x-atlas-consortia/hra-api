@@ -47,4 +47,4 @@ WHERE {
     GROUP BY ?tool ?modality
   }
 }
-ORDER BY DESC(?predicted_cell_count)
+ORDER BY ?tool ?modality (?predicted_cell_count)
