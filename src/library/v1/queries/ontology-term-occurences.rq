@@ -29,18 +29,25 @@ FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
 WHERE {
   SELECT ?annotation (COUNT(?annotation) as ?count)
   WHERE {
+    {
+      ?sample ccf:comes_from ?tissueDonor .
+      ?sample ccf:has_registration_location ?rui_location .
+      ?sample ccf:generates_dataset ?allTech .
+    } UNION {
+      ?block ccf:comes_from ?tissueDonor .
+      ?block ccf:subdivided_into_sections ?sample .
+      ?block ccf:has_registration_location ?rui_location .
+      ?sample ccf:generates_dataset ?allTech .
+    }
 
-    ?sample ccf:has_registration_location ?rui_location ;
-            ccf:generates_dataset ?allTech ;
-          ccf:comes_from ?tissueDonor .  
     ?rui_location a ccf:SpatialEntity ;
-                  ccf:collides_with ?annotation .
+      ccf:collides_with ?annotation .
     ?cell_type ccf:ccf_located_in ?annotation .
 
     ?tissueDonor ccf:sex ?sex ;
-                ccf:age ?age ;
-                ccf:bmi ?bmi ;
-                ccf:tissue_provider_name ?tmc .
+      ccf:age ?age ;
+      ccf:bmi ?bmi ;
+      ccf:tissue_provider_name ?tmc .
     
     ?allTech ccf:technology ?technology .
 

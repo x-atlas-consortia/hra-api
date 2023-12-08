@@ -13,5 +13,7 @@ WHERE {
   [] ccf:has_cell_summary [
     ccf:cell_annotation_method ?tool ;
   ] .
+
+  FILTER (?tool != 'spatial')
 }
 ORDER BY ?tool

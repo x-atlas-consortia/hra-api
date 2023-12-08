@@ -47,12 +47,13 @@ WHERE {
   # Dataset cell sources
   {
     {
+      ?sample ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?cell_source .
     } UNION {
-      [] ccf:subdivided_into_sections ?sample .
+      ?block ccf:subdivided_into_sections ?sample .
+      ?block ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?cell_source .
     }
-    ?sample ccf:has_registration_location ?rui_location .
 
     [] a ccf:SpatialPlacement ;
       ccf:placement_for ?rui_location ;
