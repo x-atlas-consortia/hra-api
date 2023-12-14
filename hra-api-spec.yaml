@@ -476,6 +476,23 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
+  /hra-pop/supported-tools:
+    get:
+      summary: Get all tools supported by HRApop
+      operationId: get-supported-tools
+      tags:
+        - hra-pop
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdLabelListing'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+        '500':
+          $ref: '#/components/responses/ErrorMessage'
 components:
   parameters:
     Token:
