@@ -32,27 +32,49 @@ FROM DSGraphs:
 WHERE {
   SELECT DISTINCT ?cell_type (COUNT(?cell_type) AS ?count)
   WHERE {
+    ?block ccf:comes_from ?donor .
+    ?block ccf:has_registration_location ?rui_location .
     {
-      ?sample ccf:comes_from ?tissueDonor .
-      ?sample ccf:has_registration_location ?rui_location .
-      ?sample ccf:generates_dataset ?dataset .
+      ?block ccf:generates_dataset ?dataset .
     }
     UNION
     {
-      ?block ccf:comes_from ?tissueDonor .
-      ?block ccf:subdivided_into_sections ?sample .
-      ?block ccf:has_registration_location ?rui_location .
-      ?sample ccf:generates_dataset ?dataset .
+      ?block ccf:subdivided_into_sections ?section .
+      ?section ccf:generates_dataset ?dataset .
     }
-    ?rui_location a ccf:SpatialEntity ;
-                  ccf:collides_with ?annotation .
-    ?cell_type ccf:ccf_located_in ?annotation .
-    ?tissueDonor ccf:sex ?sex ;
-                 ccf:age ?age ;
-                 ccf:bmi ?bmi ;
-                 ccf:tissue_provider_name ?tmc .
-    ?dataset ccf:technology ?technology .
-      #{{FILTER}}
+    OPTIONAL {
+      ?donor ccf:consortium_name ?consortium .
+    }
+    OPTIONAL {
+      ?donor ccf:tissue_provider_name ?provider .
+    }
+    OPTIONAL {
+      ?donor ccf:age ?age .
+    }
+    OPTIONAL {
+      ?donor ccf:sex ?sex .
+    }
+    OPTIONAL {
+      ?donor ccf:bmi ?bmi .
+    }
+    OPTIONAL {
+      ?donor ccf:race ?race .
+    }
+    OPTIONAL {
+      ?dataset ccf:technology ?technology .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?biomarker ccf:biomarker_located_in ?anatomical_structure .
+    }
+#{{FILTER}}
   }
   GROUP BY ?cell_type
   ORDER BY DESC(?count)

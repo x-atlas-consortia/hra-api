@@ -3,11 +3,11 @@
 #  The query counts the occurrences of annotations and groups them by annotation type.
 #  
 #  * Query Structure:
-#  The query uses the CONSTRUCT statement to build a result set with the ?annotation and ?count variables.
+#  The query uses the CONSTRUCT statement to build a result set with the ?anatomical_structure and ?count variables.
 #  It retrieves data from multiple sources, including the CCF ontology and experimental data.
 #  The results are grouped by annotation and ordered in descending order of count.
 #  
-#  @param ?annotation - The annotation being counted.
+#  @param ?anatomical_structure - The annotation being counted.
 #  @param ?count - The count of occurrences for each annotation.
 #  @param <https://purl.org/ccf/releases/2.2.1/ccf.owl> - The CCF ontology.
 #  @param <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> - Experimental data source.
@@ -21,13 +21,69 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX has_characterizing_biomarker_set: <http://purl.obolibrary.org/obo/RO_0015004>
 
-SELECT *
+CONSTRUCT {
+  ?biomarker ccf:count ?count .
+}
 FROM CCF:
 FROM DSGraphs:
 WHERE {
-  ?sample ccf:comes_from ?tissueDonor ; #ccf:has_registration_location ?rui_location ;
-            #ccf:generates_dataset ?allTech ;
-          ccf:ccf_biomarker_type ?biomarkerType .
-    #{{FILTER}}
+  SELECT ?biomarker (COUNT(?biomarker) AS ?count)
+  WHERE {
+    ?block ccf:comes_from ?donor .
+    ?block ccf:has_registration_location ?rui_location .
+    {
+      ?block ccf:generates_dataset ?dataset .
+    }
+    UNION
+    {
+      ?block ccf:subdivided_into_sections ?section .
+      ?section ccf:generates_dataset ?dataset .
+    }
+    OPTIONAL {
+      ?donor ccf:consortium_name ?consortium .
+    }
+    OPTIONAL {
+      ?donor ccf:tissue_provider_name ?provider .
+    }
+    OPTIONAL {
+      ?donor ccf:age ?age .
+    }
+    OPTIONAL {
+      ?donor ccf:sex ?sex .
+    }
+    OPTIONAL {
+      ?donor ccf:bmi ?bmi .
+    }
+    OPTIONAL {
+      ?donor ccf:race ?race .
+    }
+    OPTIONAL {
+      ?dataset ccf:technology ?technology .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?biomarker ccf:ccf_bm_located_in ?anatomical_structure .
+      # ?ct ccf:ccf_located_in ?anatomical_structure .
+      # ?ct rdfs:subClassOf [
+      #   owl:onProperty has_characterizing_biomarker_set: ;
+      #   owl:someValuesFrom [ owl:intersectionOf ?bn3 ]] .
+      # ?bn3 rdf:rest*/rdf:first [
+      #   owl:onProperty ccf:has_marker_component ;
+      #   owl:someValuesFrom ?biomarker
+      # ] .
+    }
+#{{FILTER}}
+  }
+  GROUP BY ?biomarker
+  ORDER BY DESC(?count)
 }

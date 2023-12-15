@@ -11,6 +11,7 @@ const FILTER_DEFAULTS = {
   technologies: [],
   ontologyTerms: [],
   cellTypeTerms: [],
+  biomarkerTerms: [],
   spatialSearches: [],
   consortiums: [],
 };
@@ -224,6 +225,11 @@ function processParameter(result, key, value) {
     case 'celltypeterms':
     case 'cell-type-terms':
       setIfDefined(result, 'cellTypeTerms', parseArray(value, 'http://purl.obolibrary.org/obo/CL_0000000'));
+      break;
+
+    case 'biomarkerterms':
+    case 'biomarker-terms':
+      setIfDefined(result, 'biomarkerTerms', parseArray(value, 'http://purl.org/ccf/biomarker'));
       break;
 
     case 'consortiums':

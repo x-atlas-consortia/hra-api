@@ -18,16 +18,16 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?tissueDonor rdf:type ?donorType ;
-               ccf:tissue_provider_name ?tmc ;
-               rdfs:label ?donorLabel ;
-               rdfs:comment ?donorDescription ;
-               ccf:url ?link .
+  ?donor rdf:type ?donorType ;
+         ccf:tissue_provider_name ?provider ;
+         rdfs:label ?donorLabel ;
+         rdfs:comment ?donorDescription ;
+         ccf:url ?link .
   ?sample rdf:type ccf:Sample .
   ?sample ccf:sample_type ?sampleType ;
           rdfs:comment ?description ;
           rdfs:label ?label ;
-          ccf:comes_from ?tissueDonor ;
+          ccf:comes_from ?donor ;
           ccf:generates_dataset ?dataset ;
           ccf:subdivided_into_sections ?sections ;
           ccf:section_count ?sectionCount ;
@@ -53,23 +53,23 @@ WHERE {
   ?sample ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?spatialEntityId ;
           ccf:generates_dataset ?dataset ;
-          ccf:comes_from ?tissueDonor ;
+          ccf:comes_from ?donor ;
           rdfs:comment ?description ;
           ccf:section_count ?sectionCount ;
           ccf:section_size ?sectionSize ;
           ccf:section_size_unit ?sectionUnit ;
           rdfs:label ?label .
   ?spatialEntityId a ccf:SpatialEntity ;
-                   ccf:collides_with ?annotation .
-  ?cell_type ccf:ccf_located_in ?annotation .
-  ?tissueDonor rdf:type ccf:Donor ;
-               ccf:tissue_provider_name ?tmc ;
-               rdfs:label ?donorLabel ;
-               rdfs:comment ?donorDescription ;
-               ccf:url ?link ;
-               ccf:sex ?sex ;
-               ccf:age ?age ;
-               ccf:bmi ?bmi .
+                   ccf:collides_with ?anatomical_structure .
+  ?cell_type ccf:ccf_located_in ?anatomical_structure .
+  ?donor rdf:type ccf:Donor ;
+         ccf:tissue_provider_name ?provider ;
+         rdfs:label ?donorLabel ;
+         rdfs:comment ?donorDescription ;
+         ccf:url ?link ;
+         ccf:sex ?sex ;
+         ccf:age ?age ;
+         ccf:bmi ?bmi .
   ?dataset ccf:technology ?technology ;
            ccf:thumbnail ?thumbnail ;
            rdfs:comment ?datasetDescription ;
@@ -82,6 +82,6 @@ WHERE {
               rdfs:comment ?sectionDescription ;
               ccf:url ?link .
   }
+  #{{FILTER}}
   FILTER (?sampleType = "Tissue Block")
 }
-  #{{FILTER}}

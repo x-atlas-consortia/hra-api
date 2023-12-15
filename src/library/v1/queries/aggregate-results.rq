@@ -17,46 +17,73 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
-SELECT ?label ?count
+CONSTRUCT {
+  [] a ccf:AggregateResult ;
+     rdfs:label "Tissue Data Providers" ;
+     ccf:count ?provider_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Donors" ;
+     ccf:count ?donor_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Tissue Blocks" ;
+     ccf:count ?block_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Tissue Sections" ;
+     ccf:count ?section_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Tissue Datasets" ;
+     ccf:count ?dataset_count .
+}
 FROM DSGraphs:
 WHERE {
   {
-    SELECT ("Tissue Donor" AS ?label) (COUNT(DISTINCT ?tissueDonor) AS ?count)
+    SELECT (COUNT(DISTINCT ?donor) AS ?donor_count) (COUNT(DISTINCT ?provider) AS ?provider_count)
+  (COUNT(DISTINCT ?block) AS ?block_count) (COUNT(DISTINCT ?section) AS ?section_count)
+  (COUNT(DISTINCT ?dataset) AS ?dataset_count)
     WHERE {
-      ?sample ccf:comes_from ?tissueDonor .
-    }
-  }
-  UNION
-  {
-    SELECT ("Tissue Providers" AS ?label) (COUNT(DISTINCT ?providerName) AS ?count)
-    WHERE {
-      ?sample ccf:comes_from ?tissueDonor .
-      ?tissueDonor ccf:tissue_provider_name ?providerName .
-    }
-  }
-  UNION
-  {
-    SELECT ("Tissue Blocks" AS ?label) (COUNT(DISTINCT ?sample) AS ?count)
-    WHERE {
-      ?sample rdf:type ccf:Sample .
-      ?sample ccf:sample_type ?sampleType .
-      FILTER (?sampleType = "Tissue Block")
-    }
-  }
-  UNION
-  {
-    SELECT ("Tissue Sections" AS ?label) (COUNT(DISTINCT ?sections) AS ?count)
-    WHERE {
-      ?sections ccf:sample_type ?sectionType .
-      FILTER (?sectionType = "Tissue Section")
-    }
-  }
-  UNION
-  {
-    SELECT ("Dataset" AS ?label) (COUNT(DISTINCT ?dataset) AS ?count)
-    WHERE {
-      ?sample rdf:type ccf:Sample .
-      ?sample ccf:generates_dataset ?dataset .
+      ?block ccf:comes_from ?donor .
+      ?block ccf:has_registration_location ?rui_location .
+      {
+        ?block ccf:generates_dataset ?dataset .
+      }
+      UNION
+      {
+        ?block ccf:subdivided_into_sections ?section .
+        ?section ccf:generates_dataset ?dataset .
+      }
+      OPTIONAL {
+        ?donor ccf:consortium_name ?consortium .
+      }
+      OPTIONAL {
+        ?donor ccf:tissue_provider_name ?provider .
+      }
+      OPTIONAL {
+        ?donor ccf:age ?age .
+      }
+      OPTIONAL {
+        ?donor ccf:sex ?sex .
+      }
+      OPTIONAL {
+        ?donor ccf:bmi ?bmi .
+      }
+      OPTIONAL {
+        ?donor ccf:race ?race .
+      }
+      OPTIONAL {
+        ?dataset ccf:technology ?technology .
+      }
+      OPTIONAL {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+      }
+      OPTIONAL {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+        ?cell_type ccf:ccf_located_in ?anatomical_structure .
+      }
+      OPTIONAL {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+        ?biomarker ccf:biomarker_located_in ?anatomical_structure .
+      }
+#{{FILTER}}
     }
   }
 }

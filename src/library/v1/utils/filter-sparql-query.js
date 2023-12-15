@@ -1,5 +1,5 @@
 export function filterSparqlQuery(sparqlQuery, filter = {}) {
-  const { ontologyTerms, cellTypeTerms, minAge, maxAge, minBMI, maxBMI, sex, technology, tmc, consortiums } = filter;
+  const { ontologyTerms, cellTypeTerms, biomarkerTerms, minAge, maxAge, minBMI, maxBMI, sex, technology, tmc, consortiums } = filter;
   let sparqlFilter = '';
   if (sex != undefined) {
     sparqlFilter += `
@@ -41,7 +41,7 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(' ');
     sparqlFilter += `
-        FILTER(?annotation IN (${terms}))
+        FILTER(?anatomical_structure IN (${terms}))
       `;
   }
   if (cellTypeTerms?.length > 0) {
@@ -50,10 +50,16 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
         FILTER(?cell_type IN (${terms}))
       `;
   }
+  if (biomarkerTerms?.length > 0) {
+    const terms = biomarkerTerms.map((s) => `<${s}>`).join(' ');
+    sparqlFilter += `
+        FILTER(?biomarker IN (${terms}))
+      `;
+  }
   if (tmc?.length > 0) {
     const providers = tmc.map((s) => `"${s}"`).join(',');
     sparqlFilter += `
-        FILTER(?tmc IN (${providers}))
+        FILTER(?provider IN (${providers}))
       `;
   }
   if (technology?.length > 0) {
@@ -65,7 +71,7 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
   if (consortiums?.length > 0) {
     const terms = consortiums.map((s) => `"${s}"`).join(' ');
     sparqlFilter += `
-        FILTER(?consortiums IN (${terms}))
+        FILTER(?consortium IN (${terms}))
       `;
   }
   return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);

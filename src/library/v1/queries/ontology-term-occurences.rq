@@ -3,11 +3,11 @@
 #  The query counts the occurrences of annotations and groups them by annotation type.
 #  
 #  * Query Structure:
-#  The query uses the CONSTRUCT statement to build a result set with the ?annotation and ?count variables.
+#  The query uses the CONSTRUCT statement to build a result set with the ?anatomical_structure and ?count variables.
 #  It retrieves data from multiple sources, including the CCF ontology and experimental data.
 #  The results are grouped by annotation and ordered in descending order of count.
 #  
-#  @param ?annotation - The annotation being counted.
+#  @param ?anatomical_structure - The annotation being counted.
 #  @param ?count - The count of occurrences for each annotation.
 #  @param <https://purl.org/ccf/releases/2.2.1/ccf.owl> - The CCF ontology.
 #  @param <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> - Experimental data source.
@@ -23,35 +23,57 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?annotation ccf:count ?count .
+  ?anatomical_structure ccf:count ?count .
 }
 FROM CCF:
 FROM DSGraphs:
 WHERE {
-  SELECT ?annotation (COUNT(?annotation) AS ?count)
+  SELECT ?anatomical_structure (COUNT(?anatomical_structure) AS ?count)
   WHERE {
+    ?block ccf:comes_from ?donor .
+    ?block ccf:has_registration_location ?rui_location .
     {
-      ?sample ccf:comes_from ?tissueDonor .
-      ?sample ccf:has_registration_location ?rui_location .
-      ?sample ccf:generates_dataset ?allTech .
+      ?block ccf:generates_dataset ?dataset .
     }
     UNION
     {
-      ?block ccf:comes_from ?tissueDonor .
-      ?block ccf:subdivided_into_sections ?sample .
-      ?block ccf:has_registration_location ?rui_location .
-      ?sample ccf:generates_dataset ?allTech .
+      ?block ccf:subdivided_into_sections ?section .
+      ?section ccf:generates_dataset ?dataset .
     }
-    ?rui_location a ccf:SpatialEntity ;
-                  ccf:collides_with ?annotation .
-    ?cell_type ccf:ccf_located_in ?annotation .
-    ?tissueDonor ccf:sex ?sex ;
-                 ccf:age ?age ;
-                 ccf:bmi ?bmi ;
-                 ccf:tissue_provider_name ?tmc .
-    ?allTech ccf:technology ?technology .
-    #{{FILTER}}
+    OPTIONAL {
+      ?donor ccf:consortium_name ?consortium .
+    }
+    OPTIONAL {
+      ?donor ccf:tissue_provider_name ?provider .
+    }
+    OPTIONAL {
+      ?donor ccf:age ?age .
+    }
+    OPTIONAL {
+      ?donor ccf:sex ?sex .
+    }
+    OPTIONAL {
+      ?donor ccf:bmi ?bmi .
+    }
+    OPTIONAL {
+      ?donor ccf:race ?race .
+    }
+    OPTIONAL {
+      ?dataset ccf:technology ?technology .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    }
+    OPTIONAL {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?biomarker ccf:biomarker_located_in ?anatomical_structure .
+    }
+#{{FILTER}}
   }
-  GROUP BY ?annotation
+  GROUP BY ?anatomical_structure
   ORDER BY DESC(?count)
 }

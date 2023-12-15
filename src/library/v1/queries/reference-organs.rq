@@ -18,7 +18,7 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?refOrgan rdf:type ccf:spatial_entity ;
+  ?refOrgan rdf:type ccf:SpatialEntity ;
             ccf:has_reference_organ ?refOrgan ;
             ccf:representation_of ?representation_of ;
             dcterms:creator ?creator ;
@@ -33,30 +33,14 @@ CONSTRUCT {
             ccf:sex ?sex ;
             ccf:rui_rank ?rui_rank ;
             ccf:has_object_reference ?object .
-  ?object rdf:type ccf:spatial_object_reference ;
+  ?object rdf:type ccf:SpatialObjectReference ;
           ccf:file_url ?file ;
           ccf:file_format ?file_format ;
           ccf:file_subpath ?file_subpath .
 }
 FROM CCF:
-FROM DSGraphs:
 WHERE {
-  {
-    ?sample ccf:comes_from ?tissueDonor .
-    ?sample ccf:has_registration_location ?rui_location .
-    ?sample ccf:generates_dataset ?allTech .
-  }
-  UNION
-  {
-    ?block ccf:comes_from ?tissueDonor .
-    ?block ccf:subdivided_into_sections ?sample .
-    ?block ccf:has_registration_location ?rui_location .
-    ?sample ccf:generates_dataset ?allTech .
-  }
-  ?rui_location a ccf:SpatialEntity ;
-                ccf:collides_with ?annotation .
-  ?cell_type ccf:ccf_located_in ?annotation .
-  ?refOrgan rdf:type ccf:spatial_entity ;
+  ?refOrgan rdf:type ccf:SpatialEntity ;
             ccf:has_reference_organ ?refOrgan ;
             ccf:representation_of ?representation_of ;
             dcterms:creator ?creator ;
@@ -72,14 +56,8 @@ WHERE {
             ccf:organ_owner_sex ?sex ;
             ccf:rui_rank ?rui_rank ;
             ccf:has_object_reference ?object .
-  ?object rdf:type ccf:spatial_object_reference ;
+  ?object rdf:type ccf:SpatialObjectReference ;
           ccf:file_url ?file ;
           ccf:file_format ?file_format ;
           ccf:file_subpath ?file_subpath .
-  ?tissueDonor ccf:sex ?sex ;
-               ccf:age ?age ;
-               ccf:bmi ?bmi ;
-               ccf:tissue_provider_name ?tmc .
-  ?allTech ccf:technology ?technology .
-  #{{FILTER}}
 }
