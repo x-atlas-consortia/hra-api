@@ -1,5 +1,5 @@
 import query from '../queries/ontology-term-occurences.rq';
-import frame from '../frames/ontology-term-occurences.jsonld';
+import frame from '../frames/basic.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**

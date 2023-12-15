@@ -1,5 +1,5 @@
 import query from '../queries/ontology-tree-model.rq';
-import frame from '../frames/ontology-tree-model.jsonld';
+import frame from '../frames/tree-model.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**

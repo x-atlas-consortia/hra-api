@@ -1,5 +1,5 @@
 import query from '../queries/biomarker-tree-model.rq';
-import frame from '../frames/biomarker-tree-model.jsonld';
+import frame from '../frames/tree-model.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**

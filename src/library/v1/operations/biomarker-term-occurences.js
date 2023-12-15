@@ -1,5 +1,5 @@
 import query from '../queries/biomarker-term-occurences.rq';
-import frame from '../frames/biomarker-term-occurences.jsonld';
+import frame from '../frames/basic.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**

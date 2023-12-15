@@ -1,5 +1,6 @@
 import query from '../queries/aggregate-results.rq';
-import { executeFilteredQuery } from '../utils/execute-sparql.js';
+import frame from '../frames/basic.jsonld';
+import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**
  * Retrieves aggregate results
@@ -8,5 +9,7 @@ import { executeFilteredQuery } from '../utils/execute-sparql.js';
  * @returns {Promise<Array>} - A promise that resolves to an array of aggregate results
  */
 export async function getAggregateResults(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return executeFilteredQuery(query, filter, endpoint);
+  const results = await executeFilteredConstructQuery(query, filter, frame, endpoint);
+  const reformatted = results['@graph'].map(({label, count}) => ({label, count}));
+  return reformatted;
 }

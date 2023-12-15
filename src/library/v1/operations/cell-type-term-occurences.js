@@ -1,5 +1,5 @@
 import query from '../queries/cell-type-term-occurences.rq';
-import frame from '../frames/cell-type-term-occurences.jsonld';
+import frame from '../frames/basic.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 
 /**
