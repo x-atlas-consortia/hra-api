@@ -7,12 +7,15 @@
 #  
 #  * @param ?providerName - The distinct tissue provider names.
 
-
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 SELECT DISTINCT ?providerName
+FROM CCF:
+FROM DSGraphs:
 WHERE {
-    ?sample ccf:comes_from ?tissueDonor .
-    ?tissueDonor ccf:tissue_provider_name ?providerName .
+  ?sample ccf:comes_from ?tissueDonor .
+  ?tissueDonor ccf:tissue_provider_name ?providerName .
 }

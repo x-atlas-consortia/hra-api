@@ -26,7 +26,6 @@
 #     cell: rdfs:label ?cellLabel .
 #     cell: rdf:type ccf:OntologyTreeNode .
 #     cell: ccf:is_root_for "AS" .
-
 #     ?child rdf:type ccf:OntologyTreeNode .
 #     ?child ccf:parent ?parent .
 #     ?child rdfs:label ?label .
@@ -39,31 +38,32 @@
 #     ?child rdfs:subClassOf ?parent .
 #     ?child rdfs:label ?label .
 #     ?child ccf:ccf_pref_label ?synonymLabel .
-
 #     FILTER(!isBLANK(?child) && !isBLANK(?parent))
 # }
-
 # prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 # prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
 # prefix ccf:<http://purl.org/ccf/>
 # prefix biomarker:<http://purl.org/ccf/ccf_biomarkers>
-
 # SELECT *
 # where {
 #   biomarker: ccf:ccf_biomarker_type ?child .
 #   #biomarker: rdfs:label ?biomarkerLabel .
 #   #?child rdfs:subClassOf ?parent .
 # }
-prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
-prefix ccf:<http://purl.org/ccf/>
-PREFIX biomarker:<http://purl.org/ccf/ccf_biomarkers>
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX biomarker: <http://purl.org/ccf/biomarker>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 SELECT DISTINCT ?sample ?child
+FROM CCF:
+FROM DSGraphs:
 WHERE {
-
-    ?sample ccf:ccf_biomarker_type ?child ;
-            ccf:ccf_pref_label ?label .
-    biomarker: rdfs:label ?biomarkerLabel .
+  ?sample ccf:ccf_biomarker_type ?child ;
+          ccf:ccf_pref_label ?label .
+  biomarker: rdfs:label ?biomarkerLabel .
     #?child rdfs:subClassOf ?parent .
 }

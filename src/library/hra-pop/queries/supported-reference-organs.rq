@@ -1,22 +1,20 @@
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREfIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
-SELECT DISTINCT (?organ_iri as ?id) (?organ_label as ?label)
+SELECT DISTINCT (?organ_iri AS ?id) (?organ_label AS ?label)
 FROM CCF:
 FROM HRApop:
 WHERE {
   ?as ccf:has_cell_summary [] .
   ?as rdfs:label ?as_label .
-
   ?as_entity ccf:representation_of ?as ;
-    ccf:has_reference_organ ?refOrgan .
-
+             ccf:has_reference_organ ?refOrgan .
   ?refOrgan ccf:representation_of ?organ_iri .
   ?organ_iri ccf:ccf_pref_label ?organ_label .
 }

@@ -10,135 +10,125 @@
 #  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
 #          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
 #          when used in the API call.
+
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX dcterms:<http://purl.org/dc/terms/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?tissueDonor rdf:type ccf:Donor;
-    ccf:sex ?sex;
-    ccf:age ?age;
-    ccf:bmi ?bmi;
-    ccf:consortium_name ?consortiums;
-    ccf:tissue_provider_name ?tmc ;
-    rdfs:label ?donorLabel;
-    rdfs:comment ?donorDescription;
-    ccf:url ?link .
-
-  ?sample rdf:type ccf:Sample;
-    ccf:sample_type ?sampleType ;
-    ccf:has_registration_location ?rui_location ;
-    ccf:subdivided_into_sections ?sections ;
-    ccf:comes_from ?tissueDonor ;
-    ccf:generates_dataset ?dataset .
-
+  ?tissueDonor rdf:type ccf:Donor ;
+               ccf:sex ?sex ;
+               ccf:age ?age ;
+               ccf:bmi ?bmi ;
+               ccf:consortium_name ?consortiums ;
+               ccf:tissue_provider_name ?tmc ;
+               rdfs:label ?donorLabel ;
+               rdfs:comment ?donorDescription ;
+               ccf:url ?link .
+  ?sample rdf:type ccf:Sample ;
+          ccf:sample_type ?sampleType ;
+          ccf:has_registration_location ?rui_location ;
+          ccf:subdivided_into_sections ?sections ;
+          ccf:comes_from ?tissueDonor ;
+          ccf:generates_dataset ?dataset .
   ?rui_location rdf:type ccf:SpatialEntity ;
-    dcterms:creator ?creator ;
-    ccf:creator_first_name ?creator_first_name;
-    ccf:creator_last_name ?creator_last_name;
-    ccf:x_dimension ?x_dimension;
-    ccf:y_dimension ?y_dimension;
-    ccf:z_dimension ?z_dimension;
-    ccf:dimension_unit ?dimension_units ;
-    ccf:annotations ?ccf_annotations .
-
+                dcterms:creator ?creator ;
+                ccf:creator_first_name ?creator_first_name ;
+                ccf:creator_last_name ?creator_last_name ;
+                ccf:x_dimension ?x_dimension ;
+                ccf:y_dimension ?y_dimension ;
+                ccf:z_dimension ?z_dimension ;
+                ccf:dimension_unit ?dimension_units ;
+                ccf:annotations ?ccf_annotations .
   ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
-    dcterms:created ?placement_date;
-    ccf:x_scaling ?x_scaling;
-    ccf:y_scaling ?y_scaling;
-    ccf:z_scaling ?z_scaling;
-    ccf:scaling_unit ?scaling_units;
-    ccf:x_rotation ?x_rotation;
-    ccf:y_rotation ?y_rotation;
-    ccf:z_rotation ?z_rotation;
-    ccf:rotation_order ?rotation_order;
-    ccf:rotation_unit ?rotation_units;
-    ccf:x_translation ?x_translation;
-    ccf:y_translation ?y_translation;
-    ccf:z_translation ?z_translation;
-    ccf:translation_unit ?translation_units;
-    ccf:placement_relative_to ?target ;
-    ccf:placement_for ?rui_location .
-
-  ?sections rdf:type ccf:Sample;
-    ccf:sample_type ?sectionType;
-    ccf:section_number ?sectionNumber ;
-    rdfs:label ?sectionLabel ;
-    rdfs:comment ?sectionDescription ;
-    ccf:url ?link .
-
+                    dcterms:created ?placement_date ;
+                    ccf:x_scaling ?x_scaling ;
+                    ccf:y_scaling ?y_scaling ;
+                    ccf:z_scaling ?z_scaling ;
+                    ccf:scaling_unit ?scaling_units ;
+                    ccf:x_rotation ?x_rotation ;
+                    ccf:y_rotation ?y_rotation ;
+                    ccf:z_rotation ?z_rotation ;
+                    ccf:rotation_order ?rotation_order ;
+                    ccf:rotation_unit ?rotation_units ;
+                    ccf:x_translation ?x_translation ;
+                    ccf:y_translation ?y_translation ;
+                    ccf:z_translation ?z_translation ;
+                    ccf:translation_unit ?translation_units ;
+                    ccf:placement_relative_to ?target ;
+                    ccf:placement_for ?rui_location .
+  ?sections rdf:type ccf:Sample ;
+            ccf:sample_type ?sectionType ;
+            ccf:section_number ?sectionNumber ;
+            rdfs:label ?sectionLabel ;
+            rdfs:comment ?sectionDescription ;
+            ccf:url ?link .
   ?dataset rdf:type ccf:Dataset ;
-    ccf:dataset ?technology ;
-    ccf:thumbnail ?thumbnail ;
-    rdfs:comment ?datasetDescription ;
-    rdfs:label ?datasetLabel .
+           ccf:dataset ?technology ;
+           ccf:thumbnail ?thumbnail ;
+           rdfs:comment ?datasetDescription ;
+           rdfs:label ?datasetLabel .
 }
-FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> # Experimental data / data sets / rui locations
-FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
+FROM CCF:
+FROM DSGraphs:
 WHERE {
   ?sample rdf:type ccf:Sample .
   ?sample ccf:sample_type ?sampleType ;
-    ccf:has_registration_location ?rui_location ;
-    ccf:comes_from ?tissueDonor;
-    ccf:generates_dataset ?dataset .
-  
+          ccf:has_registration_location ?rui_location ;
+          ccf:comes_from ?tissueDonor ;
+          ccf:generates_dataset ?dataset .
   ?rui_location rdf:type ccf:SpatialEntity ;
-    dcterms:creator ?creator ;
-    ccf:creator_first_name ?creator_first_name;
-    ccf:creator_last_name ?creator_last_name;
-    ccf:x_dimension ?x_dimension;
-    ccf:y_dimension ?y_dimension;
-    ccf:z_dimension ?z_dimension;
-    ccf:dimension_unit ?dimension_units ;
-    ccf:collides_with ?ccf_annotations .
-
+                dcterms:creator ?creator ;
+                ccf:creator_first_name ?creator_first_name ;
+                ccf:creator_last_name ?creator_last_name ;
+                ccf:x_dimension ?x_dimension ;
+                ccf:y_dimension ?y_dimension ;
+                ccf:z_dimension ?z_dimension ;
+                ccf:dimension_unit ?dimension_units ;
+                ccf:collides_with ?ccf_annotations .
   ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
-    dcterms:created ?placement_date;
-    ccf:x_scaling ?x_scaling;
-    ccf:y_scaling ?y_scaling;
-    ccf:z_scaling ?z_scaling;
-    ccf:scaling_unit ?scaling_units;
-    ccf:x_rotation ?x_rotation;
-    ccf:y_rotation ?y_rotation;
-    ccf:z_rotation ?z_rotation;
-    ccf:rotation_order ?rotation_order;
-    ccf:rotation_unit ?rotation_units;
-    ccf:x_translation ?x_translation;
-    ccf:y_translation ?y_translation;
-    ccf:z_translation ?z_translation;
-    ccf:translation_unit ?translation_units;
-    ccf:placement_relative_to ?target ;
-    ccf:placement_for ?rui_location .
-          
-  ?tissueDonor rdf:type ccf:Donor;
-    ccf:sex ?sex;
-    ccf:consortium_name ?consortiums;
-    ccf:tissue_provider_name ?tmc ;
-    rdfs:label ?donorLabel;
-    rdfs:comment ?donorDescription;
-    ccf:url ?link .
-
+                    dcterms:created ?placement_date ;
+                    ccf:x_scaling ?x_scaling ;
+                    ccf:y_scaling ?y_scaling ;
+                    ccf:z_scaling ?z_scaling ;
+                    ccf:scaling_unit ?scaling_units ;
+                    ccf:x_rotation ?x_rotation ;
+                    ccf:y_rotation ?y_rotation ;
+                    ccf:z_rotation ?z_rotation ;
+                    ccf:rotation_order ?rotation_order ;
+                    ccf:rotation_unit ?rotation_units ;
+                    ccf:x_translation ?x_translation ;
+                    ccf:y_translation ?y_translation ;
+                    ccf:z_translation ?z_translation ;
+                    ccf:translation_unit ?translation_units ;
+                    ccf:placement_relative_to ?target ;
+                    ccf:placement_for ?rui_location .
+  ?tissueDonor rdf:type ccf:Donor ;
+               ccf:sex ?sex ;
+               ccf:consortium_name ?consortiums ;
+               ccf:tissue_provider_name ?tmc ;
+               rdfs:label ?donorLabel ;
+               rdfs:comment ?donorDescription ;
+               ccf:url ?link .
   ?dataset ccf:technology ?technology ;
-    ccf:thumbnail ?thumbnail ;
-    rdfs:comment ?datasetDescription ;
-    rdfs:label ?datasetLabel .
-
+           ccf:thumbnail ?thumbnail ;
+           rdfs:comment ?datasetDescription ;
+           rdfs:label ?datasetLabel .
   OPTIONAL {
-    ?sections 
-      ccf:subdivided_into_sections ?sample;
-      ccf:sample_type ?sectionType ;
-      ccf:section_number ?sectionNumber ;
-      rdfs:label ?sectionLabel ;
-      rdfs:comment ?sectionDescription ;
-      ccf:url ?link .
+    ?sections ccf:subdivided_into_sections ?sample ;
+              ccf:sample_type ?sectionType ;
+              ccf:section_number ?sectionNumber ;
+              rdfs:label ?sectionLabel ;
+              rdfs:comment ?sectionDescription ;
+              ccf:url ?link .
     ?tissueDonor rdf:type ccf:Donor ;
-      ccf:age ?age;
-      ccf:bmi ?bmi .
+                 ccf:age ?age ;
+                 ccf:bmi ?bmi .
   }
-
 	#{{FILTER}}
-	FILTER (?sampleType = "Tissue Block")
+  FILTER (?sampleType = "Tissue Block")
 }

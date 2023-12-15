@@ -1,81 +1,62 @@
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREfIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
-SELECT ?cell_source_type ?cell_source ?cell_source_label ?tool ?modality ?cell_id ?percentage
+SELECT ?cell_source_type ?cell_source ?cell_source_label ?tool ?modality ?cell_id
+  ?percentage
 FROM CCF:
 FROM HRApop:
 WHERE {
-  #{{VALUES}}
-  #{{TOOLS}}
-
   {
-    ?cell_source ccf:has_cell_summary [
-        ccf:has_cell_summary_row [
-          ccf:cell_id ?cell_id ;
-          ccf:cell_label ?cell_label ;
-          ccf:percentage_of_total ?percentage ;
-        ] ;
-      ] .
+    #{{VALUES}}
+    #{{TOOLS}}
+    ?cell_source ccf:has_cell_summary [ ccf:has_cell_summary_row [ ccf:cell_id ?cell_id ;
+         ccf:cell_label ?cell_label ;
+         ccf:percentage_of_total ?percentage ] ] .
   }
   OPTIONAL {
-    ?cell_source ccf:has_cell_summary [
-      ccf:cell_annotation_method ?tool ;
-      ccf:modality ?modality ;
-    ] .
+    ?cell_source ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ;
+         ccf:modality ?modality ] .
   }
   OPTIONAL {
     ?cell_source rdfs:label ?cell_source_label .
   }
-
-  #{{ORGAN_IRIs}}
-
-  # Anatomical Structure cell sources
   {
+    #{{ORGAN_IRIs}}
+    # Anatomical Structure cell sources
     [] ccf:representation_of ?cell_source ;
-      ccf:has_reference_organ ?refOrgan .
-    
-    VALUES (?cell_source_type) {
-      (ccf:AnatomicalStructure)
-    }
+       ccf:has_reference_organ ?refOrgan .
+    VALUES (?cell_source_type) { (ccf:AnatomicalStructure) }
   }
-  UNION 
-  # Dataset cell sources
+  UNION
   {
     {
+      # Dataset cell sources
       ?sample ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?cell_source .
-    } UNION {
+    }
+    UNION
+    {
       ?block ccf:subdivided_into_sections ?sample .
       ?block ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?cell_source .
     }
-
     [] a ccf:SpatialPlacement ;
-      ccf:placement_for ?rui_location ;
-      ccf:placement_relative_to ?refOrgan .
-
-    VALUES (?cell_source_type) {
-      (ccf:Dataset)
-    }
+       ccf:placement_for ?rui_location ;
+       ccf:placement_relative_to ?refOrgan .
+    VALUES (?cell_source_type) { (ccf:Dataset) }
   }
   UNION
-  # RUI Location cell sources
   {
+    # RUI Location cell sources
     [] a ccf:SpatialPlacement ;
-      ccf:placement_for ?cell_source ;
-      ccf:placement_relative_to ?refOrgan .
-
-    VALUES (?cell_source_type) {
-      (ccf:SpatialEntity)
-    }
+       ccf:placement_for ?cell_source ;
+       ccf:placement_relative_to ?refOrgan .
+    VALUES (?cell_source_type) { (ccf:SpatialEntity) }
   }
-
-  ?refOrgan ccf:representation_of [
-    ccf:ccf_part_of* ?organ_iri ;
-  ] .
+  ?refOrgan ccf:representation_of [ ccf:ccf_part_of* ?organ_iri ] .
 }

@@ -14,45 +14,49 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-SELECT ?label ?count 
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+
+SELECT ?label ?count
+FROM DSGraphs:
 WHERE {
-    {
-        SELECT ("Tissue Donor" as ?label) (COUNT(DISTINCT ?tissueDonor) AS ?count)
-        WHERE {
-            ?sample ccf:comes_from ?tissueDonor .
-        }
+  {
+    SELECT ("Tissue Donor" AS ?label) (COUNT(DISTINCT ?tissueDonor) AS ?count)
+    WHERE {
+      ?sample ccf:comes_from ?tissueDonor .
     }
-    UNION
-    {
-        SELECT ("Tissue Providers" as ?label) (COUNT(DISTINCT ?providerName) AS ?count)
-        WHERE {
-            ?sample ccf:comes_from ?tissueDonor .
-            ?tissueDonor ccf:tissue_provider_name ?providerName .
-        }
+  }
+  UNION
+  {
+    SELECT ("Tissue Providers" AS ?label) (COUNT(DISTINCT ?providerName) AS ?count)
+    WHERE {
+      ?sample ccf:comes_from ?tissueDonor .
+      ?tissueDonor ccf:tissue_provider_name ?providerName .
     }
-    UNION
-    {
-        SELECT ("Tissue Blocks" as ?label) (COUNT(DISTINCT ?sample) AS ?count)
-        WHERE {
-            ?sample rdf:type ccf:Sample .
-            ?sample ccf:sample_type ?sampleType .
-            FILTER (?sampleType = "Tissue Block")
-        }
+  }
+  UNION
+  {
+    SELECT ("Tissue Blocks" AS ?label) (COUNT(DISTINCT ?sample) AS ?count)
+    WHERE {
+      ?sample rdf:type ccf:Sample .
+      ?sample ccf:sample_type ?sampleType .
+      FILTER (?sampleType = "Tissue Block")
     }
-    UNION
-    {
-        SELECT ("Tissue Sections" as ?label) (COUNT(DISTINCT ?sections) AS ?count)
-        WHERE {
-            ?sections ccf:sample_type ?sectionType .
-            FILTER (?sectionType = "Tissue Section")
-        }
+  }
+  UNION
+  {
+    SELECT ("Tissue Sections" AS ?label) (COUNT(DISTINCT ?sections) AS ?count)
+    WHERE {
+      ?sections ccf:sample_type ?sectionType .
+      FILTER (?sectionType = "Tissue Section")
     }
-    UNION
-    {
-        SELECT ("Dataset" as ?label) (COUNT(DISTINCT ?dataset) AS ?count)
-        WHERE {
-            ?sample rdf:type ccf:Sample .
-            ?sample ccf:generates_dataset ?dataset .
-        }
+  }
+  UNION
+  {
+    SELECT ("Dataset" AS ?label) (COUNT(DISTINCT ?dataset) AS ?count)
+    WHERE {
+      ?sample rdf:type ccf:Sample .
+      ?sample ccf:generates_dataset ?dataset .
     }
+  }
 }

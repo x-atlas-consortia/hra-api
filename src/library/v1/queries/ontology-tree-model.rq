@@ -19,21 +19,22 @@ PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
 CONSTRUCT {
-    body: rdfs:label ?bodyLabel .
-    body: rdf:type ccf:OntologyTreeNode .
-    body: ccf:is_root_for "AS" .
-
-    ?child rdf:type ccf:OntologyTreeNode .
-    ?child ccf:parent ?parent .
-    ?child rdfs:label ?label .
-    ?child ccf:synonymLabels ?synonymLabel .
+  body: rdfs:label ?bodyLabel .
+  body: rdf:type ccf:OntologyTreeNode .
+  body: ccf:is_root_for "AS" .
+  ?child rdf:type ccf:OntologyTreeNode .
+  ?child ccf:parent ?parent .
+  ?child rdfs:label ?label .
+  ?child ccf:synonymLabels ?synonymLabel .
 }
+FROM CCF:
 WHERE {
-    body: ^ccf:ccf_part_of* ?child .
-    body: rdfs:label ?bodyLabel .
-    ?child ccf:ccf_part_of ?parent .
-    ?child rdfs:label ?label .
-    ?child ccf:ccf_pref_label ?synonymLabel .
+  body: ^ccf:ccf_part_of* ?child .
+  body: rdfs:label ?bodyLabel .
+  ?child ccf:ccf_part_of ?parent .
+  ?child rdfs:label ?label .
+  ?child ccf:ccf_pref_label ?synonymLabel .
 }

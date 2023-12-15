@@ -1,19 +1,16 @@
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREfIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
-SELECT DISTINCT  (?tool as ?id) (?tool as ?label)
+SELECT DISTINCT (?tool AS ?id) (?tool AS ?label)
 FROM HRApop:
 WHERE {
-  [] ccf:has_cell_summary [
-    ccf:cell_annotation_method ?tool ;
-  ] .
-
+  [] ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ] .
   FILTER (?tool != 'spatial')
 }
 ORDER BY ?tool

@@ -16,18 +16,18 @@
 #          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
 #          when used in the API call.
 
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
-  SELECT *
-  WHERE {
-
-    ?sample #ccf:has_registration_location ?rui_location ;
+SELECT *
+FROM CCF:
+FROM DSGraphs:
+WHERE {
+  ?sample ccf:comes_from ?tissueDonor ; #ccf:has_registration_location ?rui_location ;
             #ccf:generates_dataset ?allTech ;
-          ccf:comes_from ?tissueDonor ;
           ccf:ccf_biomarker_type ?biomarkerType .
-
     #{{FILTER}}
 }

@@ -18,27 +18,28 @@
 #  * Note: Replace "cell:" with the IRI of the specific cell type you want to retrieve the ontology tree for.
 #          The query constructs the ontology tree starting from the specified cell type and traversing its subClassOf relationships.
 #  
-prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
-prefix ccf:<http://purl.org/ccf/>
-prefix cell:<http://purl.obolibrary.org/obo/CL_0000000>
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+
 CONSTRUCT {
-    cell: rdfs:label ?cellLabel .
-    cell: rdf:type ccf:OntologyTreeNode .
-    cell: ccf:is_root_for "AS" .
-
-    ?child rdf:type ccf:OntologyTreeNode .
-    ?child ccf:parent ?parent .
-    ?child rdfs:label ?label .
-    ?child ccf:synonymLabels ?synonymLabel .
+  cell: rdfs:label ?cellLabel .
+  cell: rdf:type ccf:OntologyTreeNode .
+  cell: ccf:is_root_for "AS" .
+  ?child rdf:type ccf:OntologyTreeNode .
+  ?child ccf:parent ?parent .
+  ?child rdfs:label ?label .
+  ?child ccf:synonymLabels ?synonymLabel .
 }
-FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-WHERE {
-    cell: ^rdfs:subClassOf* ?child .
-    cell: rdfs:label ?cellLabel .
-    ?child rdfs:subClassOf ?parent .
-    ?child rdfs:label ?label .
-    ?child ccf:ccf_pref_label ?synonymLabel .
-
-    FILTER(!isBLANK(?child) && !isBLANK(?parent))
+FROM CCF:
+WHERE { # Ontology / CCF.OWL
+  cell: ^rdfs:subClassOf* ?child .
+  cell: rdfs:label ?cellLabel .
+  ?child rdfs:subClassOf ?parent .
+  ?child rdfs:label ?label .
+  ?child ccf:ccf_pref_label ?synonymLabel .
+  FILTER (!isBlank(?child) && !isBlank(?parent))
 }

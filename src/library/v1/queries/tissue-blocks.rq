@@ -10,85 +10,78 @@
 #  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
 #          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
 #          when used in the API call.
+
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
   ?tissueDonor rdf:type ?donorType ;
-    ccf:tissue_provider_name ?tmc ;
-    rdfs:label ?donorLabel ;
-    rdfs:comment ?donorDescription ;
-    ccf:url ?link .
-
+               ccf:tissue_provider_name ?tmc ;
+               rdfs:label ?donorLabel ;
+               rdfs:comment ?donorDescription ;
+               ccf:url ?link .
   ?sample rdf:type ccf:Sample .
   ?sample ccf:sample_type ?sampleType ;
-    rdfs:comment ?description;
-    rdfs:label ?label;
-    ccf:comes_from ?tissueDonor ;
-    ccf:generates_dataset ?dataset ;
-    ccf:subdivided_into_sections ?sections ;
-    ccf:section_count ?sectionCount;
-    ccf:section_size ?sectionSize;
-    ccf:section_size_unit ?sectionUnit ;
-    ccf:url ?link .
-  
+          rdfs:comment ?description ;
+          rdfs:label ?label ;
+          ccf:comes_from ?tissueDonor ;
+          ccf:generates_dataset ?dataset ;
+          ccf:subdivided_into_sections ?sections ;
+          ccf:section_count ?sectionCount ;
+          ccf:section_size ?sectionSize ;
+          ccf:section_size_unit ?sectionUnit ;
+          ccf:url ?link .
   ?dataset rdf:type ccf:Dataset ;
-    ccf:technology ?technology ;
-    ccf:thumbnail ?thumbnail ;
-    rdfs:comment ?datasetDescription ;
-    rdfs:label ?datasetLabel ;
-    ccf:url ?link .
-
+           ccf:technology ?technology ;
+           ccf:thumbnail ?thumbnail ;
+           rdfs:comment ?datasetDescription ;
+           rdfs:label ?datasetLabel ;
+           ccf:url ?link .
   ?sections rdf:type ?sectionType ;
-    rdfs:label ?sectionLabel ;
-    rdfs:comment ?sectionDescription ;
-    ccf:url ?link .
-
+            rdfs:label ?sectionLabel ;
+            rdfs:comment ?sectionDescription ;
+            ccf:url ?link .
   ?sample ccf:has_registration_location ?spatialEntityId .
 }
-FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> # Experimental data / data sets / rui locations
-FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
+FROM CCF:
+FROM DSGraphs:
 WHERE {
   ?sample rdf:type ccf:Sample .
-  ?sample ccf:sample_type ?sampleType ; 
-    ccf:has_registration_location ?spatialEntityId;
-    ccf:generates_dataset ?dataset ;
-    ccf:comes_from ?tissueDonor ;
-    rdfs:comment ?description;
-    ccf:section_count ?sectionCount;
-    ccf:section_size ?sectionSize;
-    ccf:section_size_unit ?sectionUnit ;
-    rdfs:label ?label .
-
+  ?sample ccf:sample_type ?sampleType ;
+          ccf:has_registration_location ?spatialEntityId ;
+          ccf:generates_dataset ?dataset ;
+          ccf:comes_from ?tissueDonor ;
+          rdfs:comment ?description ;
+          ccf:section_count ?sectionCount ;
+          ccf:section_size ?sectionSize ;
+          ccf:section_size_unit ?sectionUnit ;
+          rdfs:label ?label .
   ?spatialEntityId a ccf:SpatialEntity ;
-    ccf:collides_with ?annotation .
-    ?cell_type ccf:ccf_located_in ?annotation .
-
+                   ccf:collides_with ?annotation .
+  ?cell_type ccf:ccf_located_in ?annotation .
   ?tissueDonor rdf:type ccf:Donor ;
-    ccf:tissue_provider_name ?tmc ;
-    rdfs:label ?donorLabel;
-    rdfs:comment ?donorDescription;
-    ccf:url ?link ;
-    ccf:sex ?sex;
-    ccf:age ?age;
-    ccf:bmi ?bmi .
-
+               ccf:tissue_provider_name ?tmc ;
+               rdfs:label ?donorLabel ;
+               rdfs:comment ?donorDescription ;
+               ccf:url ?link ;
+               ccf:sex ?sex ;
+               ccf:age ?age ;
+               ccf:bmi ?bmi .
   ?dataset ccf:technology ?technology ;
-    ccf:thumbnail ?thumbnail ;
-    rdfs:comment ?datasetDescription ;
-    rdfs:label ?datasetLabel .
-
+           ccf:thumbnail ?thumbnail ;
+           rdfs:comment ?datasetDescription ;
+           rdfs:label ?datasetLabel .
   OPTIONAL {
-    ?sections ccf:subdivided_into_sections ?sample;
-      ccf:sample_type ?sectionType ;
-      ccf:section_number ?sectionNumber ;
-      rdfs:label ?sectionLabel ;
-      rdfs:comment ?sectionDescription ;
-      ccf:url ?link .
+    ?sections ccf:subdivided_into_sections ?sample ;
+              ccf:sample_type ?sectionType ;
+              ccf:section_number ?sectionNumber ;
+              rdfs:label ?sectionLabel ;
+              rdfs:comment ?sectionDescription ;
+              ccf:url ?link .
   }
-
   FILTER (?sampleType = "Tissue Block")
-  #{{FILTER}}
 }
+  #{{FILTER}}

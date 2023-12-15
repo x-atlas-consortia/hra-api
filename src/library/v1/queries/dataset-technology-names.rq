@@ -12,13 +12,15 @@
 #  * @param ?technology - The distinct technology types used in datasets.
 # 
 
-
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 SELECT DISTINCT ?technology
-FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>
+FROM CCF:
+FROM DSGraphs:
 WHERE {
-    ?sample ccf:generates_dataset ?allTech .
-    ?allTech ccf:technology ?technology .
+  ?sample ccf:generates_dataset ?allTech .
+  ?allTech ccf:technology ?technology .
 }

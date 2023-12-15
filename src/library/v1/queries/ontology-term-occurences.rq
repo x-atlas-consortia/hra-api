@@ -16,41 +16,40 @@
 #          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
 #          when used in the API call.
 
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+
 CONSTRUCT {
-    ?annotation ccf:count ?count .
+  ?annotation ccf:count ?count .
 }
-FROM <https://purl.org/ccf/releases/2.2.1/ccf.owl> # Ontology / CCF.OWL
-FROM <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld> # Experimental data / data sets / rui locations
-FROM <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>
+FROM CCF:
+FROM DSGraphs:
 WHERE {
-  SELECT ?annotation (COUNT(?annotation) as ?count)
+  SELECT ?annotation (COUNT(?annotation) AS ?count)
   WHERE {
     {
       ?sample ccf:comes_from ?tissueDonor .
       ?sample ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?allTech .
-    } UNION {
+    }
+    UNION
+    {
       ?block ccf:comes_from ?tissueDonor .
       ?block ccf:subdivided_into_sections ?sample .
       ?block ccf:has_registration_location ?rui_location .
       ?sample ccf:generates_dataset ?allTech .
     }
-
     ?rui_location a ccf:SpatialEntity ;
-      ccf:collides_with ?annotation .
+                  ccf:collides_with ?annotation .
     ?cell_type ccf:ccf_located_in ?annotation .
-
     ?tissueDonor ccf:sex ?sex ;
-      ccf:age ?age ;
-      ccf:bmi ?bmi ;
-      ccf:tissue_provider_name ?tmc .
-    
+                 ccf:age ?age ;
+                 ccf:bmi ?bmi ;
+                 ccf:tissue_provider_name ?tmc .
     ?allTech ccf:technology ?technology .
-
     #{{FILTER}}
   }
   GROUP BY ?annotation
