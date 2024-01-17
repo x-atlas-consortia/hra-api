@@ -1,6 +1,7 @@
 import query from '../queries/reference-organs.rq';
 import frame from '../frames/reference-organs.jsonld';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
+import { expandIris } from '../utils/jsonld-compat.js';
 
 /**
  * Retrieves reference organs
@@ -9,5 +10,6 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
  * @returns {Promise<Object>} - A promise that resolves to reference organ data
  */
 export async function getReferenceOrgans(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return await executeFilteredConstructQuery(query, filter, frame, endpoint);
+  const results = await executeFilteredConstructQuery(query, filter, frame, endpoint);
+  return expandIris(results['@graph'] || []);
 }

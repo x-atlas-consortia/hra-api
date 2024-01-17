@@ -8,5 +8,5 @@ import { executeFilteredQuery } from '../utils/execute-sparql.js';
  * @returns {Promise<Array>} - A promise that resolves to an array of tissue provider names
  */
 export async function getTissueProviderNames(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return executeFilteredQuery(query, filter, endpoint);
+  return (await executeFilteredQuery(query, filter, endpoint)).map((row) => row.provider);
 }

@@ -1,8 +1,9 @@
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
+import { sparqlEndpoint } from '../environment.js';
 
 // Define the proxy middleware for SPARQL requests
 const proxyOptions = {
-  target: 'https://lod.humanatlas.io/sparql',
+  target: sparqlEndpoint(),
   changeOrigin: true,
   pathRewrite: (path) => {
     const params = new URL(path, 'http://localhost').searchParams;

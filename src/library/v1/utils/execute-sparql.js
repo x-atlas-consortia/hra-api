@@ -34,12 +34,16 @@ export async function executeFilteredConstructQuery(
   frame = undefined,
   endpoint = 'https://lod.humanatlas.io/sparql'
 ) {
+  let filteredSparqlQuery;
   try {
     // Get results as an array of objects
-    const filteredSparqlQuery = filterSparqlQuery(query, filter);
+    filteredSparqlQuery = filterSparqlQuery(query, filter);
     const results = await construct(filteredSparqlQuery, endpoint, frame);
     return results;
   } catch (error) {
     console.error('Error executing SPARQL query:', error.message);
+    if (filteredSparqlQuery) {
+      console.log('\nBad SPARQL Query: \n', filteredSparqlQuery + '\n\n');
+    }
   }
 }

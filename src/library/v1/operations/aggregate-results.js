@@ -10,6 +10,6 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
  */
 export async function getAggregateResults(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   const results = await executeFilteredConstructQuery(query, filter, frame, endpoint);
-  const reformatted = results['@graph'].map(({label, count}) => ({label, count}));
+  const reformatted = (results['@graph'] || []).map(({label, count}) => ({label, count}));
   return reformatted;
 }

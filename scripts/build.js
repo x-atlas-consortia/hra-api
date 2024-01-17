@@ -32,7 +32,10 @@ const serviceWorker = {
   entryPoints: ['src/service-worker/sw.js', 'src/service-worker/sw-loader.js'],
   platform: 'browser',
   minify: true,
-  sourcemap: 'linked'
+  sourcemap: 'linked',
+  banner: {
+    'js': `const SPARQL_ENDPOINT = '${process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql'}';`
+  }
 };
 
 const library = {

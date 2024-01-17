@@ -20,6 +20,7 @@ import {
 } from '../../../library/operations/v1.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getSpatialPlacement } from './utils/get-spatial-placement.js';
+import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
 
 const routes = Router()
   .get('/technology-names', forwardFilteredRequest(getDatasetTechnologyNames))
@@ -38,7 +39,7 @@ const routes = Router()
   .get('/gtex-rui-locations', forwardFilteredRequest(getGtexRuiLocations))
   .get('/hubmap/rui_locations.jsonld', forwardFilteredRequest(getHubmapRuiLocations))
   .get('/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
-  .get('/reference-organ-scene', forwardFilteredRequest(getReferenceOrganScene))
+  .get('/reference-organ-scene', getReferenceOrganSceneHandler())
   .get('/scene', forwardFilteredRequest(getScene))
   .post('/get-spatial-placement', getSpatialPlacement())
   .get('/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))

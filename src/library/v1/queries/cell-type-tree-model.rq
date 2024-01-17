@@ -39,7 +39,10 @@ WHERE { # Ontology / CCF.OWL
   cell: ^rdfs:subClassOf* ?child .
   cell: rdfs:label ?cellLabel .
   ?child rdfs:subClassOf ?parent .
-  ?child rdfs:label ?label .
-  ?child ccf:ccf_pref_label ?synonymLabel .
+  ?child rdfs:label ?label1 .
+  ?child ccf:ccf_pref_label ?synonymLabel1 .
   FILTER (!isBlank(?child) && !isBlank(?parent))
+
+  BIND(STR(?label1) as ?label)
+  BIND(STR(?synonymLabel1) as ?synonymLabel)
 }

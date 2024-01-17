@@ -1,6 +1,7 @@
-import query from '../queries/cell-type-term-occurences.rq';
 import frame from '../frames/basic.jsonld';
+import query from '../queries/cell-type-term-occurences.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
+import { formatTermOccurences } from '../utils/format-term-occurences.js';
 
 /**
  * Retrieves cell type term occurrences
@@ -9,7 +10,5 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
  * @returns {Promise<Object>} - A promise that resolves to cell type term occurrences
  */
 export async function getCellTypeTermOccurences(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const results = await executeFilteredConstructQuery(query, filter, frame, endpoint);
-  const reformatted = results['@graph'].reduce((acc, row) => ((acc[row['@id']] = parseInt(row['count'])), acc), {});
-  return reformatted;
+  return formatTermOccurences(await executeFilteredConstructQuery(query, filter, frame, endpoint));
 }

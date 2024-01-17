@@ -3,6 +3,14 @@
     "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
     {
       "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "ccf1": { 
+        "@id": "http://purl.org/ccf/latest/ccf.owl#",
+        "@prefix": true
+      },
+      "fma": {
+        "@id": "http://purl.org/sig/ont/fma/fma",
+        "@prefix": true
+      },
       "ccf": "http://purl.org/ccf/",
       "dcterms": "http://purl.org/dc/terms/",
       "x_dimension": {
@@ -27,5 +35,5 @@
       }
     }
   ],
-  "@type": "http://purl.org/ccf/spatial_entity"
+  "@type": "http://purl.org/ccf/SpatialEntity"
 }

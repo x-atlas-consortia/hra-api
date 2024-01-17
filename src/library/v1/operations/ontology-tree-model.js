@@ -1,6 +1,7 @@
-import query from '../queries/ontology-tree-model.rq';
 import frame from '../frames/tree-model.jsonld';
+import query from '../queries/ontology-tree-model.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
+import { formatTreeModel } from '../utils/format-tree-model.js';
 
 /**
  * Retrieves the ontology tree model
@@ -9,5 +10,5 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
  * @returns {Promise<Object>} - A promise that resolves to reference organ data
  */
 export async function getOntologyTreeModel(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return await executeFilteredConstructQuery(query, filter, frame, endpoint);
+  return formatTreeModel(await executeFilteredConstructQuery(query, filter, frame, endpoint));
 }

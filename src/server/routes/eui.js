@@ -6,7 +6,7 @@ const euiRoute = (_req, res, _next) => {
 <head>
   <meta charset="utf-8">
   <title>HRA Exploration User Interface</title>
-  <base href="https://cdn.jsdelivr.net/gh/hubmapconsortium/ccf-ui@gh-pages/">
+  <base href="https://cdn.jsdelivr.net/gh/hubmapconsortium/ccf-ui@3/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@ const euiRoute = (_req, res, _next) => {
   <script src="wc.js" async></script>
 </head>
 <body>
-  <ccf-eui use-remote-api="true" hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
+  <ccf-eui use-remote-api="true" remote-api-endpoint="http://localhost:3000/v1" hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const eui = document.querySelector('ccf-eui');

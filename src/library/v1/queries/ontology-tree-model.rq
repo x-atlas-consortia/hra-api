@@ -35,6 +35,9 @@ WHERE {
   body: ^ccf:ccf_part_of* ?child .
   body: rdfs:label ?bodyLabel .
   ?child ccf:ccf_part_of ?parent .
-  ?child rdfs:label ?label .
-  ?child ccf:ccf_pref_label ?synonymLabel .
+  ?child rdfs:label ?label1 .
+  ?child ccf:ccf_pref_label ?synonymLabel1 .
+
+  BIND(STR(?label1) as ?label)
+  BIND(STR(?synonymLabel1) as ?synonymLabel)
 }

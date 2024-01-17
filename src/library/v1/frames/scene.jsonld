@@ -1,0 +1,17 @@
+{
+  "@context": [
+    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+    {
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "ccf": "http://purl.org/ccf/",
+      "entityId": {
+        "@id": "ccf:entityId",
+        "@type": "@id"
+      },
+      "tooltip": {
+        "@id": "ccf:tooltip"
+      }
+    }
+  ],
+  "@type": "ccf:SpatialSceneNode"
+}

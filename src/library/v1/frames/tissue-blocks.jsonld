@@ -12,12 +12,20 @@
         "@id": "ccf:section_count",
         "@type": "xsd:integer"
       },
-      "SpatialEntityId": {
-        "@id": "ccf:has_registration_location",
-        "@type": "@id"
+      "section_number": {
+        "@id": "ccf:section_number",
+        "@type": "xsd:integer"
       },
       "datasets": "ccf:generates_dataset",
-      "sections": "ccf:subdivided_into_sections"
+      "sections": "ccf:subdivided_into_sections",
+      "age": {
+        "@id": "ccf:age",
+        "@type": "xsd:integer"
+      },
+      "bmi": {
+        "@id": "ccf:bmi",
+        "@type": "xsd:double"
+      }
     }
   ],
   "@type": "ccf:Sample",

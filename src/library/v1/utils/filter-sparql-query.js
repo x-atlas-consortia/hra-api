@@ -1,5 +1,17 @@
 export function filterSparqlQuery(sparqlQuery, filter = {}) {
-  const { ontologyTerms, cellTypeTerms, biomarkerTerms, minAge, maxAge, minBMI, maxBMI, sex, technology, tmc, consortiums } = filter;
+  const {
+    ontologyTerms,
+    cellTypeTerms,
+    biomarkerTerms,
+    minAge,
+    maxAge,
+    minBMI,
+    maxBMI,
+    sex,
+    technology,
+    tmc,
+    consortiums,
+  } = filter;
   let sparqlFilter = '';
   if (sex != undefined) {
     sparqlFilter += `
@@ -50,12 +62,20 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
         FILTER(?cell_type IN (${terms}))
       `;
   }
-  if (biomarkerTerms?.length > 0) {
-    const terms = biomarkerTerms.map((s) => `<${s}>`).join(' ');
-    sparqlFilter += `
-        FILTER(?biomarker IN (${terms}))
-      `;
-  }
+  // FIXME: queries require an enriched relationship: ccf:biomarker_located_in
+  // if (biomarkerTerms?.length > 0) {
+  //   const terms = biomarkerTerms
+  //     .map((s) => {
+  //       if (s === 'http://purl.org/ccf/biomarkers') {
+  //         s = 'http://purl.org/ccf/Biomarker';
+  //       }
+  //       return `<${s}>`;
+  //     })
+  //     .join(' ');
+  //   sparqlFilter += `
+  //       FILTER(?biomarker IN (${terms}))
+  //     `;
+  // }
   if (tmc?.length > 0) {
     const providers = tmc.map((s) => `"${s}"`).join(',');
     sparqlFilter += `

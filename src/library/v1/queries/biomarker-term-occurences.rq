@@ -30,7 +30,7 @@ CONSTRUCT {
 FROM CCF:
 FROM DSGraphs:
 WHERE {
-  SELECT ?biomarker (COUNT(?biomarker) AS ?count)
+  SELECT ?biomarker (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
     ?block ccf:comes_from ?donor .
     ?block ccf:has_registration_location ?rui_location .

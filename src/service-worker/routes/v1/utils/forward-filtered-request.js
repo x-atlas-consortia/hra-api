@@ -11,7 +11,7 @@ export function forwardFilteredRequest(method) {
     try {
       const { query } = req;
       const filter = queryParametersToFilter(query);
-      const result = await method(filter);
+      const result = await method(filter, SPARQL_ENDPOINT);
       res.json(result);
     } catch (error) {
       // Handle errors here

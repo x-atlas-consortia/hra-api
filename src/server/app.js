@@ -3,8 +3,8 @@ import express from 'express';
 import helmet from 'helmet';
 import qs from 'qs';
 import browserRoute from './routes/browser.js';
-import hraPopRoutes from './routes/hra-pop.js';
 import euiRoute from './routes/eui.js';
+import hraPopRoutes from './routes/hra-pop.js';
 import sparqlProxy from './routes/sparql.js';
 import v1Routes from './routes/v1';
 
@@ -20,7 +20,9 @@ app.use(
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        'script-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com'],
+        'base-uri': ["'self'", 'cdn.jsdelivr.net'],
+        'script-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
+        'img-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
         'connect-src': ['*'],
       },
     },
