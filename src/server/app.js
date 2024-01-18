@@ -22,7 +22,7 @@ app.use(
       useDefaults: true,
       directives: {
         'base-uri': ["'self'", 'cdn.jsdelivr.net'],
-        'script-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
+        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
         'img-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
         'connect-src': ['*'],
       },
