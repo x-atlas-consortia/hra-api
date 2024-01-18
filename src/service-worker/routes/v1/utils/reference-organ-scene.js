@@ -1,5 +1,6 @@
 import { getReferenceOrganScene } from '../../../../library/operations/v1';
 import { queryParametersToFilter } from '../../../../library/v1/utils/parse-filter';
+import { getQuery } from './get-query-params.js';
 
 function parseString(value) {
   return typeof value === 'string' ? value : undefined;
@@ -7,7 +8,7 @@ function parseString(value) {
 
 export function getReferenceOrganSceneHandler() {
   return async (req, res) => {
-    const { query } = req;
+    const query = getQuery(req.url);
     const organIri = parseString(query['organ-iri']);
     if (organIri) {
       const filter = queryParametersToFilter(query);

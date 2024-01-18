@@ -1,4 +1,5 @@
 import { queryParametersToFilter } from '../../../../library/v1/utils/parse-filter.js';
+import { getQuery } from './get-query-params.js';
 
 /**
  * Creates an Express middleware function that forwards a SPARQL query based on a provided method.
@@ -9,7 +10,7 @@ import { queryParametersToFilter } from '../../../../library/v1/utils/parse-filt
 export function forwardFilteredRequest(method) {
   return async (req, res) => {
     try {
-      const { query } = req;
+      const query = getQuery(req.url);
       const filter = queryParametersToFilter(query);
       const result = await method(filter, SPARQL_ENDPOINT);
       res.json(result);
