@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import qs from 'qs';
+import { longCache, noCache } from './cache-middleware.js';
 import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
@@ -34,10 +35,10 @@ app.use(express.text({ type: 'text/*' }));
 app.use(express.json());
 app.set('json spaces', 2);
 
-app.use('/', browserRoute);
-app.use('/', euiRoute);
+app.use('/', longCache, browserRoute);
+app.use('/', longCache, euiRoute);
 app.use('/v1', v1Routes);
-app.use('/v1/sparql', sparqlProxy);
+app.use('/v1/sparql', noCache, sparqlProxy);
 app.use('/hra-pop', hraPopRoutes);
 
 // app.use(function (err, req, res, next) {

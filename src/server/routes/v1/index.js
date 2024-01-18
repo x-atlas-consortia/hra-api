@@ -20,28 +20,29 @@ import {
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
+import { longCache, noCache, shortCache } from '../../cache-middleware.js';
 
 const routes = Router()
-  .get('/technology-names', forwardFilteredRequest(getDatasetTechnologyNames))
-  .get('/provider-names', forwardFilteredRequest(getTissueProviderNames))
-  .get('/tissue-provider-names', forwardFilteredRequest(getTissueProviderNames))
-  .get('/ontology-term-occurences', forwardFilteredRequest(getOntologyTermOccurences))
-  .get('/cell-type-term-occurences', forwardFilteredRequest(getCellTypeTermOccurences))
-  .get('/tissue-blocks', forwardFilteredRequest(getTissueBlocks))
-  .get('/reference-organs', forwardFilteredRequest(getReferenceOrgans))
-  .get('/ontology-tree-model', forwardFilteredRequest(getOntologyTreeModel))
-  .get('/cell-type-tree-model', forwardFilteredRequest(getCellTypeTreeModel))
-  .get('/rui-locations', forwardFilteredRequest(getRuiLocations))
-  .get('/aggregate-results', forwardFilteredRequest(getAggregateResults))
-  .get('/db-status', forwardFilteredRequest(getDbStatus))
-  .get('/hubmap-rui-locations', forwardFilteredRequest(getHubmapRuiLocations))
-  .get('/gtex-rui-locations', forwardFilteredRequest(getGtexRuiLocations))
-  .get('/hubmap/rui_locations.jsonld', forwardFilteredRequest(getHubmapRuiLocations))
-  .get('/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
-  .get('/reference-organ-scene', getReferenceOrganSceneHandler())
-  .get('/scene', forwardFilteredRequest(getScene))
-  .post('/get-spatial-placement', getSpatialPlacementHandler())
-  .get('/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
-  .get('/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences));
+  .get('/technology-names', shortCache, forwardFilteredRequest(getDatasetTechnologyNames))
+  .get('/provider-names', shortCache, forwardFilteredRequest(getTissueProviderNames))
+  .get('/tissue-provider-names', shortCache, forwardFilteredRequest(getTissueProviderNames))
+  .get('/ontology-term-occurences', shortCache, forwardFilteredRequest(getOntologyTermOccurences))
+  .get('/cell-type-term-occurences', shortCache, forwardFilteredRequest(getCellTypeTermOccurences))
+  .get('/tissue-blocks', shortCache, forwardFilteredRequest(getTissueBlocks))
+  .get('/reference-organs', longCache, forwardFilteredRequest(getReferenceOrgans))
+  .get('/ontology-tree-model', longCache, forwardFilteredRequest(getOntologyTreeModel))
+  .get('/cell-type-tree-model', longCache, forwardFilteredRequest(getCellTypeTreeModel))
+  .get('/rui-locations', shortCache, forwardFilteredRequest(getRuiLocations))
+  .get('/aggregate-results', shortCache, forwardFilteredRequest(getAggregateResults))
+  .get('/db-status', longCache, forwardFilteredRequest(getDbStatus))
+  .get('/hubmap-rui-locations', shortCache, forwardFilteredRequest(getHubmapRuiLocations))
+  .get('/gtex-rui-locations', shortCache, forwardFilteredRequest(getGtexRuiLocations))
+  .get('/hubmap/rui_locations.jsonld', shortCache, forwardFilteredRequest(getHubmapRuiLocations))
+  .get('/gtex/rui_locations.jsonld', shortCache, forwardFilteredRequest(getGtexRuiLocations))
+  .get('/reference-organ-scene', shortCache, getReferenceOrganSceneHandler())
+  .get('/scene', shortCache, forwardFilteredRequest(getScene))
+  .post('/get-spatial-placement', noCache, getSpatialPlacementHandler())
+  .get('/biomarker-tree-model', longCache, forwardFilteredRequest(getBiomarkerTreeModel))
+  .get('/biomarker-term-occurences', shortCache, forwardFilteredRequest(getBiomarkerTermOccurences));
 
 export default routes;
