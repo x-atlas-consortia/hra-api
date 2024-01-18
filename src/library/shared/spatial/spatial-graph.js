@@ -1,4 +1,4 @@
-import { Euler, Matrix4, toRadians } from '@math.gl/core';
+import { Euler, Matrix4, toDegrees, toRadians } from '@math.gl/core';
 import graphology from 'graphology';
 import shortestPath from 'graphology-shortest-path/unweighted.js';
 import { v4 as uuidV4 } from 'uuid';
@@ -38,7 +38,6 @@ export class SpatialGraph {
       return new Matrix4(Matrix4.IDENTITY); // identity
     }
     if (!this.graph.hasNode(sourceIRI) || !this.graph.hasNode(targetIRI)) {
-      console.log(sourceIRI, this.graph.hasNode(targetIRI));
       return undefined;
     }
 
@@ -99,7 +98,7 @@ export class SpatialGraph {
     if (matrix) {
       const euler = new Euler().fromRotationMatrix(matrix, Euler.XYZ);
       const T = matrix.getTranslation().map((n) => n * 1000);
-      const R = euler.toVector3().map < number > toDegrees;
+      const R = euler.toVector3().map(toDegrees);
       const S = matrix.getScale().map((n) => (n < 1 && n > 0.999999 ? 1 : n));
 
       return {

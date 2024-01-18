@@ -17,7 +17,7 @@ import {
   getTissueProviderNames,
 } from '../../../library/operations/v1.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
-import { getSpatialPlacement } from './utils/get-spatial-placement.js';
+import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
 
 function routes(app) {
@@ -40,7 +40,7 @@ function routes(app) {
     .get('/api/v1/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
     .get('/api/v1/reference-organ-scene', getReferenceOrganSceneHandler())
     .get('/api/v1/scene', forwardFilteredRequest(getScene))
-    .post('/api/v1/get-spatial-placement', getSpatialPlacement())
+    .post('/api/v1/get-spatial-placement', getSpatialPlacementHandler())
     .get('/api/v1/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
     .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences));
 }

@@ -11,7 +11,6 @@ import {
   getHubmapRuiLocations,
   getOntologyTermOccurences,
   getOntologyTreeModel,
-  getReferenceOrganScene,
   getReferenceOrgans,
   getRuiLocations,
   getScene,
@@ -19,7 +18,7 @@ import {
   getTissueProviderNames,
 } from '../../../library/operations/v1.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
-import { getSpatialPlacement } from './utils/get-spatial-placement.js';
+import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
 
 const routes = Router()
@@ -41,7 +40,7 @@ const routes = Router()
   .get('/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
   .get('/reference-organ-scene', getReferenceOrganSceneHandler())
   .get('/scene', forwardFilteredRequest(getScene))
-  .post('/get-spatial-placement', getSpatialPlacement())
+  .post('/get-spatial-placement', getSpatialPlacementHandler())
   .get('/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
   .get('/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences));
 
