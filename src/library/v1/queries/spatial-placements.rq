@@ -1,0 +1,24 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+
+SELECT *
+FROM CCF:
+FROM DSGraphs:
+WHERE {
+  []
+    rdf:type ccf:SpatialPlacement ;
+    ccf:placement_for ?source ;
+    ccf:placement_relative_to ?target ;
+    ccf:x_scaling ?x_scaling ;
+    ccf:y_scaling ?y_scaling ;
+    ccf:z_scaling ?z_scaling ;
+    ccf:x_rotation ?x_rotation ;
+    ccf:y_rotation ?y_rotation ;
+    ccf:z_rotation ?z_rotation ;
+    ccf:x_translation ?x_translation ;
+    ccf:y_translation ?y_translation ;
+    ccf:z_translation ?z_translation ;
+    ccf:translation_unit ?translation_units .                
+}

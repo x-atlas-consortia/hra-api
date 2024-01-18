@@ -11,7 +11,9 @@ CONSTRUCT {
     ccf:organ_owner_sex ?sex ;
     ccf:file_url ?file ;
     ccf:file_subpath ?file_subpath ;
-    ccf:tooltip ?label .
+    ccf:tooltip ?label ;
+    ccf:rui_rank ?rui_rank ;
+    ccf:has_object_reference ?object .
 }
 FROM CCF:
 WHERE {

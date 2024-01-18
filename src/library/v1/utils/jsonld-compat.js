@@ -1,11 +1,12 @@
-
 export function expandIri(iri) {
-  return iri && typeof iri === 'string' ?
-    iri.replace('ccf:', 'https://purl.org/ccf/')
-    .replace('ccf1:', 'https://purl.org/ccf/latest/ccf.owl#')
-    .replace('../sig/ont/fma/fma', 'http://purl.org/sig/ont/fma/fma')
-    .replace('fma:', 'http://purl.org/sig/ont/fma/fma')
-    .replace('http://purl.obolibrary.org/obo/FMA_', 'http://purl.org/sig/ont/fma/fma') : iri;
+  return iri && typeof iri === 'string'
+    ? iri
+        .replace('ccf:', 'http://purl.org/ccf/')
+        .replace('ccf1:', 'http://purl.org/ccf/latest/ccf.owl#')
+        .replace('../sig/ont/fma/fma', 'http://purl.org/sig/ont/fma/fma')
+        .replace('fma:', 'http://purl.org/sig/ont/fma/fma')
+        .replace('http://purl.obolibrary.org/obo/FMA_', 'http://purl.org/sig/ont/fma/fma')
+    : iri;
 }
 
 export function expandIris(obj) {
@@ -38,7 +39,9 @@ export function ensureArray(thing) {
 
 export function ensureNumber(value) {
   if (value?.['@type']) {
-    return Number(value['@value'])
+    return Number(value['@value']);
+  } else if (typeof value === 'string') {
+    return Number(value);
   } else {
     return value;
   }

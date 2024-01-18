@@ -9,7 +9,11 @@ CONSTRUCT {
   ?block rdf:type ccf:SpatialSceneNode ;
     ccf:has_registration_location ?rui_location ;
     ccf:entityId ?block ;
-    ccf:collides_with ?anatomical_structure .
+    ccf:collides_with ?anatomical_structure ;
+    ccf:x_dimension ?x_dimension ;
+    ccf:y_dimension ?y_dimension ;
+    ccf:z_dimension ?z_dimension ;
+    ccf:dimension_unit ?dimension_units .
 }
 FROM CCF:
 FROM DSGraphs:
@@ -60,4 +64,10 @@ WHERE {
 
 #{{FILTER}}
   }
+
+  ?rui_location rdf:type ccf:SpatialEntity ;
+                ccf:x_dimension ?x_dimension ;
+                ccf:y_dimension ?y_dimension ;
+                ccf:z_dimension ?z_dimension ;
+                ccf:dimension_unit ?dimension_units .
 }

@@ -24,11 +24,11 @@ function filterRefOrganQuery(organIri, filter) {
  * @returns {Array} - An empty array as scene data
  */
 export async function getReferenceOrganScene(organIri, filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const filteredRefOrganQuery = filterRefOrganQuery(organIri, filter);
-  const results = await executeFilteredConstructQuery(query, filter, frame, endpoint);
-  const refOrgans = await executeFilteredConstructQuery(filteredRefOrganQuery, filter, frame, endpoint);
-
-  delete refOrgans['@context'];
-  const nodes = [...(refOrgans['@graph'] ?? [refOrgans]), ...(results['@graph'] ?? [])];
-  return reformatSceneNodes(nodes);
+  const [extractionSites, refOrgans, spatialGraph] = await Promise.all([
+    executeFilteredConstructQuery(query, filter, frame, endpoint),
+    executeFilteredConstructQuery(filterRefOrganQuery(organIri, filter), filter, frame, endpoint),
+    getSpatialGraph(endpoint),
+  ]);
+  const nodes = [...(refOrgans['@graph'] ?? []), ...(extractionSites['@graph'] ?? [])];
+  return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter));
 }
