@@ -1,54 +1,21 @@
 export function filterSparqlQuery(sparqlQuery, filter = {}) {
-  const {
-    ontologyTerms,
-    cellTypeTerms,
-    biomarkerTerms,
-    minAge,
-    maxAge,
-    minBMI,
-    maxBMI,
-    sex,
-    technology,
-    tmc,
-    consortiums,
-  } = filter;
+  const { ontologyTerms, cellTypeTerms, biomarkerTerms, ageRange, bmiRange, sex, technologies, tmc, consortiums } =
+    filter;
   let sparqlFilter = '';
-  if (sex != undefined) {
+  if (sex && sex !== 'Both') {
     sparqlFilter += `
         FILTER(?sex = "${sex}")
       `;
   }
-  if (minAge && maxAge) {
+  if (ageRange) {
     sparqlFilter += `
-          FILTER (?age > ${minAge} && ?age < ${maxAge})
+          FILTER (?age > ${ageRange[0]} && ?age < ${ageRange[1]})
         `;
-  } else {
-    if (minAge != undefined) {
-      sparqlFilter += `
-          FILTER (?age > ${minAge})
-        `;
-    }
-    if (maxAge != undefined) {
-      sparqlFilter += `
-          FILTER (?age < ${maxAge})
-        `;
-    }
   }
-  if (minBMI && maxBMI) {
+  if (bmiRange) {
     sparqlFilter += `
-          FILTER (?bmi > ${minBMI} && ?bmi < ${maxBMI})
+          FILTER (?bmi > ${bmiRange[0]} && ?bmi < ${bmiRange[1]})
         `;
-  } else {
-    if (minBMI != undefined) {
-      sparqlFilter += `
-          FILTER (?bmi > ${minBMI})
-        `;
-    }
-    if (maxBMI != undefined) {
-      sparqlFilter += `
-          FILTER (?bmi < ${maxBMI})
-        `;
-    }
   }
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(' ');
@@ -82,10 +49,10 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
         FILTER(?provider IN (${providers}))
       `;
   }
-  if (technology?.length > 0) {
-    const technologies = technology.map((s) => `"${s}"`).join(',');
+  if (technologies?.length > 0) {
+    const technologiesString = technologies.map((s) => `"${s}"`).join(',');
     sparqlFilter += `
-        FILTER(?technology IN (${technologies}))
+        FILTER(?technology IN (${technologiesString}))
       `;
   }
   if (consortiums?.length > 0) {

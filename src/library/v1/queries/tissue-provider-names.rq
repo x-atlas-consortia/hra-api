@@ -60,3 +60,4 @@ WHERE {
   }
 #{{FILTER}}
 }
+ORDER BY ?provider

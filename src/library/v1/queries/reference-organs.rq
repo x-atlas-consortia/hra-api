@@ -61,3 +61,4 @@ WHERE {
           ccf:file_subpath ?file_subpath .
   OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
 }
+ORDER BY ?rui_rank

@@ -65,3 +65,4 @@ WHERE {
   }
 #{{FILTER}}
 }
+ORDER BY ?technology
