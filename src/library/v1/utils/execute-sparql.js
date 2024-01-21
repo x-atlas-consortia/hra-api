@@ -9,13 +9,17 @@ import { filterSparqlQuery } from './filter-sparql-query';
  * @returns {Promise<Array>} - A promise that resolves to an array of query results.
  */
 export async function executeFilteredQuery(query, filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+  let filteredSparqlQuery;
   try {
     // Get results as an array of objects
-    const filteredSparqlQuery = filterSparqlQuery(query, filter);
+    filteredSparqlQuery = await filterSparqlQuery(query, filter, endpoint);
     const results = await select(filteredSparqlQuery, endpoint);
     return results;
   } catch (error) {
-    console.error('Error executing SPARQL query:', error.message);
+    console.error('Error executing SELECT query:', error.message, error);
+    if (filteredSparqlQuery) {
+      console.log('\nBad SPARQL Query: \n', filteredSparqlQuery + '\n\n');
+    }
   }
 }
 
@@ -37,11 +41,11 @@ export async function executeFilteredConstructQuery(
   let filteredSparqlQuery;
   try {
     // Get results as an array of objects
-    filteredSparqlQuery = filterSparqlQuery(query, filter);
+    filteredSparqlQuery = await filterSparqlQuery(query, filter, endpoint);
     const results = await construct(filteredSparqlQuery, endpoint, frame);
     return results;
   } catch (error) {
-    console.error('Error executing SPARQL query:', error.message);
+    console.error('Error executing CONSTRUCT query:', error.message, error);
     if (filteredSparqlQuery) {
       console.log('\nBad SPARQL Query: \n', filteredSparqlQuery + '\n\n');
     }

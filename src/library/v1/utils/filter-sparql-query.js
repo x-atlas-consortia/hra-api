@@ -1,6 +1,18 @@
-export function filterSparqlQuery(sparqlQuery, filter = {}) {
-  const { ontologyTerms, cellTypeTerms, biomarkerTerms, ageRange, bmiRange, sex, technologies, tmc, consortiums } =
-    filter;
+import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
+
+export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
+  const {
+    ontologyTerms,
+    cellTypeTerms,
+    biomarkerTerms,
+    ageRange,
+    bmiRange,
+    sex,
+    technologies,
+    tmc,
+    consortiums,
+    spatialSearches,
+  } = filter;
   let sparqlFilter = '';
   if (sex && sex !== 'Both') {
     sparqlFilter += `
@@ -29,20 +41,12 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
         FILTER(?cell_type IN (${terms}))
       `;
   }
-  // FIXME: queries require an enriched relationship: ccf:biomarker_located_in
-  // if (biomarkerTerms?.length > 0) {
-  //   const terms = biomarkerTerms
-  //     .map((s) => {
-  //       if (s === 'http://purl.org/ccf/biomarkers') {
-  //         s = 'http://purl.org/ccf/Biomarker';
-  //       }
-  //       return `<${s}>`;
-  //     })
-  //     .join(' ');
-  //   sparqlFilter += `
-  //       FILTER(?biomarker IN (${terms}))
-  //     `;
-  // }
+  if (biomarkerTerms?.length > 0) {
+    const terms = biomarkerTerms.map((s) => `<${s}>`).join(' ');
+    sparqlFilter += `
+        FILTER(?biomarker IN (${terms}))
+      `;
+  }
   if (tmc?.length > 0) {
     const providers = tmc.map((s) => `"${s}"`).join(',');
     sparqlFilter += `
@@ -60,6 +64,23 @@ export function filterSparqlQuery(sparqlQuery, filter = {}) {
     sparqlFilter += `
         FILTER(?consortium IN (${terms}))
       `;
+  }
+  if (spatialSearches?.length > 0) {
+    const spatialGraph = await getSpatialGraph(endpoint);
+    let results = new Set();
+    for (const search of spatialSearches) {
+      results = spatialGraph.probeExtractionSites(search, results);
+    }
+    if (results.size === 0) {
+      sparqlFilter += `
+        FILTER(?rui_location = <https://no-extraction-sites-found.com/>)
+      `;
+    } else {
+      const sites = [...results].map((s) => `<${s}>`).join(' ');
+      `
+      FILTER(?rui_location IN (${sites}))
+      `;
+    }
   }
   return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
 }

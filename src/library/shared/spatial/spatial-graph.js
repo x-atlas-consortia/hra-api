@@ -1,8 +1,10 @@
 import { Euler, Matrix4, toDegrees, toRadians } from '@math.gl/core';
+import { OrientedBoundingBox } from '@math.gl/culling';
 import graphology from 'graphology';
 import shortestPath from 'graphology-shortest-path/unweighted.js';
 import { v4 as uuidV4 } from 'uuid';
-import query from '../../v1/queries/spatial-placements.rq';
+import dimensionsQuery from '../../v1/queries/spatial-entity-dimensions.rq';
+import placementsQuery from '../../v1/queries/spatial-placements.rq';
 import { ensureArray } from '../../v1/utils/jsonld-compat.js';
 import { select } from '../utils/sparql.js';
 
@@ -19,6 +21,18 @@ export async function getSpatialGraph(endpoint, useCache = true) {
   }
 }
 
+function getScaleFactor(units) {
+  switch (units) {
+    case 'centimeter':
+      return 0.01;
+    case 'millimeter':
+      return 0.001;
+    case 'meter':
+    default:
+      return 1;
+  }
+}
+
 export class SpatialGraph {
   constructor(endpoint) {
     this.endpoint = endpoint;
@@ -26,9 +40,18 @@ export class SpatialGraph {
 
   async initialize() {
     const graph = (this.graph = new graphology.DirectedGraph());
-    const placements = await select(query, this.endpoint);
+    const [placements, dimensions] = await Promise.all([
+      select(placementsQuery, this.endpoint),
+      select(dimensionsQuery, this.endpoint),
+    ]);
     for (const placement of placements) {
       graph.mergeDirectedEdge(placement.source, placement.target, { placement });
+    }
+
+    const halfSizeLookup = (this.halfSizeLookup = {});
+    for (const { rui_location, x, y, z, units } of dimensions) {
+      const factor = getScaleFactor(units) * 0.5;
+      halfSizeLookup[rui_location] = [x, y, z].map(n => Number(n) * factor);
     }
     return this;
   }
@@ -61,20 +84,8 @@ export class SpatialGraph {
 
   applySpatialPlacement(tx, placement) {
     const p = placement;
-    let factor;
-    switch (p.translation_units) {
-      case 'centimeter':
-        factor = 1 / 100;
-        break;
-      case 'millimeter':
-        factor = 1 / 1000;
-        break;
-      case 'meter':
-      default:
-        factor = 1;
-        break;
-    }
-    const T = [p.x_translation, p.y_translation, p.z_translation].map((t) => t * factor);
+    const factor = getScaleFactor(p.translation_units);
+    const T = [p.x_translation * factor, p.y_translation * factor, p.z_translation * factor];
     const R = [p.x_rotation, p.y_rotation, p.z_rotation].map(toRadians);
     const S = [p.x_scaling, p.y_scaling, p.z_scaling];
 
@@ -141,23 +152,39 @@ export class SpatialGraph {
       transform = new Matrix4(Matrix4.IDENTITY).rotateX(toRadians(90)).multiplyLeft(transform);
       // Scale visible bounding boxes to the desired dimensions
       if (bounds) {
-        let factor;
-        switch (bounds.dimension_units) {
-          case 'centimeter':
-            factor = 1 / 100;
-            break;
-          case 'millimeter':
-            factor = 1 / 1000;
-            break;
-          case 'meter':
-          default:
-            factor = 1;
-            break;
-        }
-        const scale = [bounds.x_dimension, bounds.y_dimension, bounds.z_dimension].map((dim) => (dim * factor) / 2);
+        const factor = getScaleFactor(bounds.dimension_units) * 0.5;
+        const scale = [bounds.x_dimension * factor, bounds.y_dimension * factor, bounds.z_dimension * factor];
         transform.scale(scale);
       }
     }
     return transform;
+  }
+
+  getOrientedBoundingBox(sourceIri, targetIri) {
+    const matrix = this.getTransformationMatrix(sourceIri, targetIri);
+    const halfSize = this.halfSizeLookup[sourceIri];
+    if (matrix && halfSize) {
+      const center = matrix.getTranslation();
+      if (center.findIndex(isNaN) === -1) {
+        const quaternion = new Euler().fromRotationMatrix(matrix, Euler.XYZ).toQuaternion().normalize().calculateW();
+        return new OrientedBoundingBox().fromCenterHalfSizeQuaternion(center, halfSize, quaternion);
+      }
+    }
+    return undefined;
+  }
+
+  probeExtractionSites(search, results = new Set()) {
+    const { x, y, z, radius, target } = search;
+    const radiusSquared = (radius / 1000) * (radius / 1000);
+    for (const sourceIri of Object.keys(this.halfSizeLookup)) {
+      const boundingBox = this.getOrientedBoundingBox(sourceIri, target);
+      if (boundingBox) {
+        const distanceSquared = boundingBox.distanceSquaredTo([x, y, z].map(n => n / 1000));
+        if (distanceSquared <= radiusSquared) {
+          results.add(sourceIri);
+        }
+      }
+    }
+    return results;
   }
 }

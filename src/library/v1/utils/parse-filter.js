@@ -10,6 +10,11 @@ const FILTER_DEFAULTS = {
   spatialSearches: [],
 };
 
+// Ignore terms which select everything
+const SKIPPABLE_AS = new Set(['http://purl.obolibrary.org/obo/UBERON_0013702']);
+const SKIPPABLE_CT = new Set(['http://purl.obolibrary.org/obo/CL_0000000']);
+const SKIPPABLE_BM = new Set(['http://purl.org/ccf/biomarkers', 'http://purl.org/ccf/Biomarker']);
+
 // ----------------------
 // Parsers
 // ----------------------
@@ -82,6 +87,15 @@ function parseArray(value) {
   }
 
   return Array.isArray(value) ? value : undefined;
+}
+
+function parseAndFilterArray(value, valuesToSkip = new Set()) {
+  const array = parseArray(value);
+  if (array) {
+    return array.filter((n) => !valuesToSkip.has(n));
+  }
+
+  return value;
 }
 
 function parseSpatial(value) {
@@ -164,17 +178,17 @@ function processParameter(result, key, value) {
 
     case 'ontologyterms':
     case 'ontology-terms':
-      setIfDefined(result, 'ontologyTerms', parseArray(value));
+      setIfDefined(result, 'ontologyTerms', parseAndFilterArray(value, SKIPPABLE_AS));
       break;
 
     case 'celltypeterms':
     case 'cell-type-terms':
-      setIfDefined(result, 'cellTypeTerms', parseArray(value));
+      setIfDefined(result, 'cellTypeTerms', parseAndFilterArray(value, SKIPPABLE_CT));
       break;
 
     case 'biomarkerterms':
     case 'biomarker-terms':
-      setIfDefined(result, 'biomarkerTerms', parseArray(value));
+      setIfDefined(result, 'biomarkerTerms', parseAndFilterArray(value, SKIPPABLE_BM));
       break;
   }
 }

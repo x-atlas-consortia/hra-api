@@ -1,3 +1,4 @@
+import { getSpatialGraph } from '../../shared/spatial/spatial-graph';
 import frame from '../frames/scene.jsonld';
 import refOrganQuery from '../queries/scene-organs.rq';
 import query from '../queries/scene.rq';
@@ -29,6 +30,6 @@ export async function getReferenceOrganScene(organIri, filter, endpoint = 'https
     executeFilteredConstructQuery(filterRefOrganQuery(organIri, filter), filter, frame, endpoint),
     getSpatialGraph(endpoint),
   ]);
-  const nodes = [...(refOrgans['@graph'] ?? []), ...(extractionSites['@graph'] ?? [])];
-  return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter));
+  const nodes = [...(refOrgans?.['@graph'] ?? []), ...(extractionSites?.['@graph'] ?? [])];
+  return reformatSceneNodes(nodes, spatialGraph, organIri);
 }

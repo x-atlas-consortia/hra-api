@@ -1,0 +1,15 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+
+SELECT *
+FROM DSGraphs:
+WHERE {
+  ?rui_location
+    rdf:type ccf:SpatialEntity ;
+    ccf:x_dimension ?x ;
+    ccf:y_dimension ?y ;
+    ccf:z_dimension ?z ;
+    ccf:dimension_unit ?units .
+}
