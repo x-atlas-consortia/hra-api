@@ -8,8 +8,16 @@ import placementsQuery from '../../v1/queries/spatial-placements.rq';
 import { ensureArray } from '../../v1/utils/jsonld-compat.js';
 import { select } from '../utils/sparql.js';
 
+/** @type {Promise<SpatialGraph> | undefined} */
 let CACHED_GRAPH;
 
+/**
+ * Get an initialized spatial graph for spatial queries
+ *
+ * @param {string} endpoint the sparql endpoint to use for queries
+ * @param {boolean} useCache whether to create/use a cached SpatialGraph
+ * @returns {Promise<SpatialGraph>} a promise for an initialized SpatialGraph
+ */
 export async function getSpatialGraph(endpoint, useCache = true) {
   if (!useCache) {
     return new SpatialGraph(endpoint).initialize();
@@ -176,10 +184,11 @@ export class SpatialGraph {
   probeExtractionSites(search, results = new Set()) {
     const { x, y, z, radius, target } = search;
     const radiusSquared = (radius / 1000) * (radius / 1000);
+    const center = [x, y, z].map(n => n / 1000);
     for (const sourceIri of Object.keys(this.halfSizeLookup)) {
       const boundingBox = this.getOrientedBoundingBox(sourceIri, target);
       if (boundingBox) {
-        const distanceSquared = boundingBox.distanceSquaredTo([x, y, z].map(n => n / 1000));
+        const distanceSquared = boundingBox.distanceSquaredTo(center);
         if (distanceSquared <= radiusSquared) {
           results.add(sourceIri);
         }

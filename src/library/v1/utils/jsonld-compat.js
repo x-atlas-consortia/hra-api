@@ -48,9 +48,9 @@ export function ensureNumber(value) {
 }
 
 export function ensureGraphArray(results) {
-  if (results['@graph']) {
+  if (results?.['@graph']) {
     return results['@graph'];
-  } else if (results['@id']) {
+  } else if (results?.['@id']) {
     delete results['@context'];
     return [results];
   } else {

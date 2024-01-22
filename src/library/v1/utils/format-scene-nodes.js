@@ -18,20 +18,21 @@ export function reformatSceneNodes(nodes, graph, targetIri) {
         z_dimension: ensureNumber(n.z_dimension),
       };
       const transformMatrix = graph.getExtractionSiteTransform(n.rui_location, targetIri, bounds);
-      Object.assign(n, {
-        '@id': n.rui_location,
-        ccf_annotations: ensureArray(n.ccf_annotations),
-        transformMatrix,
-        color: [255, 255, 255, 0.9 * 255],
-        // Delete temporary properties
-        rui_location: undefined,
-        x_dimension: undefined,
-        y_dimension: undefined,
-        z_dimension: undefined,
-        dimension_units: undefined,
-      });
-
-      extractionSites.push(n);
+      if (transformMatrix) {
+        Object.assign(n, {
+          '@id': n.rui_location,
+          ccf_annotations: ensureArray(n.ccf_annotations),
+          transformMatrix,
+          color: [255, 255, 255, 0.9 * 255],
+          // Delete temporary properties
+          rui_location: undefined,
+          x_dimension: undefined,
+          y_dimension: undefined,
+          z_dimension: undefined,
+          dimension_units: undefined,
+        });
+        extractionSites.push(n);
+      }
     } else {
       // Apply defaults to reference organs
       const transformMatrix = graph.get3DObjectTransform(n['@id'], targetIri, n.object);

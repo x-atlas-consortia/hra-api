@@ -1,10 +1,10 @@
 import frame from '../frames/tissue-blocks.jsonld';
 import query from '../queries/tissue-blocks.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
-import { ensureArray, ensureNumber, expandIri } from '../utils/jsonld-compat.js';
+import { ensureArray, ensureGraphArray, ensureNumber, expandIris } from '../utils/jsonld-compat.js';
 
 function reformatResponse(results) {
-  return (results?.['@graph'] || [])
+  const resultArray = ensureGraphArray(results)
     .map((block) => {
       // return block;
       const {
@@ -48,10 +48,11 @@ function reformatResponse(results) {
         donor,
         datasets: datasets ?? [],
         sections: sections ?? [],
-        spatialEntityId: expandIri(spatialEntityId),
+        spatialEntityId
       };
     })
     .filter((s) => !!s);
+  return expandIris(resultArray);
 }
 
 /**
