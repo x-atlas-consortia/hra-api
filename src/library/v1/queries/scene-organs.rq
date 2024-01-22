@@ -17,7 +17,6 @@ CONSTRUCT {
 }
 FROM CCF:
 WHERE {
-  #{{VALUES}}
   {
     ?refOrgan rdf:type ccf:SpatialEntity ;
               ccf:has_reference_organ ?refOrgan ;
@@ -40,5 +39,7 @@ WHERE {
             ccf:file_subpath ?file_subpath .
     OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
     BIND(STR(?_sex) as ?sex)
+    
+    #{{FILTER}}
   }
 }

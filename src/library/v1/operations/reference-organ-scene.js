@@ -4,17 +4,20 @@ import refOrganQuery from '../queries/scene-organs.rq';
 import query from '../queries/scene.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 import { reformatSceneNodes } from '../utils/format-scene-nodes.js';
+import { ensureGraphArray, expandIri } from '../utils/jsonld-compat.js';
 
 function filterRefOrganQuery(organIri, filter) {
   const hasSexFilter = filter?.sex !== undefined && filter?.sex?.toLowerCase() !== 'both';
-  let values;
+  let values = `
+    FILTER (?representation_of = <${organIri}>)
+`;
   if (hasSexFilter) {
     const sex = filter.sex.toLowerCase() === 'male' ? 'Male' : 'Female';
-    values = `VALUES (?representation_of ?sex) { (<${organIri}> "${sex}") }`;
-  } else {
-    values = `VALUES (?representation_of) { (<${organIri}>) }`;
+    values += `
+    FILTER (?sex = "${sex}")
+`;
   }
-  return refOrganQuery.replace('#{{VALUES}}', values);
+  return refOrganQuery.replace('#{{FILTER}}', values);
 }
 
 /**
@@ -30,6 +33,12 @@ export async function getReferenceOrganScene(organIri, filter, endpoint = 'https
     executeFilteredConstructQuery(filterRefOrganQuery(organIri, filter), filter, frame, endpoint),
     getSpatialGraph(endpoint),
   ]);
-  const nodes = [...(refOrgans?.['@graph'] ?? []), ...(extractionSites?.['@graph'] ?? [])];
-  return reformatSceneNodes(nodes, spatialGraph, organIri);
+  const refOrganNodes = ensureGraphArray(refOrgans);
+  if (refOrganNodes.length > 0) {
+    const nodes = [...refOrganNodes, ...ensureGraphArray(extractionSites)];
+    const targetIri = expandIri(refOrganNodes[0]['@id']);
+    return reformatSceneNodes(nodes, spatialGraph, targetIri);
+  } else {
+    return [];
+  }
 }

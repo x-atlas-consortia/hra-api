@@ -46,3 +46,14 @@ export function ensureNumber(value) {
     return value;
   }
 }
+
+export function ensureGraphArray(results) {
+  if (results['@graph']) {
+    return results['@graph'];
+  } else if (results['@id']) {
+    delete results['@context'];
+    return [results];
+  } else {
+    return [];
+  }
+}
