@@ -26,12 +26,15 @@ CONSTRUCT {
          ccf:tissue_provider_name ?provider ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
-         ccf:url ?link .
+         ccf:url ?donorLink .
   ?sample rdf:type ccf:Sample ;
           ccf:sample_type ?sampleType ;
+          rdfs:label ?sampleLabel ;
+          rdfs:comment ?sampleDescription ;
           ccf:has_registration_location ?rui_location ;
           ccf:subdivided_into_sections ?section ;
           ccf:comes_from ?donor ;
+          ccf:url ?sampleLink ;
           ccf:generates_dataset ?dataset .
   ?section rdf:type ccf:Sample ;
             ccf:sample_type ?sectionType ;
@@ -58,6 +61,9 @@ WHERE {
   ?sample rdf:type ccf:Sample ;
           ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?rui_location ;
+          rdfs:label ?sampleLabel ;
+          rdfs:comment ?sampleDescription ;
+          ccf:url ?sampleLink ;
           ccf:comes_from ?donor .
   ?donor rdf:type ccf:Donor ;
          ccf:sex ?sex ;
@@ -65,7 +71,7 @@ WHERE {
          ccf:tissue_provider_name ?provider ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
-         ccf:url ?link .
+         ccf:url ?donorLink .
 
   OPTIONAL {
     ?rui_location ccf:collides_with ?anatomical_structure .
