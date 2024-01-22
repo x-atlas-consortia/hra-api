@@ -36,9 +36,9 @@ CONSTRUCT {
 }
 FROM CCF:
 WHERE { # Ontology / CCF.OWL
-  cell: ^rdfs:subClassOf* ?child .
+  cell: ^ccf:ccf_ct_isa* ?child .
   cell: rdfs:label ?cellLabel .
-  ?child rdfs:subClassOf ?parent .
+  ?child ccf:ccf_ct_isa ?parent .
   ?child rdfs:label ?label1 .
   ?child ccf:ccf_pref_label ?synonymLabel1 .
   FILTER (!isBlank(?child) && !isBlank(?parent))
