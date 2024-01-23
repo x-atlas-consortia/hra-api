@@ -33,6 +33,7 @@ function reformatResponse(results) {
       sections.forEach((section) => {
         section.sample_type = 'Tissue Section';
         section.datasets = ensureArray(section.datasets);
+        section.section_number = ensureNumber(section.section_number);
       });
 
       return {
@@ -42,8 +43,8 @@ function reformatResponse(results) {
         link,
         label,
         description: Array.isArray(description) ? description.join('; ') : description || '',
-        sectionCount,
-        sectionSize,
+        sectionCount: ensureNumber(sectionCount),
+        sectionSize: ensureNumber(sectionSize),
         sectionUnits,
         donor,
         datasets: datasets ?? [],

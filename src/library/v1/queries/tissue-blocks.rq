@@ -1,16 +1,3 @@
-# This SPARQL query constructs a result set representing detailed information about tissue donors, samples, datasets, and sections.
-# It combines data from the CCF ontology and experimental data sources.
-#  
-#  * Query Structure:
-#     The query uses the CONSTRUCT statement to build a result set containing information about tissue donors, samples, datasets, and sections.
-#     It retrieves data from the CCF ontology and external data sources.
-#     The query constructs nodes for various entities, including tissue donors, samples, datasets, and sections.
-#     It captures details such as donor type, tissue provider name, labels, comments, URLs, sex, age, BMI, technology, thumbnails,
-#     section count, section size, and more.
-#  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
-#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
-#          when used in the API call.
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
@@ -18,97 +5,104 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?donor rdf:type ccf:Donor ;
-         ccf:sex ?sex ;
-         ccf:age ?age ;
-         ccf:bmi ?bmi ;
-         ccf:consortium_name ?consortium ;
-         ccf:tissue_provider_name ?provider ;
-         rdfs:label ?donorLabel ;
-         rdfs:comment ?donorDescription ;
-         ccf:url ?donorLink .
   ?sample rdf:type ccf:Sample ;
-          ccf:sample_type ?sampleType ;
           rdfs:label ?sampleLabel ;
           rdfs:comment ?sampleDescription ;
-          ccf:has_registration_location ?rui_location ;
-          ccf:subdivided_into_sections ?section ;
-          ccf:comes_from ?donor ;
           ccf:url ?sampleLink ;
-          ccf:generates_dataset ?dataset .
+          ccf:sample_type ?sampleType ;
+          ccf:generates_dataset ?dataset ;
+          ccf:has_registration_location ?rui_location ;
+          ccf:comes_from ?donor ;
+          ccf:subdivided_into_sections ?section ;
+          ccf:section_count ?sectionCount ;
+          ccf:section_size ?sectionSize ;
+          ccf:section_size_unit ?sectionUnits ;
+  .
+  ?donor rdf:type ccf:Donor ;
+         rdfs:label ?donorLabel ;
+         rdfs:comment ?donorDescription ;
+         ccf:url ?donorLink ;
+         ccf:tissue_provider_name ?provider ;
+  .
   ?section rdf:type ccf:Sample ;
-            ccf:sample_type ?sectionType ;
-            ccf:section_number ?sectionNumber ;
-            rdfs:label ?sectionLabel ;
-            rdfs:comment ?sectionDescription ;
-            ccf:url ?sectionLink ;
-            ccf:generates_dataset ?sectionDataset .
+           rdfs:label ?sectionLabel ;
+           rdfs:comment ?sectionDescription ;
+           ccf:url ?sectionLink ;
+           ccf:sample_type ?sectionType ;
+           ccf:generates_dataset ?sectionDataset ;
+           ccf:section_number ?sectionNumber ;
+  .
   ?dataset rdf:type ccf:Dataset ;
+           rdfs:label ?datasetLabel ;
+           rdfs:comment ?datasetDescription ;
+           ccf:url ?datasetLink ;
            ccf:technology ?technology ;
            ccf:thumbnail ?thumbnail ;
-           rdfs:comment ?datasetDescription ;
-           rdfs:label ?datasetLabel .
+  .
   ?sectionDataset rdf:type ccf:Dataset ;
+                  rdfs:label ?sectionDatasetLabel ;
+                  rdfs:comment ?sectionDatasetDescription ;
+                  ccf:url ?sectionDatasetLink ;
                   ccf:technology ?sectionTechnology ;
                   ccf:thumbnail ?sectionThumbnail ;
-                  rdfs:comment ?sectionDatasetDescription ;
-                  rdfs:label ?sectionDatasetLabel .
-  ?sample ccf:has_registration_location ?rui_location .
+  .
 }
 FROM CCF:
 FROM DSGraphs:
 WHERE {
   ?sample rdf:type ccf:Sample ;
-          ccf:sample_type ?sampleType ;
-          ccf:has_registration_location ?rui_location ;
           rdfs:label ?sampleLabel ;
           rdfs:comment ?sampleDescription ;
           ccf:url ?sampleLink ;
-          ccf:comes_from ?donor .
+          ccf:sample_type ?sampleType ;
+          ccf:has_registration_location ?rui_location ;
+          ccf:comes_from ?donor ;
+  .
   ?donor rdf:type ccf:Donor ;
-         ccf:sex ?sex ;
-         ccf:consortium_name ?consortium ;
-         ccf:tissue_provider_name ?provider ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
-         ccf:url ?donorLink .
+         ccf:url ?donorLink ;
+         ccf:tissue_provider_name ?provider ;
+  .
 
   OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    ?sample ccf:section_count ?sectionCount ;
+      ccf:section_size ?sectionSize ;
+      ccf:section_size_unit ?sectionUnits .
   }
 
-  OPTIONAL {
-    ?sample ccf:generates_dataset ?dataset . 
-    ?dataset ccf:technology ?technology ;
-           ccf:thumbnail ?thumbnail ;
-           rdfs:comment ?datasetDescription ;
-           rdfs:label ?datasetLabel .
-  }
-  
   OPTIONAL {
     ?sample ccf:subdivided_into_sections ?section .
     ?section rdf:type ccf:Sample ;
-            ccf:sample_type ?sectionType ;
-            ccf:section_number ?sectionNumber ;
             rdfs:label ?sectionLabel ;
             rdfs:comment ?sectionDescription ;
-            ccf:url ?sectionLink 
-            .
-    
+            ccf:url ?sectionLink ;
+            ccf:sample_type ?sectionType ;
+            ccf:section_number ?sectionNumber ;
+    .
+
     OPTIONAL {
-      ?section ccf:generates_dataset ?sectionDataset . 
-      ?sectionDataset ccf:technology ?sectionTechnology ;
-                ccf:thumbnail ?sectionThumbnail ;
-                rdfs:comment ?sectionDatasetDescription ;
-                rdfs:label ?sectionDatasetLabel .
+      ?section ccf:generates_dataset ?sectionDataset .
+      ?sectionDataset rdf:type ccf:Dataset ;
+                  rdfs:label ?sectionDatasetLabel ;
+                  rdfs:comment ?sectionDatasetDescription ;
+                  ccf:url ?sectionDatasetLink ;
+                  ccf:technology ?sectionTechnology ;
+                  ccf:thumbnail ?sectionThumbnail ;
+      .
     }
   }
-  OPTIONAL { ?donor ccf:age ?age . }
-  OPTIONAL { ?donor ccf:bmi ?bmi . }
+
+  OPTIONAL {
+    ?sample ccf:generates_dataset ?dataset .
+    ?dataset rdf:type ccf:Dataset ;
+             rdfs:label ?datasetLabel ;
+             rdfs:comment ?datasetDescription ;
+             ccf:url ?datasetLink ;
+             ccf:technology ?technology ;
+             ccf:thumbnail ?thumbnail ;
+    .
+  }
+
   #{{FILTER}}
-  FILTER (?sampleType = "Tissue Block")
 }

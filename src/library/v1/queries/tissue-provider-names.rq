@@ -1,12 +1,3 @@
-#  * This SPARQL query retrieves distinct tissue provider names from the CCF dataset.
-#  
-#  * Query Structure:
-#       The query uses the SELECT DISTINCT statement to retrieve distinct tissue provider names.
-#       It specifies the variables ?providerName to store the retrieved tissue provider names.
-#       The query searches for relationships between samples, tissue donors, and tissue provider names in the CCF dataset.
-#  
-#  * @param ?providerName - The distinct tissue provider names.
-
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
@@ -26,38 +17,8 @@ WHERE {
     ?block ccf:subdivided_into_sections ?section .
     ?section ccf:generates_dataset ?dataset .
   }
-  OPTIONAL {
-    ?donor ccf:consortium_name ?consortium .
-  }
-  OPTIONAL {
-    ?donor ccf:tissue_provider_name ?provider .
-  }
-  OPTIONAL {
-    ?donor ccf:age ?age .
-  }
-  OPTIONAL {
-    ?donor ccf:sex ?sex .
-  }
-  OPTIONAL {
-    ?donor ccf:bmi ?bmi .
-  }
-  OPTIONAL {
-    ?donor ccf:race ?race .
-  }
-  OPTIONAL {
-    ?dataset ccf:technology ?technology .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?cell_type ccf:ccf_located_in ?anatomical_structure .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?biomarker ccf:biomarker_located_in ?anatomical_structure .
-  }
-#{{FILTER}}
+  ?donor ccf:tissue_provider_name ?provider .
+
+  #{{FILTER}}
 }
 ORDER BY ?provider

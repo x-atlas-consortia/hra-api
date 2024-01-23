@@ -1,23 +1,3 @@
-#  * This CONSTRUCT SPARQL query retrieves information about cell types and their counts based on specific criteria.
-#  * It constructs a new RDF graph with cell types and their associated counts. We can add all other filters to the query. 
-#  
-#  * Query Structure:
-#  * The query performs the following steps:
-#  * 1. Selects distinct cell types and counts how many times they appear in the data.
-#  * 2. Constructs RDF triples where each cell type is linked to its count using the ccf:count predicate.
-#  
-#  * Data Sources:
-#  * - The query retrieves data from multiple sources specified using the FROM clause.
-#  *   - The CCF ontology from <https://purl.org/ccf/releases/2.2.1/ccf.owl>
-#  *   - Experimental data sets from RUI locations (e.g., <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>)
-#  *   - GTEx data from RUI locations (e.g., <https://ccf-api.hubmapconsortium.org/v1/gtex/rui_locations.jsonld>)
-#  
-#  * @param ?cell_type - The cell type.
-#  * @param ?count     - The count of occurrences for each cell type.
-#  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
-#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
-#          when used in the API call.
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
@@ -30,63 +10,22 @@ CONSTRUCT {
 FROM CCF:
 FROM DSGraphs:
 WHERE {
-  SELECT DISTINCT ?_cell_type (COUNT(DISTINCT(?block)) AS ?count)
+  SELECT DISTINCT ?cell_type (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
+    ?block ccf:comes_from ?donor .
+    ?block ccf:has_registration_location ?rui_location .
     {
-      ?block ccf:comes_from ?donor .
-      ?block ccf:has_registration_location ?rui_location .
-      {
-        ?block ccf:generates_dataset ?dataset .
-      }
-      UNION
-      {
-        ?block ccf:subdivided_into_sections ?section .
-        ?section ccf:generates_dataset ?dataset .
-      }
-      OPTIONAL {
-        ?donor ccf:consortium_name ?consortium .
-      }
-      OPTIONAL {
-        ?donor ccf:tissue_provider_name ?provider .
-      }
-      OPTIONAL {
-        ?donor ccf:age ?age .
-      }
-      OPTIONAL {
-        ?donor ccf:sex ?sex .
-      }
-      OPTIONAL {
-        ?donor ccf:bmi ?bmi .
-      }
-      OPTIONAL {
-        ?donor ccf:race ?race .
-      }
-      OPTIONAL {
-        ?dataset ccf:technology ?technology .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-        ?cell_type ccf:ccf_located_in ?anatomical_structure .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-        ?biomarker ccf:biomarker_located_in ?anatomical_structure .
-      }
-#{{FILTER}}
-    }
-
-    {
-      BIND(?cell_type as ?_cell_type)
+      ?block ccf:generates_dataset ?dataset .
     }
     UNION
     {
-      ?anatomical_structure ccf:ccf_part_of ?_anatomical_structure .
-      ?_anatomical_structure ccf:ccf_located_in ?_cell_type .
+      ?block ccf:subdivided_into_sections ?section .
+      ?section ccf:generates_dataset ?sectionDataset .
     }
+    ?rui_location ccf:collides_with ?anatomical_structure .
+    ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    #{{FILTER}}
   }
-  GROUP BY ?_cell_type
+  GROUP BY ?cell_type
   ORDER BY DESC(?count)
 }

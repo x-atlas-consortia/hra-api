@@ -1,17 +1,3 @@
-#  * This SELECT SPARQL query retrieves distinct technology types associated with datasets
-#    from the HubMap Consortium's data source.
-#  
-#  * Query Structure:
-#    The query retrieves distinct technology types (?technology) used in datasets generated
-#    by samples from the specified data source.
-#  
-#  * Data Source:
-#       - The query fetches data from the HubMap Consortium's data source specified in the FROM clause.
-#       - The data source is available at <https://ccf-api.hubmapconsortium.org/v1/hubmap/rui_locations.jsonld>.
-#  
-#  * @param ?technology - The distinct technology types used in datasets.
-# 
-
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
@@ -31,38 +17,7 @@ WHERE {
     ?block ccf:subdivided_into_sections ?section .
     ?section ccf:generates_dataset ?dataset .
   }
-  OPTIONAL {
-    ?donor ccf:consortium_name ?consortium .
-  }
-  OPTIONAL {
-    ?donor ccf:tissue_provider_name ?provider .
-  }
-  OPTIONAL {
-    ?donor ccf:age ?age .
-  }
-  OPTIONAL {
-    ?donor ccf:sex ?sex .
-  }
-  OPTIONAL {
-    ?donor ccf:bmi ?bmi .
-  }
-  OPTIONAL {
-    ?donor ccf:race ?race .
-  }
-  OPTIONAL {
-    ?dataset ccf:technology ?technology .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?cell_type ccf:ccf_located_in ?anatomical_structure .
-  }
-  OPTIONAL {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?biomarker ccf:biomarker_located_in ?anatomical_structure .
-  }
-#{{FILTER}}
+  ?dataset ccf:technology ?technology .
+  #{{FILTER}}
 }
 ORDER BY ?technology

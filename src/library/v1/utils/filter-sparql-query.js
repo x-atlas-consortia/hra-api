@@ -13,57 +13,71 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
     consortiums,
     spatialSearches,
   } = filter;
-  let sparqlFilter = '';
+  const filters = {
+    donor: [],
+    rui_location: [],
+    dataset: [],
+    sectionDataset: [],
+  };
   if (sex && sex !== 'Both') {
-    sparqlFilter += `
-        FILTER(?sex = "${sex}")
-`;
+    filters.donor.push(`?donor ccf:sex ?sex . FILTER(?sex = "${sex}")`);
   }
   if (ageRange) {
-    sparqlFilter += `
-          FILTER (?age > ${ageRange[0]} && ?age < ${ageRange[1]})
-`;
+    filters.donor.push(`?donor ccf:age ?age . FILTER (?age > ${ageRange[0]} && ?age < ${ageRange[1]})`);
   }
   if (bmiRange) {
-    sparqlFilter += `
-          FILTER (?bmi > ${bmiRange[0]} && ?bmi < ${bmiRange[1]})
-`;
+    filters.donor.push(`?donor ccf:bmi ?bmi . FILTER (?bmi > ${bmiRange[0]} && ?bmi < ${bmiRange[1]})`);
   }
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(', ');
-    sparqlFilter += `
-        FILTER(?anatomical_structure IN (${terms}))
-`;
+    filters.rui_location.push(`
+      {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+      }
+      UNION
+      {
+        ?rui_location ccf:collides_with [
+          ccf:ccf_part_of ?anatomical_structure
+        ] .
+      }
+      FILTER(?anatomical_structure IN (${terms}))`);
   }
   if (cellTypeTerms?.length > 0) {
     const terms = cellTypeTerms.map((s) => `<${s}>`).join(', ');
-    sparqlFilter += `
-        FILTER(?cell_type IN (${terms}))
-`;
+    filters.rui_location.push(`
+      ?rui_location ccf:collides_with [
+        ^ccf:ccf_located_in ?cell_type
+      ] .
+      FILTER(?cell_type IN (${terms}))`);
   }
   if (biomarkerTerms?.length > 0) {
     const terms = biomarkerTerms.map((s) => `<${s}>`).join(', ');
-    sparqlFilter += `
-        FILTER(?biomarker IN (${terms}))
-`;
+    filters.rui_location.push(`
+      ?rui_location ccf:collides_with [
+        ^ccf:ccf_bm_located_in ?biomarker
+      ] .
+      FILTER(?biomarker IN (${terms}))`);
   }
   if (tmc?.length > 0) {
     const providers = tmc.map((s) => `"${s}"`).join(', ');
-    sparqlFilter += `
-        FILTER(?provider IN (${providers}))
-`;
+    filters.donor.push(`
+      ?donor ccf:tissue_provider_name ?provider .
+      FILTER(?provider IN (${providers}))`);
   }
   if (technologies?.length > 0) {
     const technologiesString = technologies.map((s) => `"${s}"`).join(', ');
-    sparqlFilter += `
-        FILTER(?technology IN (${technologiesString}))
-`;
+    filters.dataset.push(`
+      ?dataset ccf:technology ?technology .
+      FILTER(?technology IN (${technologiesString}) )`);
+    filters.sectionDataset.push(`
+      ?sectionDataset ccf:technology ?sectionTechnology .
+      FILTER(?sectionTechnology IN (${technologiesString}))`);
   }
   if (consortiums?.length > 0) {
     const terms = consortiums.map((s) => `"${s}"`).join(', ');
-    sparqlFilter += `
-        FILTER(?consortium IN (${terms}))
-`;
+    filters.donor.push(`
+      ?donor ccf:consortium_name ?consortium .
+      FILTER(?consortium IN (${terms}))`);
   }
   if (spatialSearches?.length > 0) {
     const spatialGraph = await getSpatialGraph(endpoint);
@@ -72,15 +86,46 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
       results = spatialGraph.probeExtractionSites(search, results);
     }
     if (results.size === 0) {
-      sparqlFilter += `
-        FILTER(?rui_location = <https://no-extraction-sites-found.com/>)
-`;
+      filters.rui_location.push(`FILTER(?rui_location = <https://no-extraction-sites-found.com/>)`);
     } else {
       const sites = [...results].map((s) => `<${s}>`).join(', ');
-      sparqlFilter += `
-        FILTER(?rui_location IN (${sites}))
-`;
+      filters.rui_location.push(`FILTER(?rui_location IN (${sites}))`);
     }
+  }
+  let sparqlFilter = '';
+  if (filters.donor.length > 0) {
+    sparqlFilter += `
+    {
+      SELECT ?donor
+      WHERE {
+        ${filters.donor.join('\n')}
+      }
+    }`;
+  }
+  if (filters.dataset.length > 0) {
+    sparqlFilter += `
+    {
+      SELECT ?dataset
+      WHERE {
+        ${filters.dataset.join('\n')}
+      }
+    }
+    UNION
+    {
+      SELECT ?sectionDataset
+      WHERE {
+        ${filters.sectionDataset.join('\n')}
+      }
+    }`;
+  }
+  if (filters.rui_location.length) {
+    sparqlFilter += `
+    {
+      SELECT ?rui_location
+      WHERE {
+        ${filters.rui_location.join('\n')}
+      }
+    }`;
   }
   return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
 }

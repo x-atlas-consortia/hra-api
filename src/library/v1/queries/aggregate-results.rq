@@ -1,16 +1,3 @@
-#  * This SPARQL query retrieves counts for different categories related to tissue data.
-#  * It counts the number of:
-#     - Tissue Donors
-#     - Tissue Providers
-#     - Tissue Blocks
-#     - Tissue Sections
-#     - Datasets
-#  
-#  * Each count is presented with a corresponding label.
-#
-#  * @param ?label - The label for the category (e.g., "Tissue Donor").
-#  * @param ?count - The count of items in the category.
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
@@ -37,9 +24,12 @@ CONSTRUCT {
 FROM DSGraphs:
 WHERE {
   {
-    SELECT (COUNT(DISTINCT ?donor) AS ?donor_count) (COUNT(DISTINCT ?provider) AS ?provider_count)
-  (COUNT(DISTINCT ?block) AS ?block_count) (COUNT(DISTINCT ?section) AS ?section_count)
-  (COUNT(DISTINCT ?dataset) AS ?dataset_count)
+    SELECT 
+      (COUNT(DISTINCT ?donor) AS ?donor_count)
+      (COUNT(DISTINCT ?provider) AS ?provider_count)
+      (COUNT(DISTINCT ?block) AS ?block_count)
+      (COUNT(DISTINCT ?section) AS ?section_count)
+      (COUNT(DISTINCT ?dataset) AS ?dataset_count)
     WHERE {
       ?block ccf:comes_from ?donor .
       ?block ccf:has_registration_location ?rui_location .
@@ -52,38 +42,9 @@ WHERE {
         ?section ccf:generates_dataset ?dataset .
       }
       OPTIONAL {
-        ?donor ccf:consortium_name ?consortium .
-      }
-      OPTIONAL {
         ?donor ccf:tissue_provider_name ?provider .
       }
-      OPTIONAL {
-        ?donor ccf:age ?age .
-      }
-      OPTIONAL {
-        ?donor ccf:sex ?sex .
-      }
-      OPTIONAL {
-        ?donor ccf:bmi ?bmi .
-      }
-      OPTIONAL {
-        ?donor ccf:race ?race .
-      }
-      OPTIONAL {
-        ?dataset ccf:technology ?technology .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-        ?cell_type ccf:ccf_located_in ?anatomical_structure .
-      }
-      OPTIONAL {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-        ?biomarker ccf:biomarker_located_in ?anatomical_structure .
-      }
-#{{FILTER}}
+      #{{FILTER}}
     }
   }
 }

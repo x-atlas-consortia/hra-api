@@ -3,6 +3,7 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX has_characterizing_biomarker_set: <http://purl.obolibrary.org/obo/RO_0015004>
 
 CONSTRUCT {
@@ -14,8 +15,11 @@ CONSTRUCT {
   ?child_ct rdfs:subClassOf ?ct .
   ?bm ccf:ccf_bm_located_in ?bm_as .
   ?bm ccf:ccf_bm_located_in ?bm_as_parent .
+  ?rui_location ccf:collides_with ?rui_as .
+  ?rui_location ccf:collides_with ?rui_as_parent .
 }
 FROM CCF:
+FROM DSGraphs:
 WHERE {
   {
     ?as ccf:ccf_part_of* ?as_parent .
@@ -38,5 +42,10 @@ WHERE {
       owl:onProperty ccf:has_marker_component ;
       owl:someValuesFrom ?bm
     ] .
+  }
+  UNION
+  {
+    ?rui_location ccf:collides_with ?rui_as .
+    ?rui_as ccf:ccf_part_of* ?rui_as_parent .
   }
 }

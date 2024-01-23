@@ -1,15 +1,3 @@
-#   This SPARQL query constructs a result set representing spatial entities and their associated information.
-#   It operates on data related to spatial entities, including their dimensions, creators, labels, and file references.
-#   The query combines data from the CCF ontology and experimental data sources.
-#  
-#  * Query Structure:
-#       The query uses the CONSTRUCT statement to build a result set representing spatial entities and their details.
-#       It retrieves data from the CCF ontology and external data sources.
-#       The query constructs nodes for spatial entities, including their types, dimensions, creators, labels, and file references.
-# * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
-#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
-#          when used in the API call.
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
