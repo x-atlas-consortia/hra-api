@@ -1,4 +1,4 @@
-import { ensureArray, ensureNumber, expandIris } from './jsonld-compat.js';
+import { ensureArray, ensureNumber, normalizeJsonLd } from './jsonld-compat.js';
 
 export function reformatSceneNodes(nodes, graph, targetIri) {
   const refOrgans = [];
@@ -8,7 +8,7 @@ export function reformatSceneNodes(nodes, graph, targetIri) {
   nodes.sort((a, b) => a.rui_rank - b.rui_rank);
 
   for (let n of nodes) {
-    n = expandIris(n);
+    n = normalizeJsonLd(n);
     if (n.entityId) {
       // Reformat and apply defaults to experimental data
       const bounds = {

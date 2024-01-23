@@ -1,7 +1,7 @@
 import frame from '../frames/reference-organs.jsonld';
 import query from '../queries/reference-organs.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
-import { ensureGraphArray, ensureNumber, expandIris } from '../utils/jsonld-compat.js';
+import { ensureGraphArray, ensureNumber, normalizeJsonLd } from '../utils/jsonld-compat.js';
 
 function reformatResponse(results) {
   const resultArray = ensureGraphArray(results);
@@ -13,7 +13,7 @@ function reformatResponse(results) {
       rui_rank: ensureNumber(organ.rui_rank),
     });
   }
-  return expandIris(resultArray);
+  return normalizeJsonLd(resultArray);
 }
 
 /**

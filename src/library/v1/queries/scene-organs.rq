@@ -40,6 +40,6 @@ WHERE {
     OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
     BIND(STR(?_sex) as ?sex)
     
-    #{{FILTER}}
+    #{{ORGAN_FILTER}}
   }
 }

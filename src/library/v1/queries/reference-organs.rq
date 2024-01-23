@@ -19,6 +19,7 @@ CONSTRUCT {
             ccf:dimension_unit ?dimension_units ;
             rdfs:label ?label ;
             ccf:sex ?sex ;
+            ccf:organ_side ?organ_side ;
             ccf:rui_rank ?rui_rank ;
             ccf:has_object_reference ?object .
   ?object rdf:type ccf:SpatialObjectReference ;

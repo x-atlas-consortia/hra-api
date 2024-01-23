@@ -9,9 +9,27 @@ export function expandIri(iri) {
     : iri;
 }
 
-export function expandIris(obj) {
-  return JSON.parse(JSON.stringify(obj), (_key, value) => {
-    if (Array.isArray(value)) {
+export function normalizeJsonLd(jsonld, arrayFields = new Set()) {
+  return JSON.parse(JSON.stringify(jsonld), (key, value) => {
+    if (arrayFields.has(key)) {
+      value = ensureArray(value);
+    }
+    if (typeof value === 'object' && value?.['@type'] && value['@value'] && (
+        value['@type'].startsWith('xsd:') || 
+        value['@type'].startsWith('http://www.w3.org/2001/XMLSchema#')
+      )) {
+      switch (value['@type']) {
+        case 'http://www.w3.org/2001/XMLSchema#integer':
+        case 'http://www.w3.org/2001/XMLSchema#double':
+        case 'http://www.w3.org/2001/XMLSchema#decimal':
+        case 'xsd:integer':
+        case 'xsd:double':
+        case 'xsd:decimal':
+          return Number(value['@value']);
+        default:
+          return value;
+      }
+    } else if (Array.isArray(value)) {
       return value.map(expandIri);
     } else {
       return expandIri(value);

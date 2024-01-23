@@ -17,7 +17,7 @@ function filterRefOrganQuery(organIri, filter) {
     FILTER (?sex = "${sex}")
 `;
   }
-  return refOrganQuery.replace('#{{FILTER}}', values);
+  return refOrganQuery.replace('#{{ORGAN_FILTER}}', values);
 }
 
 /**
