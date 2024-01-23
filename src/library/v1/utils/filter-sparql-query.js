@@ -67,11 +67,15 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
   if (technologies?.length > 0) {
     const technologiesString = technologies.map((s) => `"${s}"`).join(', ');
     filters.dataset.push(`
+      ?sample ccf:generates_dataset ?dataset ;
+              ccf:sample_type ?sampleType .
       ?dataset ccf:technology ?technology .
-      FILTER(?technology IN (${technologiesString}) )`);
+      FILTER(?sampleType = "Tissue Block" && ?technology IN (${technologiesString}) )`);
     filters.sectionDataset.push(`
+      ?section ccf:generates_dataset ?sectionDataset ;
+              ccf:sample_type ?sampleType .
       ?sectionDataset ccf:technology ?sectionTechnology .
-      FILTER(?sectionTechnology IN (${technologiesString}))`);
+      FILTER(?sampleType = "Tissue Section" && ?sectionTechnology IN (${technologiesString}))`);
   }
   if (consortiums?.length > 0) {
     const terms = consortiums.map((s) => `"${s}"`).join(', ');
@@ -86,46 +90,47 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
       results = spatialGraph.probeExtractionSites(search, results);
     }
     if (results.size === 0) {
-      filters.rui_location.push(`FILTER(?rui_location = <https://no-extraction-sites-found.com/>)`);
+      filters.rui_location.push(`?block ccf:has_registration_location ?rui_location . FILTER(?rui_location = <https://no-extraction-sites-found.com/>)`);
     } else {
       const sites = [...results].map((s) => `<${s}>`).join(', ');
-      filters.rui_location.push(`FILTER(?rui_location IN (${sites}))`);
+      filters.rui_location.push(`?block ccf:has_registration_location ?rui_location . FILTER(?rui_location IN (${sites}))`);
     }
   }
   let sparqlFilter = '';
   if (filters.donor.length > 0) {
     sparqlFilter += `
-    {
-      SELECT ?donor
+    FILTER (BOUND(?donor) && EXISTS {
+      SELECT DISTINCT ?donor
       WHERE {
         ${filters.donor.join('\n')}
       }
-    }`;
+    })`;
   }
   if (filters.dataset.length > 0) {
     sparqlFilter += `
-    {
-      SELECT ?dataset
-      WHERE {
-        ${filters.dataset.join('\n')}
-      }
-    }
-    UNION
-    {
-      SELECT ?sectionDataset
-      WHERE {
-        ${filters.sectionDataset.join('\n')}
-      }
-    }`;
+    FILTER (
+      (BOUND(?dataset) && EXISTS {
+        SELECT DISTINCT ?dataset
+        WHERE {
+          ${filters.dataset.join('\n')}
+        }
+      }) || 
+      (BOUND(?sectionDataset) && EXISTS {
+        SELECT DISTINCT ?sectionDataset
+        WHERE {
+          ${filters.sectionDataset.join('\n')}
+        }
+      })
+    )`;
   }
   if (filters.rui_location.length) {
     sparqlFilter += `
-    {
-      SELECT ?rui_location
+    FILTER (BOUND(?rui_location) && EXISTS {
+      SELECT DISTINCT ?rui_location
       WHERE {
         ${filters.rui_location.join('\n')}
       }
-    }`;
+    })`;
   }
   return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
 }
