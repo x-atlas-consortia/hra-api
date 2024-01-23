@@ -1,33 +1,5 @@
 {
-  "@context": [
-    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
-    {
-      "xsd": "http://www.w3.org/2001/XMLSchema#",
-      "ccf": "http://purl.org/ccf/",
-      "section_size": {
-        "@id": "ccf:section_size",
-        "@type": "xsd:integer"
-      },
-      "section_count": {
-        "@id": "ccf:section_count",
-        "@type": "xsd:integer"
-      },
-      "section_number": {
-        "@id": "ccf:section_number",
-        "@type": "xsd:integer"
-      },
-      "datasets": "ccf:generates_dataset",
-      "sections": "ccf:subdivided_into_sections",
-      "age": {
-        "@id": "ccf:age",
-        "@type": "xsd:integer"
-      },
-      "bmi": {
-        "@id": "ccf:bmi",
-        "@type": "xsd:double"
-      }
-    }
-  ],
+  "@context": "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
   "@type": "ccf:Sample",
   "sections": {
     "@type": "ccf:Sample",

@@ -1,24 +1,15 @@
-import { ensureArray, ensureNumber, normalizeJsonLd } from './jsonld-compat.js';
+import { ensureArray, normalizeJsonLd } from './jsonld-compat.js';
 
 export function reformatSceneNodes(nodes, graph, targetIri) {
   const refOrgans = [];
   const skinRefOrgans = [];
   const extractionSites = [];
 
-  nodes.sort((a, b) => a.rui_rank - b.rui_rank);
-
-  for (let n of nodes) {
+  for (let n of nodes.sort((a, b) => a.rui_rank - b.rui_rank)) {
     n = normalizeJsonLd(n);
     if (n.entityId) {
-      // Reformat and apply defaults to experimental data
-      const bounds = {
-        dimension_units: n.dimension_units,
-        x_dimension: ensureNumber(n.x_dimension),
-        y_dimension: ensureNumber(n.y_dimension),
-        z_dimension: ensureNumber(n.z_dimension),
-      };
-      const transformMatrix = graph.getExtractionSiteTransform(n.rui_location, targetIri, bounds);
-      if (transformMatrix) {
+      const transformMatrix = graph.getExtractionSiteTransform(n.rui_location, targetIri, n);
+      if (transformMatrix && !isNaN(transformMatrix.toArray()[0])) {
         Object.assign(n, {
           '@id': n.rui_location,
           ccf_annotations: ensureArray(n.ccf_annotations),

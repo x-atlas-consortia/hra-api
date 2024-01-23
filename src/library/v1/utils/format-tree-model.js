@@ -1,13 +1,14 @@
-import { ensureString, expandIri } from './jsonld-compat.js';
+import { ensureGraphArray, ensureString, normalizeJsonLd } from './jsonld-compat.js';
 
-export function formatTreeModel(dataJsonLd) {
+export function formatTreeModel(jsonld) {
+  const data = normalizeJsonLd(ensureGraphArray(jsonld));
   let root;
   const nodes = {};
-  for (const node of dataJsonLd['@graph']) {
-    const id = (node['@id'] = expandIri(node['@id']));
+  for (const node of data) {
+    const id = (node['@id'] = node['@id']);
     const parent = node.parent;
     if (parent && typeof parent !== 'string') {
-      node.parent = expandIri(parent['@id']);
+      node.parent = parent['@id'];
       if (!root && parent.is_root_for) {
         root = node.parent;
       }

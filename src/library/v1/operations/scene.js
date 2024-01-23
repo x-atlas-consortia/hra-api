@@ -4,6 +4,7 @@ import refOrganQuery from '../queries/scene-organs.rq';
 import query from '../queries/scene.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 import { reformatSceneNodes } from '../utils/format-scene-nodes.js';
+import { ensureGraphArray } from '../utils/jsonld-compat.js';
 
 function getTargetIri(filter) {
   switch (filter.sex) {
@@ -28,6 +29,6 @@ export async function getScene(filter, endpoint = 'https://lod.humanatlas.io/spa
     executeFilteredConstructQuery(refOrganQuery, filter, frame, endpoint),
     getSpatialGraph(endpoint),
   ]);
-  const nodes = [...(refOrgans['@graph'] ?? []), ...(extractionSites['@graph'] ?? [])];
+  const nodes = [...ensureGraphArray(refOrgans), ...ensureGraphArray(extractionSites)];
   return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter));
 }

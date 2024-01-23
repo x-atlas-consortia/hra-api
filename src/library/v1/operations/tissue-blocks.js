@@ -1,15 +1,15 @@
 import frame from '../frames/tissue-blocks.jsonld';
 import query from '../queries/tissue-blocks.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
-import { ensureArray, ensureGraphArray, ensureNumber, expandIri, normalizeJsonLd } from '../utils/jsonld-compat.js';
+import { ensureArray, ensureGraphArray, normalizeJsonLd } from '../utils/jsonld-compat.js';
 
-function reformatResponse(results) {
-  const resultArray = ensureGraphArray(results)
+function reformatResponse(jsonld) {
+  const resultArray = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['datasets', 'sections']))
     .map((block) => {
-      // return block;
       const {
         donor,
         datasets,
+        sections,
         link,
         label,
         description,
@@ -21,39 +21,32 @@ function reformatResponse(results) {
       if (donor) {
         donor.providerName = donor.provider_name;
         delete donor.provider_name;
-        if (donor['ccf:bmi']) {
-          donor.bmi = ensureNumber(donor['ccf:bmi']);
-          delete donor['ccf:bmi'];
-        }
-        donor.label = Array.isArray(donor.label) ? donor.label.join('; ') : donor.label || '';
+        donor.label = ensureArray(donor.label).join('; ');
       } else {
         return undefined;
       }
-      const sections = ensureArray(block.sections);
       sections.forEach((section) => {
         section.sample_type = 'Tissue Section';
-        section.datasets = ensureArray(section.datasets);
-        section.section_number = ensureNumber(section.section_number);
       });
 
       return {
-        '@id': expandIri(block['@id']),
+        '@id': block['@id'],
         '@type': block['@type'],
         sample_type: 'Tissue Block',
         link,
         label,
-        description: Array.isArray(description) ? description.join('; ') : description || '',
-        sectionCount: ensureNumber(sectionCount),
-        sectionSize: ensureNumber(sectionSize),
+        description: ensureArray(description).join('; '),
+        sectionCount,
+        sectionSize,
         sectionUnits,
         donor,
-        datasets: datasets ?? [],
-        sections: sections ?? [],
-        spatialEntityId: expandIri(spatialEntityId)
+        datasets,
+        sections,
+        spatialEntityId,
       };
     })
     .filter((s) => !!s);
-  return normalizeJsonLd(resultArray);
+  return resultArray;
 }
 
 /**

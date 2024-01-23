@@ -26,6 +26,9 @@ export function normalizeJsonLd(jsonld, arrayFields = new Set()) {
         case 'xsd:double':
         case 'xsd:decimal':
           return Number(value['@value']);
+        case 'http://www.w3.org/2001/XMLSchema#date':
+        case 'xsd:date':
+          return value['@value'];
         default:
           return value;
       }
