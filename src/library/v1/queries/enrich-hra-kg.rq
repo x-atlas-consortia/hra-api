@@ -28,7 +28,7 @@ WHERE {
   {
     ?ct ccf:ccf_located_in ?ct_as .
     ?ct_as ccf:ccf_part_of* ?ct_as_parent .
-    ?ct rdfs:subClassOf* ?child_ct .
+    ?child_ct rdfs:subClassOf* ?ct .
   }
   UNION
   {
