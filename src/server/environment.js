@@ -13,3 +13,7 @@ export function shortCacheTimeout() {
 export function longCacheTimeout() {
   return process.env.LONG_CACHE_TIMEOUT || shortCacheTimeout() * 24;
 }
+
+export function activeQueryLimit() {
+  return process.env.ACTIVE_QUERIES || 2;
+}

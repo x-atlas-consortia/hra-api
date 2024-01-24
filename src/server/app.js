@@ -1,8 +1,10 @@
 import cors from 'cors';
 import express from 'express';
+import queue from 'express-queue';
 import helmet from 'helmet';
 import qs from 'qs';
 import { longCache, noCache } from './cache-middleware.js';
+import { activeQueryLimit } from './environment.js';
 import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
@@ -22,7 +24,14 @@ app.use(
       useDefaults: true,
       directives: {
         'base-uri': ["'self'", 'cdn.jsdelivr.net'],
-        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
+        'script-src': [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          'cdn.jsdelivr.net',
+          'unpkg.com',
+          'www.googletagmanager.com',
+        ],
         'img-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
         'connect-src': ['*'],
       },
@@ -37,9 +46,11 @@ app.set('json spaces', 2);
 
 app.use('/', longCache, browserRoute);
 app.use('/', longCache, euiRoute);
-app.use('/v1', v1Routes);
+
+const procesingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
+app.use('/v1', procesingQueue, v1Routes);
 app.use('/v1/sparql', noCache, sparqlProxy);
-app.use('/hra-pop', hraPopRoutes);
+app.use('/hra-pop', procesingQueue, hraPopRoutes);
 
 // app.use(function (err, req, res, next) {
 //   const debugMode = req.app.get('env') === 'development';
