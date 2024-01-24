@@ -18,8 +18,8 @@ WHERE {
   cell: ^ccf:ccf_ct_isa* ?child .
   cell: rdfs:label ?cellLabel .
   ?child ccf:ccf_ct_isa ?parent .
-  ?child rdfs:label ?label1 .
-  ?child ccf:ccf_pref_label ?synonymLabel1 .
+  ?child rdfs:label ?synonymLabel1 .
+  ?child ccf:ccf_pref_label ?label1 .
   FILTER (!isBlank(?child) && !isBlank(?parent))
 
   BIND(STR(?label1) as ?label)

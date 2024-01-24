@@ -33,13 +33,17 @@ WHERE {
     WHERE {
       ?block ccf:comes_from ?donor .
       ?block ccf:has_registration_location ?rui_location .
-      {
-        ?block ccf:generates_dataset ?dataset .
-      }
-      UNION
-      {
-        ?block ccf:subdivided_into_sections ?section .
-        ?section ccf:generates_dataset ?dataset .
+      OPTIONAL {
+        {
+          ?block ccf:generates_dataset ?dataset .
+        }
+        UNION
+        {
+          ?block ccf:subdivided_into_sections ?section .
+          OPTIONAL {
+            ?section ccf:generates_dataset ?dataset .
+          }
+        }
       }
       OPTIONAL {
         ?donor ccf:tissue_provider_name ?provider .
