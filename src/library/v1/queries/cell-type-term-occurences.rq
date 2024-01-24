@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 
 CONSTRUCT {
   ?cell_type ccf:count ?count .
@@ -22,8 +23,21 @@ WHERE {
       ?block ccf:subdivided_into_sections ?section .
       ?section ccf:generates_dataset ?sectionDataset .
     }
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?cell_type ccf:ccf_located_in ?anatomical_structure .
+    {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?cell_type ccf:ccf_located_in ?anatomical_structure . 
+    }
+    UNION
+    {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      ?anatomical_structure ^ccf:ccf_located_in [
+        ccf:ccf_ct_isa* ?cell_type
+      ] .
+    }
+    UNION
+    {
+      BIND(cell: as ?cell_type)
+    }
     #{{FILTER}}
   }
   GROUP BY ?cell_type

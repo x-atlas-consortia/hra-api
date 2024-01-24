@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX HRAExtra: <https://purl.humanatlas.io/graph/hra-kg-enrichments>
 
 CONSTRUCT {
   ?biomarker ccf:count ?count .
@@ -22,8 +23,16 @@ WHERE {
       ?block ccf:subdivided_into_sections ?section .
       ?section ccf:generates_dataset ?sectionDataset .
     }
-    ?rui_location ccf:collides_with ?anatomical_structure .
-    ?biomarker ccf:ccf_bm_located_in ?anatomical_structure .
+    {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+      GRAPH HRAExtra: {
+        ?biomarker ccf:ccf_bm_located_in ?anatomical_structure . 
+      }
+    }
+    UNION
+    {
+      BIND(ccf:Biomarker as ?biomarker)
+    }
     #{{FILTER}}
   }
   GROUP BY ?biomarker
