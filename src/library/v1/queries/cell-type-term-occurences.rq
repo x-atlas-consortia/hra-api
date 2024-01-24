@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 
 CONSTRUCT {
@@ -25,16 +26,22 @@ WHERE {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
+
     {
-      ?rui_location ccf:collides_with ?anatomical_structure .
-      ?cell_type ccf:ccf_located_in ?anatomical_structure . 
-    }
-    UNION
-    {
-      ?rui_location ccf:collides_with ?anatomical_structure .
-      ?anatomical_structure ^ccf:ccf_located_in [
-        ccf:ccf_ct_isa* ?cell_type
-      ] .
+      {
+        GRAPH DSGraphsExtra: {
+          ?rui_location ccf:collides_with ?anatomical_structure .
+        }
+      }
+      {
+        ?cell_type ccf:ccf_located_in ?anatomical_structure . 
+      }
+      UNION
+      {
+        ?anatomical_structure ^ccf:ccf_located_in [
+          ccf:ccf_ct_isa* ?cell_type
+        ] .
+      }
     }
     UNION
     {

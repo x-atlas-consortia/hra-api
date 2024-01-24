@@ -26,7 +26,9 @@ function reformatResponse(jsonld) {
         return undefined;
       }
       sections.forEach((section) => {
-        section.sample_type = 'Tissue Section';
+        if (typeof section !== 'string') {
+          section.sample_type = 'Tissue Section';
+        }
       });
 
       return {

@@ -25,6 +25,7 @@ WHERE {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
+
     {
       ?rui_location ccf:collides_with ?anatomical_structure .
       GRAPH HRAExtra: {
@@ -38,5 +39,4 @@ WHERE {
     #{{FILTER}}
   }
   GROUP BY ?biomarker
-  ORDER BY DESC(?count)
 }

@@ -4,6 +4,7 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
@@ -25,14 +26,11 @@ WHERE {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
+
     {
-      ?rui_location ccf:collides_with ?anatomical_structure .
-    }
-    UNION
-    {
-      ?rui_location ccf:collides_with [
-        ccf:ccf_part_of* ?anatomical_structure
-      ] .
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+      }
     }
     UNION
     {
