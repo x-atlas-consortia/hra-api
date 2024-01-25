@@ -29,22 +29,20 @@ WHERE {
       (COUNT(DISTINCT ?provider) AS ?provider_count)
       (COUNT(DISTINCT ?block) AS ?block_count)
       (COUNT(DISTINCT ?section) AS ?section_count)
-      (COUNT(DISTINCT ?dataset) AS ?dataset_count)
+      (COUNT(DISTINCT ?dataset) + COUNT(DISTINCT ?sectionDataset) AS ?dataset_count)
     WHERE {
       ?block ccf:comes_from ?donor .
       ?block ccf:has_registration_location ?rui_location .
       OPTIONAL {
-        {
-          ?block ccf:generates_dataset ?dataset .
-        }
-        UNION
-        {
-          ?block ccf:subdivided_into_sections ?section .
-          OPTIONAL {
-            ?section ccf:generates_dataset ?dataset .
-          }
+        ?block ccf:generates_dataset ?dataset .
+      }
+      OPTIONAL {
+        ?block ccf:subdivided_into_sections ?section .
+        OPTIONAL {
+          ?section ccf:generates_dataset ?sectionDataset .
         }
       }
+
       OPTIONAL {
         ?donor ccf:tissue_provider_name ?provider .
       }

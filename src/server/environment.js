@@ -15,5 +15,5 @@ export function longCacheTimeout() {
 }
 
 export function activeQueryLimit() {
-  return process.env.ACTIVE_QUERIES || 2;
+  return process.env.ACTIVE_QUERIES || 4;
 }

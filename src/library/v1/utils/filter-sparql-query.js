@@ -1,6 +1,22 @@
 import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
+import { select } from '../../shared/utils/sparql.js';
+import baseQuery from '../queries/base-query.rq'
 
-export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
+const QUERY_CACHE = {};
+
+async function getFilterQuery(filter, endpoint, useCache = true) {
+  if (useCache) {
+    const key = JSON.stringify(filter);
+    if (!QUERY_CACHE[key]) {
+      QUERY_CACHE[key] = filterQuery(filter, endpoint);
+    }
+    return QUERY_CACHE[key];
+  } else {
+    return filterQuery(filter, endpoint);
+  }
+}
+
+async function filterQuery(filter, endpoint) {
   const {
     ontologyTerms,
     cellTypeTerms,
@@ -19,43 +35,38 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
     dataset: [],
     sectionDataset: [],
   };
+  
   if (sex && sex !== 'Both') {
-    filters.donor.push(`?donor ccf:sex ?sex . FILTER(?sex = "${sex}")`);
+    filters.donor.push(`
+      ?donor ccf:sex ?sex .
+      FILTER(?sex = "${sex}")`);
   }
   if (ageRange) {
-    filters.donor.push(`?donor ccf:age ?age . FILTER (?age > ${ageRange[0]} && ?age < ${ageRange[1]})`);
+    filters.donor.push(`
+      ?donor ccf:age ?age .
+      FILTER (?age > ${ageRange[0]} && ?age < ${ageRange[1]})`);
   }
   if (bmiRange) {
-    filters.donor.push(`?donor ccf:bmi ?bmi . FILTER (?bmi > ${bmiRange[0]} && ?bmi < ${bmiRange[1]})`);
+    filters.donor.push(`
+      ?donor ccf:bmi ?bmi .
+      FILTER (?bmi > ${bmiRange[0]} && ?bmi < ${bmiRange[1]})`);
   }
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-      }
-      UNION
-      {
-        ?rui_location ccf:collides_with [
-          ccf:ccf_part_of ?anatomical_structure
-        ] .
-      }
+      ?rui_location ccf:collides_with ?anatomical_structure .
       FILTER(?anatomical_structure IN (${terms}))`);
   }
   if (cellTypeTerms?.length > 0) {
     const terms = cellTypeTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      ?rui_location ccf:collides_with [
-        ^ccf:ccf_located_in ?cell_type
-      ] .
+      ?rui_location ccf:collides_with_ct ?cell_type .
       FILTER(?cell_type IN (${terms}))`);
   }
   if (biomarkerTerms?.length > 0) {
     const terms = biomarkerTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      ?rui_location ccf:collides_with [
-        ^ccf:ccf_bm_located_in ?biomarker
-      ] .
+      ?rui_location ccf:collides_with_bm ?biomarker .
       FILTER(?biomarker IN (${terms}))`);
   }
   if (tmc?.length > 0) {
@@ -67,15 +78,11 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
   if (technologies?.length > 0) {
     const technologiesString = technologies.map((s) => `"${s}"`).join(', ');
     filters.dataset.push(`
-      ?sample ccf:generates_dataset ?dataset ;
-              ccf:sample_type ?sampleType .
       ?dataset ccf:technology ?technology .
-      FILTER(?sampleType = "Tissue Block" && ?technology IN (${technologiesString}) )`);
+      FILTER(?technology IN (${technologiesString}) )`);
     filters.sectionDataset.push(`
-      ?section ccf:generates_dataset ?sectionDataset ;
-              ccf:sample_type ?sampleType .
       ?sectionDataset ccf:technology ?sectionTechnology .
-      FILTER(?sampleType = "Tissue Section" && ?sectionTechnology IN (${technologiesString}))`);
+      FILTER(?sectionTechnology IN (${technologiesString}))`);
   }
   if (consortiums?.length > 0) {
     const terms = consortiums.map((s) => `"${s}"`).join(', ');
@@ -90,47 +97,55 @@ export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'ht
       results = spatialGraph.probeExtractionSites(search, results);
     }
     if (results.size === 0) {
-      filters.rui_location.push(`?block ccf:has_registration_location ?rui_location . FILTER(?rui_location = <https://no-extraction-sites-found.com/>)`);
+      filters.rui_location.push(`
+        ?block ccf:has_registration_location ?rui_location .
+        FILTER(?rui_location = <https://no-extraction-sites-found.com/>)`);
     } else {
       const sites = [...results].map((s) => `<${s}>`).join(', ');
-      filters.rui_location.push(`?block ccf:has_registration_location ?rui_location . FILTER(?rui_location IN (${sites}))`);
+      filters.rui_location.push(`
+        ?block ccf:has_registration_location ?rui_location .
+        FILTER(?rui_location IN (${sites}))`);
     }
   }
-  let sparqlFilter = '';
-  if (filters.donor.length > 0) {
-    sparqlFilter += `
-    FILTER (BOUND(?donor) && EXISTS {
-      SELECT DISTINCT ?donor
-      WHERE {
-        ${filters.donor.join('\n')}
-      }
-    })`;
+
+  if (Object.values(filters).filter(s => s.length > 0).length > 0) {
+    const entityQuery = baseQuery
+      .replace('#{{FILTER}}', (filters.donor.concat(filters.rui_location)).join('\n'))
+      .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
+      .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'));
+
+    console.log(entityQuery);
+    const subgraph = (await select(entityQuery, endpoint));
+    console.log(subgraph.length);
+
+    const mainEntities = subgraph.map(({donor, block, rui_location}) => 
+      `(<${donor}> <${block}> <${rui_location}>)`)
+      .join('\n')
+    const datasets = subgraph.filter((row) => row.dataset).map((row) => `(<${row.dataset}>)`).join(', ');
+    const sectionDatasets = subgraph.filter((row) => row.sectionDataset).map((row) => `(<${row.sectionDataset}>)`).join(', ');
+
+    let sparqlFilter = `
+      VALUES (?donor ?block ?rui_location) {
+        ${mainEntities}
+      }`;
+    if (datasets.length > 0 && sectionDatasets.length > 0) {
+      sparqlFilter += `
+        FILTER (?dataset IN (${datasets}) || ?sectionDataset IN (${sectionDatasets}))`;
+    } else if (datasets.length > 0) {
+      sparqlFilter += `
+        FILTER (?dataset IN (${datasets}))`;
+    } else if (sectionDatasets.length > 0) {
+      sparqlFilter += `
+        FILTER (?sectionDataset IN (${sectionDatasets}))`;
+    }
+    return sparqlFilter;
+  } else {
+    return '';
   }
-  if (filters.dataset.length > 0) {
-    sparqlFilter += `
-    FILTER (
-      (BOUND(?dataset) && EXISTS {
-        SELECT DISTINCT ?dataset
-        WHERE {
-          ${filters.dataset.join('\n')}
-        }
-      }) || 
-      (BOUND(?sectionDataset) && EXISTS {
-        SELECT DISTINCT ?sectionDataset
-        WHERE {
-          ${filters.sectionDataset.join('\n')}
-        }
-      })
-    )`;
-  }
-  if (filters.rui_location.length) {
-    sparqlFilter += `
-    FILTER (BOUND(?rui_location) && EXISTS {
-      SELECT DISTINCT ?rui_location
-      WHERE {
-        ${filters.rui_location.join('\n')}
-      }
-    })`;
-  }
-  return sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
+}
+
+export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
+  const sparqlFilter = await getFilterQuery(filter, endpoint);
+  const filteredQuery = sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
+  return filteredQuery;
 }

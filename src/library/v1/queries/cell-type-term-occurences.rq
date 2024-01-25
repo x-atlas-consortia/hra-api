@@ -17,30 +17,18 @@ WHERE {
     ?block ccf:comes_from ?donor .
     ?block ccf:has_registration_location ?rui_location .
     OPTIONAL {
-      {
-        ?block ccf:generates_dataset ?dataset .
-      }
-      UNION
-      {
-        ?block ccf:subdivided_into_sections ?section .
+      ?block ccf:generates_dataset ?dataset .
+    }
+    OPTIONAL {
+      ?block ccf:subdivided_into_sections ?section .
+      OPTIONAL {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
 
     {
-      {
-        GRAPH DSGraphsExtra: {
-          ?rui_location ccf:collides_with ?anatomical_structure .
-        }
-      }
-      {
-        ?cell_type ccf:ccf_located_in ?anatomical_structure . 
-      }
-      UNION
-      {
-        ?anatomical_structure ^ccf:ccf_located_in [
-          ccf:ccf_ct_isa* ?cell_type
-        ] .
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with_ct ?cell_type .
       }
     }
     UNION
@@ -50,5 +38,4 @@ WHERE {
     #{{FILTER}}
   }
   GROUP BY ?cell_type
-  ORDER BY DESC(?count)
 }

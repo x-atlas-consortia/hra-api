@@ -7,11 +7,12 @@ export function reformatSceneNodes(nodes, graph, targetIri) {
 
   for (let n of nodes.sort((a, b) => a.rui_rank - b.rui_rank)) {
     n = normalizeJsonLd(n);
-    if (n.entityId) {
+    if (!n.file) {
       const transformMatrix = graph.getExtractionSiteTransform(n.rui_location, targetIri, n);
       if (transformMatrix && !isNaN(transformMatrix.toArray()[0])) {
         Object.assign(n, {
           '@id': n.rui_location,
+          entityId: n['@id'],
           ccf_annotations: ensureArray(n.ccf_annotations),
           transformMatrix,
           color: [255, 255, 255, 0.9 * 255],

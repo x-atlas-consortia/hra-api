@@ -28,7 +28,7 @@ CONSTRUCT {
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
          ccf:url ?link .
-  ?sample rdf:type ccf:Sample ;
+  ?block rdf:type ccf:Sample ;
           ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?rui_location ;
           ccf:subdivided_into_sections ?section ;
@@ -86,14 +86,14 @@ WHERE {
     WHERE {
       {
         #{{DATASET_VALUES}}
-        ?sample ccf:has_registration_location ?rui_location .
-        ?sample ccf:generates_dataset ?dataset .
+        ?block ccf:has_registration_location ?rui_location .
+        ?block ccf:generates_dataset ?dataset .
       }
       UNION
       {
-        ?block ccf:subdivided_into_sections ?sample .
+        ?block ccf:subdivided_into_sections ?section .
         ?block ccf:has_registration_location ?rui_location .
-        ?sample ccf:generates_dataset ?dataset .
+        ?section ccf:generates_dataset ?dataset .
       }
     }
   }
@@ -103,18 +103,18 @@ WHERE {
     WHERE {
       {
         #{{RUI_LOCATION_VALUES}}
-        ?sample ccf:has_registration_location ?rui_location .
-        ?sample ccf:generates_dataset ?dataset .
+        ?block ccf:has_registration_location ?rui_location .
+        ?block ccf:generates_dataset ?dataset .
       }
       UNION
       {
-        ?block ccf:subdivided_into_sections ?sample .
+        ?block ccf:subdivided_into_sections ?section .
         ?block ccf:has_registration_location ?rui_location .
-        ?sample ccf:generates_dataset ?dataset .
+        ?section ccf:generates_dataset ?dataset .
       }
     }
   }
-  ?sample rdf:type ccf:Sample ;
+  ?block rdf:type ccf:Sample ;
           ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?rui_location ;
           ccf:comes_from ?donor .
@@ -153,7 +153,7 @@ WHERE {
          ccf:url ?link .
 
   OPTIONAL {
-    ?sample ccf:generates_dataset ?dataset . 
+    ?block ccf:generates_dataset ?dataset . 
     ?dataset ccf:technology ?technology ;
            ccf:thumbnail ?thumbnail ;
            rdfs:comment ?datasetDescription ;
@@ -161,7 +161,7 @@ WHERE {
   }
   
   OPTIONAL {
-    ?sample ccf:subdivided_into_sections ?section .
+    ?block ccf:subdivided_into_sections ?section .
     ?section rdf:type ccf:Sample ;
             ccf:sample_type ?sectionType ;
             ccf:section_number ?sectionNumber ;

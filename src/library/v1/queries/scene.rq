@@ -4,11 +4,11 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 CONSTRUCT {
   ?block rdf:type ccf:SpatialSceneNode ;
     ccf:has_registration_location ?rui_location ;
-    ccf:entityId ?block ;
     ccf:collides_with ?anatomical_structure ;
     ccf:x_dimension ?x_dimension ;
     ccf:y_dimension ?y_dimension ;
@@ -20,13 +20,14 @@ FROM DSGraphs:
 WHERE {
   ?block ccf:comes_from ?donor .
   ?block ccf:has_registration_location ?rui_location .
-  {
+  OPTIONAL {
     ?block ccf:generates_dataset ?dataset .
   }
-  UNION
-  {
+  OPTIONAL {
     ?block ccf:subdivided_into_sections ?section .
-    ?section ccf:generates_dataset ?dataset .
+    OPTIONAL {
+      ?section ccf:generates_dataset ?sectionDataset .
+    }
   }
 
   ?rui_location rdf:type ccf:SpatialEntity ;
@@ -35,8 +36,19 @@ WHERE {
                 ccf:z_dimension ?z_dimension ;
                 ccf:dimension_unit ?dimension_units ;
   .
-  OPTIONAL {
+  {
     ?rui_location ccf:collides_with ?anatomical_structure .
+  }
+  UNION {
+    [] rdf:type ccf:SpatialPlacement ;
+        ccf:placement_relative_to [
+          ccf:has_reference_organ ?ref_organ
+        ] ;
+        ccf:placement_for ?rui_location .
+    ?ref_organ ccf:representation_of ?anatomical_structure .
+  }
+  UNION {
+    BIND(<http://purl.obolibrary.org/obo/UBERON_0013702> as ?anatomical_structure)
   }
 
   #{{FILTER}}

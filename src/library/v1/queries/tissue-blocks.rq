@@ -5,7 +5,7 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 
 CONSTRUCT {
-  ?sample rdf:type ccf:Sample ;
+  ?block rdf:type ccf:Sample ;
           rdfs:label ?sampleLabel ;
           rdfs:comment ?sampleDescription ;
           ccf:url ?sampleLink ;
@@ -50,7 +50,7 @@ CONSTRUCT {
 FROM CCF:
 FROM DSGraphs:
 WHERE {
-  ?sample rdf:type ccf:Sample ;
+  ?block rdf:type ccf:Sample ;
           rdfs:label ?sampleLabel ;
           rdfs:comment ?sampleDescription ;
           ccf:url ?sampleLink ;
@@ -66,13 +66,13 @@ WHERE {
   .
 
   OPTIONAL {
-    ?sample ccf:section_count ?sectionCount ;
+    ?block ccf:section_count ?sectionCount ;
       ccf:section_size ?sectionSize ;
       ccf:section_size_unit ?sectionUnits .
   }
 
   OPTIONAL {
-    ?sample ccf:subdivided_into_sections ?section .
+    ?block ccf:subdivided_into_sections ?section .
     ?section rdf:type ccf:Sample ;
             rdfs:label ?sectionLabel ;
             rdfs:comment ?sectionDescription ;
@@ -94,7 +94,7 @@ WHERE {
   }
 
   OPTIONAL {
-    ?sample ccf:generates_dataset ?dataset .
+    ?block ccf:generates_dataset ?dataset .
     ?dataset rdf:type ccf:Dataset ;
              rdfs:label ?datasetLabel ;
              rdfs:comment ?datasetDescription ;

@@ -2,10 +2,9 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
-PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
-
+PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
 }
@@ -17,12 +16,11 @@ WHERE {
     ?block ccf:comes_from ?donor .
     ?block ccf:has_registration_location ?rui_location .
     OPTIONAL {
-      {
-        ?block ccf:generates_dataset ?dataset .
-      }
-      UNION
-      {
-        ?block ccf:subdivided_into_sections ?section .
+      ?block ccf:generates_dataset ?dataset .
+    }
+    OPTIONAL {
+      ?block ccf:subdivided_into_sections ?section .
+      OPTIONAL {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
@@ -39,5 +37,4 @@ WHERE {
     #{{FILTER}}
   }
   GROUP BY ?anatomical_structure
-  ORDER BY DESC(?count)
 }
