@@ -9,7 +9,7 @@ SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?section ?sectionDataset
 WHERE {
   GRAPH DSGraphs: {
     ?block ccf:comes_from ?donor ;
-    ccf:has_registration_location ?rui_location .
+      ccf:has_registration_location ?rui_location .
     OPTIONAL {
       ?block ccf:generates_dataset ?dataset .
       #{{DATASET_FILTER}}

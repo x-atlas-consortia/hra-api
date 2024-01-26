@@ -14,8 +14,8 @@ FROM DSGraphs:
 WHERE {
   SELECT DISTINCT ?cell_type (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
-    ?block ccf:comes_from ?donor .
-    ?block ccf:has_registration_location ?rui_location .
+    ?block ccf:comes_from ?donor ;
+      ccf:has_registration_location ?rui_location .
     OPTIONAL {
       ?block ccf:generates_dataset ?dataset .
     }
