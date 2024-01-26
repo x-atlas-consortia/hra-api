@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 
 CONSTRUCT {
   cell: rdfs:label ?cellLabel .
@@ -18,8 +19,10 @@ WHERE {
   cell: ^ccf:ccf_ct_isa* ?child .
   cell: rdfs:label ?cellLabel .
   ?child ccf:ccf_ct_isa ?parent .
-  ?child rdfs:label ?synonymLabel1 .
   ?child ccf:ccf_pref_label ?label1 .
+  OPTIONAL {
+    ?child hasExactSynonym: ?synonymLabel1 .
+  }
   FILTER (!isBlank(?child) && !isBlank(?parent))
 
   BIND(STR(?label1) as ?label)

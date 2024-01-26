@@ -5,6 +5,7 @@ import { formatTreeModel, treeify } from '../utils/format-tree-model.js';
 
 function reformatResponse(jsonld) {
   const tree = formatTreeModel(jsonld);
+  treeify(tree);
   const body = tree.nodes[tree.root]
   body.label = 'body';
   body.children = [
@@ -13,7 +14,7 @@ function reformatResponse(jsonld) {
     // 'http://purl.obolibrary.org/obo/UBERON_0002509', // Mesenteric Lymph Node
     'http://purl.obolibrary.org/obo/UBERON_0000970', // Eye
     // 'http://purl.obolibrary.org/obo/UBERON_0004548', // Eye, L
-    // 'http://purl.org/sig/ont/fma/fma54449', // Eye, R
+    // 'http://purl.obolibrary.org/obo/UBERON_0004549', // Eye, R
     'http://purl.obolibrary.org/obo/UBERON_0003889', // Fallopian Tube
     // 'http://purl.obolibrary.org/obo/UBERON_0001303', // Fallopian Tube, L
     // 'http://purl.obolibrary.org/obo/UBERON_0001302', // Fallopian Tube, R
@@ -59,7 +60,6 @@ function reformatResponse(jsonld) {
   for (const child of body.children) {
     tree.nodes[child].parent = body['@id'];
   }
-  treeify(tree);
   return tree;
 }
 

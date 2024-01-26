@@ -23,8 +23,10 @@ CONSTRUCT {
 FROM CCF:
 WHERE {
   ?child ccf:ccf_biomarker_type ?parent_label .
-  ?child rdfs:label ?label1 .
-  ?child ccf:ccf_pref_label ?synonymLabel1 .
+  ?child ccf:ccf_pref_label ?label1 .
+  OPTIONAL {
+    ?child rdfs:label ?synonymLabel1 .
+  }
   BIND (URI(CONCAT(str(ccf:), ?parent_label)) AS ?parent)
 
   BIND(STR(?label1) as ?label)

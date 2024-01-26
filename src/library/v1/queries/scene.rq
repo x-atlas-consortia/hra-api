@@ -37,15 +37,9 @@ WHERE {
                 ccf:dimension_unit ?dimension_units ;
   .
   {
-    ?rui_location ccf:collides_with ?anatomical_structure .
-  }
-  UNION {
-    [] rdf:type ccf:SpatialPlacement ;
-        ccf:placement_relative_to [
-          ccf:has_reference_organ ?ref_organ
-        ] ;
-        ccf:placement_for ?rui_location .
-    ?ref_organ ccf:representation_of ?anatomical_structure .
+    GRAPH DSGraphsExtra: {
+      ?rui_location ccf:collides_with ?anatomical_structure .
+    }
   }
   UNION {
     BIND(<http://purl.obolibrary.org/obo/UBERON_0013702> as ?anatomical_structure)

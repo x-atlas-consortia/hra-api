@@ -4,6 +4,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 
 CONSTRUCT {
   body: rdfs:label ?bodyLabel .
@@ -19,8 +20,16 @@ WHERE {
   body: ^ccf:ccf_part_of* ?child .
   body: rdfs:label ?bodyLabel .
   ?child ccf:ccf_part_of ?parent .
-  ?child rdfs:label ?label1 .
-  ?child ccf:ccf_pref_label ?synonymLabel1 .
+  ?child ccf:ccf_pref_label ?label1 .
+  OPTIONAL {
+    {
+      ?child hasExactSynonym: ?synonymLabel1 .
+    }
+    UNION
+    {
+      ?child rdfs:label ?synonymLabel1 .
+    }
+  }
 
   BIND(STR(?label1) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)

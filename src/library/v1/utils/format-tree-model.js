@@ -55,6 +55,7 @@ export function treeify(model, nodeIri = undefined, seen = new Set()) {
   const node = model.nodes[nodeIri ?? model.root];
   if (node) {
     node.children = node.children.filter((n) => !seen.has(n));
+    node.children.sort((a, b) => model.nodes[a].label.localeCompare(model.nodes[b].label));
     node.children.forEach((n) => seen.add(n));
     for (const childId of node.children) {
       treeify(model, childId, seen);
