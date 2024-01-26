@@ -1,0 +1,29 @@
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+
+#START-SUBQUERY
+SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?section ?sectionDataset
+WHERE {
+  GRAPH DSGraphs: {
+    ?block ccf:comes_from ?donor ;
+    ccf:has_registration_location ?rui_location .
+    OPTIONAL {
+      ?block ccf:generates_dataset ?dataset .
+      #{{DATASET_FILTER}}
+    }
+    OPTIONAL {
+      ?block ccf:subdivided_into_sections ?section .
+      OPTIONAL {
+        ?section ccf:generates_dataset ?sectionDataset .
+        #{{SECTION_FILTER}}
+      }
+    }
+
+    #{{FILTER}}
+  }
+
+  #hint:SubQuery hint:runOnce true;
+}

@@ -5,6 +5,7 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 CONSTRUCT {
     ?block rdf:type ccf:Sample ;

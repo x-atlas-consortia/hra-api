@@ -4,6 +4,7 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 CONSTRUCT {
   ?refOrgan rdf:type ccf:SpatialEntity ;

@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 CONSTRUCT {
   [] a ccf:AggregateResult ;

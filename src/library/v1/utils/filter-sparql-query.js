@@ -1,22 +1,7 @@
 import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
-import { select } from '../../shared/utils/sparql.js';
-import baseQuery from '../queries/base-query.rq'
+import baseSubQuery from '../queries/base-subquery.rq';
 
-const QUERY_CACHE = {};
-
-async function getFilterQuery(filter, endpoint, useCache = true) {
-  if (useCache) {
-    const key = JSON.stringify(filter);
-    if (!QUERY_CACHE[key]) {
-      QUERY_CACHE[key] = filterQuery(filter, endpoint);
-    }
-    return QUERY_CACHE[key];
-  } else {
-    return filterQuery(filter, endpoint);
-  }
-}
-
-async function filterQuery(filter, endpoint) {
+async function getFilterQuery(filter, endpoint) {
   const {
     ontologyTerms,
     cellTypeTerms,
@@ -35,7 +20,7 @@ async function filterQuery(filter, endpoint) {
     dataset: [],
     sectionDataset: [],
   };
-  
+
   if (sex && sex !== 'Both') {
     filters.donor.push(`
       ?donor ccf:sex ?sex .
@@ -54,20 +39,26 @@ async function filterQuery(filter, endpoint) {
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      ?rui_location ccf:collides_with ?anatomical_structure .
-      FILTER(?anatomical_structure IN (${terms}))`);
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+        FILTER(?anatomical_structure IN (${terms}))
+      }`);
   }
   if (cellTypeTerms?.length > 0) {
     const terms = cellTypeTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      ?rui_location ccf:collides_with_ct ?cell_type .
-      FILTER(?cell_type IN (${terms}))`);
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with_ct ?cell_type .
+        FILTER(?cell_type IN (${terms}))
+      }`);
   }
   if (biomarkerTerms?.length > 0) {
     const terms = biomarkerTerms.map((s) => `<${s}>`).join(', ');
     filters.rui_location.push(`
-      ?rui_location ccf:collides_with_bm ?biomarker .
-      FILTER(?biomarker IN (${terms}))`);
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with_bm ?biomarker .
+        FILTER(?biomarker IN (${terms}))
+      }`);
   }
   if (tmc?.length > 0) {
     const providers = tmc.map((s) => `"${s}"`).join(', ');
@@ -108,37 +99,17 @@ async function filterQuery(filter, endpoint) {
     }
   }
 
-  if (Object.values(filters).filter(s => s.length > 0).length > 0) {
-    const entityQuery = baseQuery
-      .replace('#{{FILTER}}', (filters.donor.concat(filters.rui_location)).join('\n'))
+  if (Object.values(filters).filter((s) => s.length > 0).length > 0) {
+    const entityQuery = baseSubQuery
+      .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
+      .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
-      .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'));
+      .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'))
+      .replace('#hint:SubQuery', 'hint:SubQuery');
 
-    console.log(entityQuery);
-    const subgraph = (await select(entityQuery, endpoint));
-    console.log(subgraph.length);
-
-    const mainEntities = subgraph.map(({donor, block, rui_location}) => 
-      `(<${donor}> <${block}> <${rui_location}>)`)
-      .join('\n')
-    const datasets = subgraph.filter((row) => row.dataset).map((row) => `(<${row.dataset}>)`).join(', ');
-    const sectionDatasets = subgraph.filter((row) => row.sectionDataset).map((row) => `(<${row.sectionDataset}>)`).join(', ');
-
-    let sparqlFilter = `
-      VALUES (?donor ?block ?rui_location) {
-        ${mainEntities}
-      }`;
-    if (datasets.length > 0 && sectionDatasets.length > 0) {
-      sparqlFilter += `
-        FILTER (?dataset IN (${datasets}) || ?sectionDataset IN (${sectionDatasets}))`;
-    } else if (datasets.length > 0) {
-      sparqlFilter += `
-        FILTER (?dataset IN (${datasets}))`;
-    } else if (sectionDatasets.length > 0) {
-      sparqlFilter += `
-        FILTER (?sectionDataset IN (${sectionDatasets}))`;
-    }
-    return sparqlFilter;
+    return `{
+      ${entityQuery}
+    }`;
   } else {
     return '';
   }

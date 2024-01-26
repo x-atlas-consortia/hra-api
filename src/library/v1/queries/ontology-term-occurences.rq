@@ -5,6 +5,7 @@ PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
+
 CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
 }

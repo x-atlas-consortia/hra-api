@@ -4,6 +4,7 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX biomarker: <http://purl.org/ccf/biomarker>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX has_characterizing_biomarker_set: <http://purl.obolibrary.org/obo/RO_0015004>
 
