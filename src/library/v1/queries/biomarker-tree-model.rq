@@ -1,34 +1,41 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX biomarker: <http://purl.org/ccf/biomarker>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
-PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
-PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX has_characterizing_biomarker_set: <http://purl.obolibrary.org/obo/RO_0015004>
+PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 
-CONSTRUCT {
-  ccf:Biomarker rdfs:label "Biomarkers" .
-  ccf:Biomarker rdf:type ccf:OntologyTreeNode .
-  ccf:Biomarker ccf:is_root_for "BM" .
-  ?parent rdf:type ccf:OntologyTreeNode .
-  ?parent ccf:parent ccf:Biomarker .
-  ?parent rdfs:label ?parent_label .
-  ?child rdf:type ccf:OntologyTreeNode .
-  ?child ccf:parent ?parent .
-  ?child rdfs:label ?label .
-  ?child ccf:synonymLabels ?synonymLabel .
-}
+SELECT DISTINCT ?root ?child ?parent ?label ?synonymLabel
 FROM CCF:
 WHERE {
-  ?child ccf:ccf_biomarker_type ?parent_label .
-  ?child ccf:ccf_pref_label ?label1 .
-  OPTIONAL {
-    ?child rdfs:label ?synonymLabel1 .
-  }
-  BIND (URI(CONCAT(str(ccf:), ?parent_label)) AS ?parent)
+  BIND("biomarkers" as ?root)
 
-  BIND(STR(?label1) as ?label)
+  {
+    BIND("biomarkers" as ?child)
+    BIND("biomarkers" as ?parent)
+  }
+  UNION
+  {
+    ?child ccf:ccf_pref_label ?label1 .
+    OPTIONAL {
+      {
+        ?child hasExactSynonym: ?synonymLabel1 .
+      }
+      UNION
+      {
+        ?child rdfs:label ?synonymLabel1 .
+      }
+    }
+    ?child ccf:ccf_biomarker_type ?parent .
+    BIND (?parent_label AS ?parent)
+  }
+  UNION
+  {
+    [] ccf:ccf_biomarker_type ?label1 .
+    BIND (?label1 AS ?child)
+    BIND ("biomarkers" AS ?parent)
+  }
+
+  BIND(IF(?child = ?root, 'Biomarkers', STR(?label1)) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)
 }
+ORDER BY ?label

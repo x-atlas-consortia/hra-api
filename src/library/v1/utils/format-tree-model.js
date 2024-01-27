@@ -1,47 +1,35 @@
-import { ensureGraphArray, ensureString, normalizeJsonLd } from './jsonld-compat.js';
-
-export function formatTreeModel(jsonld) {
-  const data = normalizeJsonLd(ensureGraphArray(jsonld));
-  let root;
+export function formatTreeModel(data) {
+  const root = data[0]?.root;
   const nodes = {};
-  for (const node of data) {
-    const id = (node['@id'] = node['@id']);
-    const parent = node.parent;
-    if (parent && typeof parent !== 'string') {
-      node.parent = parent['@id'];
-      if (!root && parent.is_root_for) {
-        root = node.parent;
-      }
+  for (const { child, parent, label, synonymLabel } of data) {
+    const node = (nodes[child] = nodes[child] || {
+      '@id': child,
+      '@type': 'OntologyTreeNode',
+      id: child,
+      parent,
+      children: [],
+      synonymLabels: new Set(),
+      label,
+    });
+    if (child === parent) {
+      node.parent = '';
     }
-    let synonyms = [];
-    if (node.synonymLabels) {
-      if (Array.isArray(node.synonymLabels)) {
-        synonyms = node.synonymLabels;
-      } else {
-        synonyms = [node.synonymLabels];
-      }
+    if (synonymLabel) {
+      node.synonymLabels.add(synonymLabel);
     }
-    node.synonymLabels = synonyms;
-    if (Array.isArray(node.label)) {
-      const label = node.label[0];
-      synonyms = synonyms.concat(node.label.slice(1));
-      node.label = label;
-    }
-    node.label = ensureString(node.label)?.replace(' (from CL)', '');
-    node.children = [];
-    nodes[id] = node;
   }
+
   for (const node of Object.values(nodes)) {
     const parent = nodes[node.parent];
     if (parent) {
-      if (!parent.children) {
-        parent.children = [];
-      }
       parent.children.push(node['@id']);
     }
-    node.id = node['@id'];
+    node.synonymLabels = Array.from(node.synonymLabels);
   }
-  return { root, nodes };
+
+  const tree = { root, nodes };
+  treeify(tree);
+  return tree;
 }
 
 /**
@@ -55,7 +43,6 @@ export function treeify(model, nodeIri = undefined, seen = new Set()) {
   const node = model.nodes[nodeIri ?? model.root];
   if (node) {
     node.children = node.children.filter((n) => !seen.has(n));
-    node.children.sort((a, b) => model.nodes[a].label.localeCompare(model.nodes[b].label));
     node.children.forEach((n) => seen.add(n));
     for (const childId of node.children) {
       treeify(model, childId, seen);

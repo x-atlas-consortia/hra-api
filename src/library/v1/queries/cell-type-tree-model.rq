@@ -5,26 +5,33 @@ PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 
-CONSTRUCT {
-  cell: rdfs:label ?cellLabel .
-  cell: rdf:type ccf:OntologyTreeNode .
-  cell: ccf:is_root_for "AS" .
-  ?child rdf:type ccf:OntologyTreeNode .
-  ?child ccf:parent ?parent .
-  ?child rdfs:label ?label .
-  ?child ccf:synonymLabels ?synonymLabel .
-}
+SELECT DISTINCT ?root ?child ?parent ?label ?synonymLabel
 FROM CCF:
 WHERE {
-  cell: ^ccf:ccf_ct_isa* ?child .
-  cell: rdfs:label ?cellLabel .
-  ?child ccf:ccf_ct_isa ?parent .
+  BIND(cell: as ?root)
+
+  {
+    BIND(cell: as ?child)
+    BIND(cell: as ?parent)
+  }
+  UNION
+  {
+    ?child ccf:ccf_ct_isa ?parent .
+  }
+
   ?child ccf:ccf_pref_label ?label1 .
   OPTIONAL {
-    ?child hasExactSynonym: ?synonymLabel1 .
+    {
+      ?child hasExactSynonym: ?synonymLabel1 .
+    }
+    UNION
+    {
+      ?child rdfs:label ?synonymLabel1 .
+    }
   }
   FILTER (!isBlank(?child) && !isBlank(?parent))
 
-  BIND(STR(?label1) as ?label)
+  BIND(IF(?child = ?root, 'cell', STR(?label1)) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)
 }
+ORDER BY ?label
