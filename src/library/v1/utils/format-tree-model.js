@@ -9,13 +9,16 @@ export function formatTreeModel(data) {
       parent,
       children: [],
       synonymLabels: new Set(),
-      label,
+      label: new Set(),
     });
     if (child === parent) {
       node.parent = '';
     }
+    if (label) {
+      node.label.add(label.trim());
+    }
     if (synonymLabel) {
-      node.synonymLabels.add(synonymLabel);
+      node.synonymLabels.add(synonymLabel.trim());
     }
   }
 
@@ -24,7 +27,12 @@ export function formatTreeModel(data) {
     if (parent) {
       parent.children.push(node['@id']);
     }
-    node.synonymLabels = Array.from(node.synonymLabels);
+    const labels = Array.from(node.label).sort();
+    node.label = labels[0];
+    if (labels.length > 1) {
+      labels.slice(1).forEach((l) => node.synonymLabels.add(l));
+    }
+    node.synonymLabels = Array.from(node.synonymLabels).filter((l) => l != node.label);
   }
 
   const tree = { root, nodes };

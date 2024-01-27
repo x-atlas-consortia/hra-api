@@ -99,4 +99,4 @@ WHERE {
   BIND(STR(?synonymLabel1) as ?synonymLabel)
   BIND(IF(BOUND(?rank), ?rank, 1000) as ?rank_order)
 }
-ORDER BY ?rank_order ?label
+ORDER BY ?rank_order ?label ?child

@@ -34,4 +34,4 @@ WHERE {
   BIND(IF(?child = ?root, 'cell', STR(?label1)) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)
 }
-ORDER BY ?label
+ORDER BY ?label ?child
