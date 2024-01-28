@@ -30,5 +30,5 @@ export async function getScene(filter, endpoint = 'https://lod.humanatlas.io/spa
     getSpatialGraph(endpoint),
   ]);
   const nodes = [...ensureGraphArray(refOrgans), ...ensureGraphArray(extractionSites)];
-  return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter));
+  return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter), true);
 }

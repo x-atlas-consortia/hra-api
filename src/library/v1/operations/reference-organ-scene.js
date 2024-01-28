@@ -37,7 +37,7 @@ export async function getReferenceOrganScene(organIri, filter, endpoint = 'https
   if (refOrganNodes.length > 0) {
     const nodes = [...refOrganNodes, ...ensureGraphArray(extractionSites)];
     const targetIri = expandIri(refOrganNodes[0]['@id']);
-    return reformatSceneNodes(nodes, spatialGraph, targetIri);
+    return reformatSceneNodes(nodes, spatialGraph, targetIri, false);
   } else {
     return [];
   }

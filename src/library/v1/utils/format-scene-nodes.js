@@ -1,6 +1,6 @@
 import { ensureArray, normalizeJsonLd } from './jsonld-compat.js';
 
-export function reformatSceneNodes(nodes, graph, targetIri) {
+export function reformatSceneNodes(nodes, graph, targetIri, zoomBasedOpacity) {
   const refOrgans = [];
   const skinRefOrgans = [];
   const extractionSites = [];
@@ -38,7 +38,7 @@ export function reformatSceneNodes(nodes, graph, targetIri) {
         opacity: isSkin ? 0.5 : 0.2,
         unpickable: true,
         _lighting: 'pbr',
-        zoomBasedOpacity: false,
+        zoomBasedOpacity: zoomBasedOpacity ? !isSkin : undefined,
         // Delete temporary properties
         object: undefined,
         organ_owner_sex: undefined,
