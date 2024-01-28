@@ -155,9 +155,8 @@ export class SpatialGraph {
   }
 
   getExtractionSiteTransform(sourceIri, targetIri, bounds) {
-    let transform = this.getTransformationMatrix(sourceIri, targetIri);
+    const transform = this.getTransformationMatrix(sourceIri, targetIri);
     if (transform) {
-      transform = new Matrix4(Matrix4.IDENTITY).rotateX(toRadians(90)).multiplyLeft(transform);
       // Scale visible bounding boxes to the desired dimensions
       if (bounds) {
         const factor = getScaleFactor(bounds.dimension_units) * 0.5;
