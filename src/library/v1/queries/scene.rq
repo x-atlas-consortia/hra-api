@@ -15,7 +15,6 @@ CONSTRUCT {
     ccf:z_dimension ?z_dimension ;
     ccf:dimension_unit ?dimension_units .
 }
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   ?block ccf:comes_from ?donor ;

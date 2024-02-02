@@ -8,7 +8,6 @@ PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 CONSTRUCT {
   ?biomarker ccf:count ?count .
 }
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   SELECT DISTINCT ?biomarker (COUNT(DISTINCT(?block)) AS ?count)

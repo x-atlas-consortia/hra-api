@@ -86,7 +86,6 @@ CONSTRUCT {
                   ccf:thumbnail ?sectionThumbnail ;
   .
 }
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   ?block rdf:type ccf:Sample ;

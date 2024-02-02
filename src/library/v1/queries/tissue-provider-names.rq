@@ -5,7 +5,6 @@ PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 SELECT DISTINCT ?provider
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   # V1 Routes don't respect filters, so disabling them for now

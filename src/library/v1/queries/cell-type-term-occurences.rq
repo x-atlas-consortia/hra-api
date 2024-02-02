@@ -9,7 +9,6 @@ PREFIX cell: <http://purl.obolibrary.org/obo/CL_0000000>
 CONSTRUCT {
   ?cell_type ccf:count ?count .
 }
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   SELECT DISTINCT ?cell_type (COUNT(DISTINCT(?block)) AS ?count)

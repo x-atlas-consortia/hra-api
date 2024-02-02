@@ -9,7 +9,6 @@ PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
 }
-FROM CCF:
 FROM DSGraphs:
 WHERE {
   SELECT DISTINCT ?anatomical_structure (COUNT(DISTINCT(?block)) AS ?count)

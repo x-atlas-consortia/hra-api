@@ -5,7 +5,7 @@ PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 SELECT *
-FROM DSGraphs:
+FROM CCF:
 WHERE {
   []
     rdf:type ccf:SpatialPlacement ;

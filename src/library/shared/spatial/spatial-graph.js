@@ -4,6 +4,7 @@ import graphology from 'graphology';
 import shortestPath from 'graphology-shortest-path/unweighted.js';
 import { v4 as uuidV4 } from 'uuid';
 import dimensionsQuery from '../../v1/queries/spatial-entity-dimensions.rq';
+import hraPlacementsQuery from '../../v1/queries/spatial-placements-hra.rq';
 import placementsQuery from '../../v1/queries/spatial-placements.rq';
 import { ensureArray } from '../../v1/utils/jsonld-compat.js';
 import { select } from '../utils/sparql.js';
@@ -48,18 +49,19 @@ export class SpatialGraph {
 
   async initialize() {
     const graph = (this.graph = new graphology.DirectedGraph());
-    const [placements, dimensions] = await Promise.all([
+    const [placements, hraPlacements, dimensions] = await Promise.all([
       select(placementsQuery, this.endpoint),
+      select(hraPlacementsQuery, this.endpoint),
       select(dimensionsQuery, this.endpoint),
     ]);
-    for (const placement of placements) {
+    for (const placement of placements.concat(hraPlacements)) {
       graph.mergeDirectedEdge(placement.source, placement.target, { placement });
     }
 
     const halfSizeLookup = (this.halfSizeLookup = {});
     for (const { rui_location, x, y, z, units } of dimensions) {
       const factor = getScaleFactor(units) * 0.5;
-      halfSizeLookup[rui_location] = [x, y, z].map(n => Number(n) * factor);
+      halfSizeLookup[rui_location] = [x, y, z].map((n) => Number(n) * factor);
     }
     return this;
   }
@@ -183,7 +185,7 @@ export class SpatialGraph {
   probeExtractionSites(search, results = new Set()) {
     const { x, y, z, radius, target } = search;
     const radiusSquared = (radius / 1000) * (radius / 1000);
-    const center = [x, y, z].map(n => n / 1000);
+    const center = [x, y, z].map((n) => n / 1000);
     for (const sourceIri of Object.keys(this.halfSizeLookup)) {
       const boundingBox = this.getOrientedBoundingBox(sourceIri, target);
       if (boundingBox) {
