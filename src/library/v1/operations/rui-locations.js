@@ -5,8 +5,10 @@ import { ensureGraphArray, normalizeJsonLd } from '../utils/jsonld-compat.js';
 
 function reformatResponse(jsonld) {
   const results = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['datasets', 'samples', 'sections', 'ccf_annotations']));
-  results['@context'] = 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld';
-  return results;
+  return {
+    '@context': 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld',
+    '@graph': results
+  };
 }
 
 /**
