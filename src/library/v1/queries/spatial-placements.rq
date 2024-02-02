@@ -1,24 +1,43 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
 PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
-SELECT *
+SELECT ?source ?target 
+  ?x_scaling ?y_scaling ?z_scaling
+  ?x_rotation ?y_rotation ?z_rotation
+  ?x_translation ?y_translation ?z_translation ?translation_units
 FROM DSGraphs:
 WHERE {
   []
     rdf:type ccf:SpatialPlacement ;
     ccf:placement_for ?source ;
     ccf:placement_relative_to ?target ;
-    ccf:x_scaling ?x_scaling ;
-    ccf:y_scaling ?y_scaling ;
-    ccf:z_scaling ?z_scaling ;
-    ccf:x_rotation ?x_rotation ;
-    ccf:y_rotation ?y_rotation ;
-    ccf:z_rotation ?z_rotation ;
-    ccf:x_translation ?x_translation ;
-    ccf:y_translation ?y_translation ;
-    ccf:z_translation ?z_translation ;
-    ccf:translation_unit ?translation_units .                
+    ccf:x_scaling ?_x_scaling ;
+    ccf:y_scaling ?_y_scaling ;
+    ccf:z_scaling ?_z_scaling ;
+    ccf:x_rotation ?_x_rotation ;
+    ccf:y_rotation ?_y_rotation ;
+    ccf:z_rotation ?_z_rotation ;
+    ccf:x_translation ?_x_translation ;
+    ccf:y_translation ?_y_translation ;
+    ccf:z_translation ?_z_translation ;
+    ccf:translation_unit ?translation_units .
+
+    FILTER(?target = <http://purl.org/ccf/latest/ccf.owl#VHBothSexes> ||
+      !(?source IN (<http://purl.org/ccf/latest/ccf.owl#VHFemale>, <http://purl.org/ccf/latest/ccf.owl#VHMale>)))
+
+    BIND(xsd:decimal(?_x_scaling) as ?x_scaling)
+    BIND(xsd:decimal(?_y_scaling) as ?y_scaling)
+    BIND(xsd:decimal(?_z_scaling) as ?z_scaling)
+
+    BIND(xsd:decimal(?_x_rotation) as ?x_rotation)
+    BIND(xsd:decimal(?_y_rotation) as ?y_rotation)
+    BIND(xsd:decimal(?_z_rotation) as ?z_rotation)
+
+    BIND(xsd:decimal(?_x_translation) as ?x_translation)
+    BIND(xsd:decimal(?_y_translation) as ?y_translation)
+    BIND(xsd:decimal(?_z_translation) as ?z_translation)
 }
