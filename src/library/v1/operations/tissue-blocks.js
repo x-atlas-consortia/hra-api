@@ -27,14 +27,18 @@ function reformatResponse(jsonld) {
       }
       sections.forEach((section) => {
         if (typeof section !== 'string') {
-          section.sample_type = 'Tissue Section';
+          section.sampleType = 'Tissue Section';
+          delete section.sample_type;
+          section.sectionNumber = section.section_number;
+          delete section.section_number;
         }
       });
 
       return {
         '@id': block['@id'],
         '@type': block['@type'],
-        sample_type: 'Tissue Block',
+        sampleType: 'Tissue Block',
+        sample_type: undefined,
         link,
         label,
         description: ensureArray(description).join('; '),
