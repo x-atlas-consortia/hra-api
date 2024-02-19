@@ -1,10 +1,16 @@
 {
   "@context": "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
   "@type": "ccf:Sample",
+  "sample_type": {},
+  "rui_location": {},
   "sections": {
     "@type": "ccf:Sample",
+    "sample_type": {},
     "datasets": {
-      "@type": "ccf:dataset"
+      "@type": "ccf:Dataset"
     }
+  },
+  "datasets": {
+    "@type": "ccf:Dataset"
   }
 }
