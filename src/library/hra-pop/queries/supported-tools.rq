@@ -11,6 +11,6 @@ SELECT DISTINCT (?tool AS ?id) (?tool AS ?label)
 FROM HRApop:
 WHERE {
   [] ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ] .
-  FILTER (?tool != 'spatial')
+  FILTER (?tool != 'sc_proteomics')
 }
 ORDER BY ?tool
