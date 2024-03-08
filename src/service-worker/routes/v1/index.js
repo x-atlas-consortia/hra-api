@@ -1,5 +1,6 @@
 import {
   getAggregateResults,
+  getAnatomicalSystemsTreeModel,
   getBiomarkerTermOccurences,
   getBiomarkerTreeModel,
   getCellTypeTermOccurences,
@@ -42,7 +43,8 @@ function routes(app) {
     .get('/api/v1/scene', forwardFilteredRequest(getScene))
     .post('/api/v1/get-spatial-placement', getSpatialPlacementHandler())
     .get('/api/v1/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
-    .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences));
+    .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences))
+    .get('/anatomical-systems-tree-model', forwardFilteredRequest(getAnatomicalSystemsTreeModel));
 }
 
 export default routes;

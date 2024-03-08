@@ -2,6 +2,7 @@
 // ls | perl -pe "s/^/export\ \*\ from \'\.\/operations\//g;s/\.js/\.js\'\;/g"
 
 export * from '../v1/operations/aggregate-results.js';
+export * from '../v1/operations/anatomical-systems-tree-model.js';
 export * from '../v1/operations/biomarker-term-occurences.js';
 export * from '../v1/operations/biomarker-tree-model.js';
 export * from '../v1/operations/cell-type-term-occurences.js';

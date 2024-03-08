@@ -1,0 +1,12 @@
+get:
+  summary: Get anatomical systems partonomy tree nodes
+  operationId: anatomical-systems-tree-model
+  tags: [v1]
+  parameters:
+    - $ref: ../components/parameters/Cache.yaml
+    - $ref: ../components/parameters/Token.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/OntologyTree.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

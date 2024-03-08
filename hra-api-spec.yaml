@@ -404,6 +404,20 @@ paths:
                 type: object
         '404':
           description: Not found due to option being disabled
+  /v1/anatomical-systems-tree-model:
+    get:
+      summary: Get anatomical systems partonomy tree nodes
+      operationId: anatomical-systems-tree-model
+      tags:
+        - v1
+      parameters:
+        - $ref: '#/components/parameters/Cache'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          $ref: '#/components/responses/OntologyTree'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
     post:
       summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.

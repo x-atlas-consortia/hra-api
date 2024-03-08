@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getAggregateResults,
+  getAnatomicalSystemsTreeModel,
   getBiomarkerTermOccurences,
   getBiomarkerTreeModel,
   getCellTypeTermOccurences,
@@ -43,6 +44,7 @@ const routes = Router()
   .get('/scene', shortCache, forwardFilteredRequest(getScene))
   .post('/get-spatial-placement', noCache, getSpatialPlacementHandler())
   .get('/biomarker-tree-model', longCache, forwardFilteredRequest(getBiomarkerTreeModel))
-  .get('/biomarker-term-occurences', shortCache, forwardFilteredRequest(getBiomarkerTermOccurences));
+  .get('/biomarker-term-occurences', shortCache, forwardFilteredRequest(getBiomarkerTermOccurences))
+  .get('/anatomical-systems-tree-model', longCache, forwardFilteredRequest(getAnatomicalSystemsTreeModel));
 
 export default routes;

@@ -83,6 +83,8 @@ paths:
     $ref: v1/paths/tissue-blocks.yaml
   /v1/gtex/rui_locations.jsonld:
     $ref: v1/paths/gtex_rui_locations.jsonld.yaml
+  /v1/anatomical-systems-tree-model:
+    $ref: v1/paths/anatomical-systems-tree-model.yaml
 
   /hra-pop/cell-summary-report:
     $ref: hra-pop/paths/cell-summary-report.yaml
