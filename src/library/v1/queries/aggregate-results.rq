@@ -1,7 +1,6 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
@@ -16,6 +15,9 @@ CONSTRUCT {
      rdfs:label "Tissue Blocks" ;
      ccf:count ?block_count .
   [] a ccf:AggregateResult ;
+     rdfs:label "Extraction Sites" ;
+     ccf:count ?rui_location_count .
+  [] a ccf:AggregateResult ;
      rdfs:label "Tissue Sections" ;
      ccf:count ?section_count .
   [] a ccf:AggregateResult ;
@@ -29,6 +31,7 @@ WHERE {
       (COUNT(DISTINCT ?donor) AS ?donor_count)
       (COUNT(DISTINCT ?provider) AS ?provider_count)
       (COUNT(DISTINCT ?block) AS ?block_count)
+      (COUNT(DISTINCT ?rui_location) AS ?rui_location_count)
       (COUNT(DISTINCT ?section) AS ?section_count)
       (COUNT(DISTINCT ?dataset) + COUNT(DISTINCT ?sectionDataset) AS ?dataset_count)
     WHERE {
