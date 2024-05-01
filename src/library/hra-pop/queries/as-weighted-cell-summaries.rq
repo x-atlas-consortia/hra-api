@@ -2,10 +2,10 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
 SELECT ?tool ?modality ?cell_id ?cell_label (?predicted_cell_count AS ?count) (?predicted_cell_count / ?total_cell_count AS ?percentage)
-FROM CCF:
+FROM HRA:
 FROM HRApop:
 WHERE {
   {

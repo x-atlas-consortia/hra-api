@@ -34,10 +34,10 @@ function getScaleFactor(units) {
   switch (units) {
     case 'centimeter':
       return 0.01;
+    default:
     case 'millimeter':
       return 0.001;
     case 'meter':
-    default:
       return 1;
   }
 }
@@ -55,11 +55,6 @@ export class SpatialGraph {
       select(dimensionsQuery, this.endpoint),
     ]);
     for (const placement of placements.concat(hraPlacements)) {
-      for (const key of Object.keys(placement)) {
-        if (key.startsWith('x_') || key.startsWith('y_') || key.startsWith('z_')) {
-          placement[key] = Number(placement[key]);
-        }
-      }
       graph.mergeDirectedEdge(placement.source, placement.target, { placement });
     }
 

@@ -27,7 +27,7 @@ export function fetchSparql(query, endpoint, mimetype) {
 export async function select(query, endpoint) {
   const resp = await fetchSparql(query, endpoint, 'text/csv');
   const text = await resp.text();
-  const { data } = Papa.parse(text, { header: true, skipEmptyLines: true });
+  const { data } = Papa.parse(text, { header: true, skipEmptyLines: true, dynamicTyping: true });
   return data || [];
 }
 

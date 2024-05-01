@@ -404,6 +404,17 @@ paths:
                 type: object
         '404':
           description: Not found due to option being disabled
+  /v1/rui-reference-data:
+    get:
+      summary: Get reference data for the RUI tool
+      operationId: rui-reference-data
+      tags:
+        - v1
+      responses:
+        '200':
+          $ref: '#/components/responses/RuiReferenceData'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /v1/anatomical-systems-tree-model:
     get:
       summary: Get anatomical systems partonomy tree nodes
@@ -1486,6 +1497,14 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/TissueBlock'
+    RuiReferenceData:
+      description: Successful operation. RUI Reference Data.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
   requestBodies:
     SparqlQuery:
       description: Request format for a SPARQL query

@@ -5,10 +5,10 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
 SELECT DISTINCT (?organ_iri AS ?id) (?organ_label AS ?label)
-FROM CCF:
+FROM HRA:
 FROM HRApop:
 WHERE {
   ?as ccf:has_cell_summary [] .

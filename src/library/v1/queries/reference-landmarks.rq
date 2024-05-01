@@ -11,8 +11,11 @@ PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
 CONSTRUCT {
-  ?refOrgan rdf:type ccf:SpatialEntity ;
-            ccf:has_reference_organ ?refOrgan ;
+  ?extractionSet rdf:type ccf:ExtractionSet ;
+    ccf:extraction_set_for ?refOrgan ;
+    rdfs:label ?extractionSetLabel .
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
+            ccf:extraction_set ?extractionSet ;
             ccf:representation_of ?representation_of ;
             dcterms:creator ?creator ;
             ccf:creator_first_name ?creator_first_name ;
@@ -34,27 +37,27 @@ CONSTRUCT {
 }
 FROM HRA:
 WHERE {
-    ?refOrgan rdf:type ccf:SpatialEntity ;
-            ccf:has_reference_organ ?refOrgan ;
-            ccf:representation_of ?representation_of ;
-            dcterms:creator [
-              schema:name ?creator ;
-              schema:givenName ?creator_first_name ;
-              schema:familyName ?creator_last_name ;
-            ] ;
-            dcterms:created ?created ;
-            ccf:x_dimension ?x_dimension ;
-            ccf:y_dimension ?y_dimension ;
-            ccf:z_dimension ?z_dimension ;
-            ccf:dimension_unit ?dimension_units ;
-            skos:prefLabel ?label ;
-            ccf:organ_owner_sex ?sex ;
-            ccf:has_object_reference ?object .
+  ?extractionSet rdf:type ccf:ExtractionSet ;
+    ccf:extraction_set_for ?refOrgan ;
+    skos:prefLabel ?extractionSetLabel .
+
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
+              ccf:extraction_set ?_extractionSet ;
+              dcterms:creator [
+                schema:name ?creator ;
+                schema:givenName ?creator_first_name ;
+                schema:familyName ?creator_last_name ;
+              ] ;
+              ccf:x_dimension ?x_dimension ;
+              ccf:y_dimension ?y_dimension ;
+              ccf:z_dimension ?z_dimension ;
+              ccf:dimension_unit ?dimension_units ;
+              skos:prefLabel ?label ;
+              ccf:has_object_reference ?object .
   ?object rdf:type ccf:SpatialObjectReference ;
           ccf:file_url ?file ;
           ccf:file_format ?file_format ;
           ccf:file_subpath ?file_subpath .
-  OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
-  BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
+  BIND(IRI(?_extractionSet) as ?extractionSet)
 }
 ORDER BY ?rui_rank

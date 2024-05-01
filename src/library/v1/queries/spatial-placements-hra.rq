@@ -1,15 +1,17 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
+PREFIX HRAbody: <https://purl.humanatlas.io/graph/hra-ccf-body#>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
-SELECT ?source ?target 
+SELECT DISTINCT ?source ?target 
   ?x_scaling ?y_scaling ?z_scaling
   ?x_rotation ?y_rotation ?z_rotation
   ?x_translation ?y_translation ?z_translation ?translation_units
-FROM CCF:
+FROM HRA:
 WHERE {
   []
     rdf:type ccf:SpatialPlacement ;
@@ -26,8 +28,8 @@ WHERE {
     ccf:z_translation ?_z_translation ;
     ccf:translation_unit ?translation_units .
 
-    FILTER(?target = <http://purl.org/ccf/latest/ccf.owl#VHBothSexes> ||
-      !(?source IN (<http://purl.org/ccf/latest/ccf.owl#VHFemale>, <http://purl.org/ccf/latest/ccf.owl#VHMale>)))
+    FILTER(?target = ccf1:VHBothSexes || ?target = HRAbody:VHBothSexes || 
+      !(?source IN (ccf1:VHFemale, ccf1:VHMale, HRAbody:VHFemale, HRAbody:VHMale)))
 
     BIND(xsd:decimal(?_x_scaling) as ?x_scaling)
     BIND(xsd:decimal(?_y_scaling) as ?y_scaling)
@@ -41,3 +43,4 @@ WHERE {
     BIND(xsd:decimal(?_y_translation) as ?y_translation)
     BIND(xsd:decimal(?_z_translation) as ?z_translation)
 }
+ORDER BY ?source

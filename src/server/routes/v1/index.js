@@ -14,6 +14,7 @@ import {
   getOntologyTreeModel,
   getReferenceOrgans,
   getRuiLocations,
+  getRuiReferenceData,
   getScene,
   getTissueBlocks,
   getTissueProviderNames,
@@ -21,7 +22,7 @@ import {
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
-import { longCache, noCache, shortCache } from '../../cache-middleware.js';
+import { fileCache, longCache, noCache, shortCache } from '../../cache-middleware.js';
 
 const routes = Router()
   .get('/technology-names', shortCache, forwardFilteredRequest(getDatasetTechnologyNames))
@@ -30,9 +31,9 @@ const routes = Router()
   .get('/ontology-term-occurences', shortCache, forwardFilteredRequest(getOntologyTermOccurences))
   .get('/cell-type-term-occurences', shortCache, forwardFilteredRequest(getCellTypeTermOccurences))
   .get('/tissue-blocks', shortCache, forwardFilteredRequest(getTissueBlocks))
-  .get('/reference-organs', longCache, forwardFilteredRequest(getReferenceOrgans))
-  .get('/ontology-tree-model', longCache, forwardFilteredRequest(getOntologyTreeModel))
-  .get('/cell-type-tree-model', longCache, forwardFilteredRequest(getCellTypeTreeModel))
+  .get('/reference-organs', longCache, fileCache('reference-organs.json'), forwardFilteredRequest(getReferenceOrgans))
+  .get('/ontology-tree-model', longCache, fileCache('ontology-tree-model.json'), forwardFilteredRequest(getOntologyTreeModel))
+  .get('/cell-type-tree-model', longCache, fileCache('cell-type-tree-model.json'), forwardFilteredRequest(getCellTypeTreeModel))
   .get('/rui-locations', shortCache, forwardFilteredRequest(getRuiLocations))
   .get('/aggregate-results', shortCache, forwardFilteredRequest(getAggregateResults))
   .get('/db-status', longCache, forwardFilteredRequest(getDbStatus))
@@ -43,8 +44,9 @@ const routes = Router()
   .get('/reference-organ-scene', shortCache, getReferenceOrganSceneHandler())
   .get('/scene', shortCache, forwardFilteredRequest(getScene))
   .post('/get-spatial-placement', noCache, getSpatialPlacementHandler())
-  .get('/biomarker-tree-model', longCache, forwardFilteredRequest(getBiomarkerTreeModel))
+  .get('/biomarker-tree-model', longCache, fileCache('biomarker-tree-model.json'), forwardFilteredRequest(getBiomarkerTreeModel))
   .get('/biomarker-term-occurences', shortCache, forwardFilteredRequest(getBiomarkerTermOccurences))
-  .get('/anatomical-systems-tree-model', longCache, forwardFilteredRequest(getAnatomicalSystemsTreeModel));
+  .get('/anatomical-systems-tree-model', longCache, fileCache('anatomical-systems-tree-model.json'), forwardFilteredRequest(getAnatomicalSystemsTreeModel))
+  .get('/rui-reference-data', longCache, fileCache('rui-reference-data.json'), forwardFilteredRequest(getRuiReferenceData));
 
 export default routes;

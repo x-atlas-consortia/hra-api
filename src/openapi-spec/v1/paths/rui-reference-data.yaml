@@ -1,0 +1,9 @@
+get:
+  summary: Get reference data for the RUI tool
+  operationId: rui-reference-data
+  tags: [v1]
+  responses:
+    '200':
+      $ref: ../components/responses/RuiReferenceData.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

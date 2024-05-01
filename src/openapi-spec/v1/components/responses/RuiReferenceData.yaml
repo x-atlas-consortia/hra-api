@@ -1,0 +1,7 @@
+description: Successful operation. RUI Reference Data.
+content:
+  application/json:
+    schema:
+      type: array
+      items:
+        type: object

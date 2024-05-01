@@ -11,7 +11,7 @@ PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
 CONSTRUCT {
-  ?refOrgan rdf:type ccf:SpatialEntity ;
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
             ccf:has_reference_organ ?refOrgan ;
             ccf:representation_of ?representation_of ;
             dcterms:creator ?creator ;
@@ -34,7 +34,7 @@ CONSTRUCT {
 }
 FROM HRA:
 WHERE {
-    ?refOrgan rdf:type ccf:SpatialEntity ;
+    ?refOrganAs rdf:type ccf:SpatialEntity ;
             ccf:has_reference_organ ?refOrgan ;
             ccf:representation_of ?representation_of ;
             dcterms:creator [
@@ -56,5 +56,6 @@ WHERE {
           ccf:file_subpath ?file_subpath .
   OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
   BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
+  FILTER(?refOrganAs != ?refOrgan)
 }
 ORDER BY ?rui_rank

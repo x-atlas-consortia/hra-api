@@ -14,9 +14,9 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
 
 CONSTRUCT {
   ?donor rdf:type ccf:Donor ;
@@ -78,7 +78,7 @@ CONSTRUCT {
                   rdfs:comment ?sectionDatasetDescription ;
                   rdfs:label ?sectionDatasetLabel .
 }
-FROM CCF:
+FROM HRA:
 FROM HRApop:
 WHERE {
   {

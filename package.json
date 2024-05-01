@@ -17,9 +17,10 @@
   "type": "module",
   "scripts": {
     "start": "npm-run-all build start:server",
-    "build": "npm-run-all build:openapi-spec build:code",
+    "build": "npm-run-all build:openapi-spec build:code build:cache",
     "build:openapi-spec": "npx @redocly/cli bundle ./src/openapi-spec/openapi.yaml -o hra-api-spec.yaml",
     "build:code": "node ./scripts/build.js",
+    "build:cache": "node ./scripts/generate-cache.js",
     "start:server": "nodemon ./dist/server.js -w dist",
     "lint:openapi-spec": "npx @redocly/cli lint ./src/openapi-spec/openapi.yaml --format stylish"
   },
@@ -36,8 +37,12 @@
   ],
   "dependencies": {
     "@jcubic/wayne": "^0.11.2",
+    "@loaders.gl/core": "^3.4.0",
+    "@loaders.gl/draco": "^3.4.0",
+    "@loaders.gl/gltf": "^3.4.0",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
+    "cannon-es": "^0.18.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-queue": "^0.0.13",
@@ -49,7 +54,8 @@
     "mathjs": "^11.11.2",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.5",
