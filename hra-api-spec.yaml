@@ -475,11 +475,7 @@ paths:
         - hra-pop
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdLabelListing'
+          $ref: '#/components/responses/IdLabelsResponse'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -492,11 +488,7 @@ paths:
         - hra-pop
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdLabelListing'
+          $ref: '#/components/responses/IdLabelsResponse'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -509,11 +501,7 @@ paths:
         - hra-pop
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdLabelListing'
+          $ref: '#/components/responses/IdLabelsResponse'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -1089,6 +1077,7 @@ components:
               format: uri
               example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
             - $ref: '#/components/schemas/SpatialEntity'
+          x-preprocessor-delete: oneOf
     Rgba:
       title: RGBA Color Tuple
       type: array
@@ -1398,21 +1387,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TissueSection'
-    IdLabelListing:
-      title: A list of ID - Label pairs
-      type: array
-      items:
-        - type: object
-          required:
-            - id
-            - label
-          properties:
-            id:
-              title: ID (iri) of the entity
-              type: iri
-            label:
-              title: Label of the entity
-              type: string
+    IdLabelPair:
+      title: ID - Label pair
+      type: object
+      required:
+        - id
+        - label
+      properties:
+        id:
+          title: ID (iri) of the entity
+          type: string
+          format: uri
+        label:
+          title: Label of the entity
+          type: string
   responses:
     DatabaseStatus:
       description: Successful operation
@@ -1505,6 +1493,14 @@ components:
             type: array
             items:
               type: object
+    IdLabelsResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/IdLabelPair'
   requestBodies:
     SparqlQuery:
       description: Request format for a SPARQL query
