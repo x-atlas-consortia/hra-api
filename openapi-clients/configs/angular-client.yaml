@@ -2,11 +2,12 @@ generatorName: typescript-angular
 templateDir: openapi-clients/templates/angular-client
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-angular.md
 additionalProperties:
-  apiModulePrefix: Ccf
-  configurationPrefix: CcfApi
+  npmName: "@hra-api/ng-client"
+  npmVersion: 0.5.0
+  apiModulePrefix: Hra
+  configurationPrefix: HraApi
   fileNaming: kebab-case
-  ngVersion: "15.2.9"
-  npmName: "@ccf-openapi/ng-client"
+  ngVersion: "17.3.4"
   stringEnums: true
   supportsES6: true
   useSingleRequestParameter: true
