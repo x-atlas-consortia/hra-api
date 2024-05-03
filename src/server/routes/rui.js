@@ -12,7 +12,7 @@ const ruiRoute = (_req, res, _next) => {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
-  <script src="runtime.js" type="module"></script><script src="polyfills.js" type="module"></script><script src="scripts.js" defer></script><script src="vendor.js" type="module"></script><script src="main.js" type="module"></script>
+  <script src="wc.js" async></script>
 </head>
 <body>
   <ccf-rui collisions-endpoint="" base-href="https://cdn.humanatlas.io/ui--staging/ccf-rui/"></ccf-rui>
