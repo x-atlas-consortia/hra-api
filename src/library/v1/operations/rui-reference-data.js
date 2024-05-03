@@ -1,4 +1,5 @@
 import { Matrix4 } from '@math.gl/core';
+import { simplifyScene } from '../../shared/spatial/simplify-scene.js';
 import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
 import { select } from '../../shared/utils/sparql.js';
 import landmarksQuery from '../../v1/queries/reference-landmarks.rq';
@@ -9,7 +10,6 @@ import query from '../queries/reference-organ-as.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 import { ensureArray, ensureGraphArray, normalizeJsonLd } from '../utils/jsonld-compat.js';
 import { getReferenceOrgans } from './reference-organs.js';
-import { simplifyScene } from '../../shared/spatial/simplify-scene.js';
 
 function reformatResponse(results) {
   return normalizeJsonLd(ensureGraphArray(results));
@@ -81,13 +81,14 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
 
   const organIRILookup = {};
   const organSpatialEntities = {};
+  const anatomicalStructures = {};
   for (const organ of refOrgans) {
     const key = [getLabel(organ), organ.sex, organ.side ?? ''].join('|');
     organIRILookup[key] = organ['@id'];
     organSpatialEntities[organ['@id']] = organ;
+    anatomicalStructures[organ['@id']] = [organ];
   }
 
-  const anatomicalStructures = {};
   for (const organAs of refOrganAs) {
     const organ = organAs.reference_organ;
     const structures = (anatomicalStructures[organ] = anatomicalStructures[organ] ?? []);
@@ -96,6 +97,7 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
 
   const sceneNodeLookup = {};
   const asNodes = [
+    ...Object.entries(organSpatialEntities),
     ...refOrganAs.map((organAs) => [organAs.reference_organ, organAs]),
     ...landmarkSets.reduce(
       (acc, landmarkSet) =>
@@ -162,7 +164,8 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
   // TODO: get simplified scene nodes into the KG so we don't have to load/compute this on the fly
   const simpleSceneNodes = await simplifyScene(Object.values(sceneNodeLookup));
   const simpleSceneNodeLookup = simpleSceneNodes.reduce((acc, node) => {
-    acc[node['@id']] = node; return acc;
+    acc[node['@id']] = node;
+    return acc;
   }, {});
 
   return {

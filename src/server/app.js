@@ -8,6 +8,7 @@ import { activeQueryLimit } from './environment.js';
 import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
+import ruiRoute from './routes/rui.js';
 import sparqlProxy from './routes/sparql.js';
 import v1Routes from './routes/v1';
 
@@ -23,16 +24,24 @@ app.use(
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        'base-uri': ["'self'", 'cdn.jsdelivr.net'],
+        'base-uri': ["'self'", 'cdn.humanatlas.io', 'cdn.jsdelivr.net'],
         'script-src': [
           "'self'",
           "'unsafe-inline'",
           "'unsafe-eval'",
+          'cdn.humanatlas.io',
           'cdn.jsdelivr.net',
           'unpkg.com',
           'www.googletagmanager.com',
         ],
-        'img-src': ["'self'", "'unsafe-eval'", 'cdn.jsdelivr.net', 'unpkg.com', 'www.googletagmanager.com'],
+        'img-src': [
+          "'self'",
+          "'unsafe-eval'",
+          'cdn.humanatlas.io',
+          'cdn.jsdelivr.net',
+          'unpkg.com',
+          'www.googletagmanager.com',
+        ],
         'connect-src': ['*'],
       },
     },
@@ -46,6 +55,7 @@ app.set('json spaces', 2);
 
 app.use('/', longCache, browserRoute);
 app.use('/', longCache, euiRoute);
+app.use('/', longCache, ruiRoute);
 
 const procesingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
 app.use('/v1', procesingQueue, v1Routes);
