@@ -50,6 +50,7 @@
     "express-queue": "^0.0.13",
     "glob": "^10.3.12",
     "graphology": "^0.25.4",
+    "graphology-operators": "^1.6.0",
     "graphology-shortest-path": "^2.0.2",
     "helmet": "^7.1.0",
     "http-proxy-middleware": "^2.0.6",
