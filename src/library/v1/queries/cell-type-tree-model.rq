@@ -31,7 +31,7 @@ WHERE {
   }
   FILTER (!isBlank(?child) && !isBlank(?parent))
 
-  BIND(IF(?child = ?root, 'cell', STR(?label1)) as ?label)
+  BIND(IF(?child = ?root, 'cell', STR(LCASE(?label1))) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)
 }
 ORDER BY ?label ?child
