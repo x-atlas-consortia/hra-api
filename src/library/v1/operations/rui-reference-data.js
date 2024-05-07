@@ -56,7 +56,9 @@ function getPatchPlacements(refOrganIris, placements) {
 }
 
 async function getReferenceOrganAnatomicalStructures(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return reformatResponse(await executeFilteredConstructQuery(query, filter, frame, endpoint));
+  return reformatResponse(await executeFilteredConstructQuery(query, filter, frame, endpoint)).sort(
+    (a, b) => a.rui_rank - b.rui_rank
+  );
 }
 
 async function getReferenceLandmarks(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
@@ -86,13 +88,18 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
     const key = [getLabel(organ), organ.sex, organ.side ?? ''].join('|');
     organIRILookup[key] = organ['@id'];
     organSpatialEntities[organ['@id']] = organ;
-    anatomicalStructures[organ['@id']] = [organ];
   }
 
   for (const organAs of refOrganAs) {
     const organ = organAs.reference_organ;
     const structures = (anatomicalStructures[organ] = anatomicalStructures[organ] ?? []);
     structures.push(organAs);
+  }
+
+  for (const organ of refOrgans) {
+    if (!anatomicalStructures[organ['@id']]) {
+      anatomicalStructures[organ['@id']] = [organ];
+    }
   }
 
   const sceneNodeLookup = {};

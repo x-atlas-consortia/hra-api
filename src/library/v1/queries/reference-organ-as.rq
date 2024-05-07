@@ -47,15 +47,17 @@ WHERE {
             ccf:y_dimension ?y_dimension ;
             ccf:z_dimension ?z_dimension ;
             ccf:dimension_unit ?dimension_units ;
-            skos:prefLabel ?label ;
+            skos:prefLabel ?pref_label ;
             ccf:organ_owner_sex ?sex ;
+            ccf:rui_rank ?rui_rank ;
             ccf:has_object_reference ?object .
   ?object rdf:type ccf:SpatialObjectReference ;
           ccf:file_url ?file ;
           ccf:file_format ?file_format ;
           ccf:file_subpath ?file_subpath .
   OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
-  BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
+  BIND(STR(LCASE(?pref_label)) as ?label)
+  # BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
   FILTER(?refOrganAs != ?refOrgan)
 }
 ORDER BY ?rui_rank
