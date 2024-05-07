@@ -6,7 +6,7 @@ const ruiRoute = (_req, res, _next) => {
 <head>
   <meta charset="utf-8">
   <title>Human Reference Atlas Registration User Interface (RUI)</title>
-  <base href="https://cdn.humanatlas.io/ui--staging/ccf-rui/">
+  <base href="https://cdn.humanatlas.io/ui/ccf-rui/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@ const ruiRoute = (_req, res, _next) => {
   <script src="wc.js" async></script>
 </head>
 <body>
-  <ccf-rui collisions-endpoint="" base-href="https://cdn.humanatlas.io/ui--staging/ccf-rui/"></ccf-rui>
+  <ccf-rui collisions-endpoint="" base-href="https://cdn.humanatlas.io/ui/ccf-rui/"></ccf-rui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const rui = document.querySelector('ccf-rui');
