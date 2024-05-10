@@ -5,7 +5,6 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 
 SELECT DISTINCT (?tool AS ?id) (?tool AS ?label)
 FROM HRApop:
