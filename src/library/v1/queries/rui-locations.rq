@@ -2,6 +2,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
@@ -90,6 +91,8 @@ WHERE {
   ?block rdf:type ccf:Sample ;
           rdfs:label ?sampleLabel ;
           rdfs:comment ?sampleDescription ;
+          # skos:prefLabel ?sampleLabel ;
+          # dcterms:description ?sampleDescription ;
           ccf:url ?sampleLink ;
           ccf:sample_type ?sampleType ;
           ccf:has_registration_location ?rui_location ;
@@ -98,6 +101,8 @@ WHERE {
   ?donor rdf:type ccf:Donor ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
+         #  skos:prefLabel ?donorLabel ;
+         #  dcterms:description ?donorDescription ;
          ccf:url ?donorLink ;
          ccf:sex ?sex ;
          ccf:consortium_name ?consortium ;
@@ -149,6 +154,8 @@ WHERE {
     ?section rdf:type ccf:Sample ;
              rdfs:label ?sectionLabel ;
              rdfs:comment ?sectionDescription ;
+            #  skos:prefLabel ?sectionLabel ;
+            #  dcterms:description ?sectionDescription ;
              ccf:url ?sectionLink ;
              ccf:sample_type ?sectionType ;
              ccf:section_number ?sectionNumber ;
@@ -158,6 +165,8 @@ WHERE {
       ?sectionDataset rdf:type ccf:Dataset ;
                       rdfs:label ?sectionDatasetLabel ;
                       rdfs:comment ?sectionDatasetDescription ;
+                      # skos:prefLabel ?sectionDatasetLabel ;
+                      # dcterms:description ?sectionDatasetDescription ;
                       ccf:url ?sectionDatasetLink ;
                       ccf:technology ?sectionTechnology ;
                       ccf:thumbnail ?sectionThumbnail ;
@@ -169,6 +178,8 @@ WHERE {
     ?dataset rdf:type ccf:Dataset ;
              rdfs:label ?datasetLabel ;
              rdfs:comment ?datasetDescription ;
+            #  skos:prefLabel ?datasetLabel ;
+            #  dcterms:description ?datasetDescription ;
              ccf:url ?datasetLink ;
              ccf:technology ?technology ;
              ccf:thumbnail ?thumbnail ;
