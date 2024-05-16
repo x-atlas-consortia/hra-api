@@ -13,7 +13,7 @@ import { cacheDir, sparqlEndpoint } from '../src/server/environment.js';
 
 async function runAndCache(operation, file) {
   const filePath = resolve(cacheDir(), file);
-  const results = JSON.stringify(await operation(sparqlEndpoint()), null, 2);
+  const results = JSON.stringify(await operation({}, sparqlEndpoint()), null, 2);
   return writeFile(filePath, results);
 }
 
