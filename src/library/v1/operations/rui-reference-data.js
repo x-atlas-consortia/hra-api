@@ -22,7 +22,8 @@ function getLabel(spatialEntity) {
     .replace('left ', '')
     .replace('right ', '')
     .replace('Left ', '')
-    .replace('Right ', '');
+    .replace('Right ', '')
+    .replace(' full term', '');
 }
 
 async function getSpatialPlacements(endpoint = 'https://lod.humanatlas.io/sparql') {
@@ -64,9 +65,7 @@ async function getReferenceOrganAnatomicalStructures(filter, endpoint = 'https:/
 async function getReferenceLandmarks(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   return reformatResponse(await executeFilteredConstructQuery(landmarksQuery, filter, landmarksFrame, endpoint)).map(
     (landmarkSet) => {
-      landmarkSet.extraction_set_for = landmarkSet['ccf:extraction_set_for'];
       landmarkSet.extractionSites = ensureArray(landmarkSet.extractionSites);
-      delete landmarkSet['ccf:extraction_set_for'];
       return landmarkSet;
     }
   );

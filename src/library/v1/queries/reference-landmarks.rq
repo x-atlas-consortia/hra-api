@@ -38,8 +38,12 @@ CONSTRUCT {
 FROM HRA:
 WHERE {
   ?extractionSet rdf:type ccf:ExtractionSet ;
-    ccf:extraction_set_for ?refOrgan ;
+    ccf:extraction_set_for ?refOrganGraph ;
     skos:prefLabel ?extractionSetLabel .
+
+  ?refOrgan rdf:type ccf:SpatialEntity ;
+    ccf:has_reference_organ ?refOrgan .
+  FILTER(STRSTARTS(STR(?refOrgan), STR(?refOrganGraph)))
 
   ?refOrganAs rdf:type ccf:SpatialEntity ;
               ccf:extraction_set ?_extractionSet ;
