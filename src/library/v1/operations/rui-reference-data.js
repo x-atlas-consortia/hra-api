@@ -28,14 +28,13 @@ function getLabel(spatialEntity) {
 
 async function getSpatialPlacements(endpoint = 'https://lod.humanatlas.io/sparql') {
   const placements = await select(hraPlacementsQuery, endpoint);
-  return getPatchPlacements(undefined, placements);
+  return placements;
 }
 
-// TODO: currently selects too many patches
-function getPatchPlacements(refOrganIris, placements) {
+function getPatchPlacements(refOrgans, placements, graph) {
   const placementPatches = {};
-  for (const placement of placements) {
-    const source = placement.source;
+  for (const sourcePlacement of placements) {
+    const source = sourcePlacement.source;
     // Ignore placements from spatial object references and the VH Male/Female entities
     if (
       !source.endsWith('_obj') &&
@@ -43,14 +42,24 @@ function getPatchPlacements(refOrganIris, placements) {
       !source.endsWith('#VHFemale') &&
       !source.endsWith('#VHMale')
     ) {
-      placementPatches[source] = {
-        '@id': placement.id,
+      let placement = {
+        '@id': sourcePlacement.id,
         '@type': 'SpatialPlacement',
-        ...placement,
+        ...sourcePlacement,
         scaling_units: 'ratio',
         rotation_units: 'degree',
         id: undefined,
       };
+      if (!refOrgans.some((refOrgan) => refOrgan['@id'] === placement.target)) {
+        for (const refOrgan of refOrgans) {
+          const directPlacement = graph.getSpatialPlacement({ '@id': source }, refOrgan['@id']);
+          if (directPlacement) {
+            placement = directPlacement;
+            break;
+          }
+        }
+      }
+      placementPatches[source] = placement;
     }
   }
   return placementPatches;
@@ -72,7 +81,7 @@ async function getReferenceLandmarks(filter, endpoint = 'https://lod.humanatlas.
 }
 
 export async function getRuiReferenceData(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const [refOrgans, refOrganAs, landmarkSets, graph, placementPatches] = await Promise.all([
+  const [refOrgans, refOrganAs, landmarkSets, graph, allPlacementPatches] = await Promise.all([
     getReferenceOrgans(filter, endpoint),
     getReferenceOrganAnatomicalStructures(filter, endpoint),
     getReferenceLandmarks(filter, endpoint),
@@ -80,6 +89,7 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
     getSpatialPlacements(endpoint),
   ]);
 
+  const placementPatches = getPatchPlacements(refOrgans, allPlacementPatches, graph);
   const organIRILookup = {};
   const organSpatialEntities = {};
   const anatomicalStructures = {};
