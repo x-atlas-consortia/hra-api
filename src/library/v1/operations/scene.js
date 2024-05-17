@@ -9,13 +9,10 @@ import { ensureGraphArray } from '../utils/jsonld-compat.js';
 function getTargetIri(filter) {
   switch (filter.sex) {
     case 'Male':
-      // return 'http://purl.org/ccf/latest/ccf.owl#VHMale';
       return 'https://purl.humanatlas.io/graph/hra-ccf-body#VHMale';
     case 'Female':
-      // return 'http://purl.org/ccf/latest/ccf.owl#VHFemale';
       return 'https://purl.humanatlas.io/graph/hra-ccf-body#VHFemale';
     default:
-      // return 'http://purl.org/ccf/latest/ccf.owl#VHBothSexes';
       return 'https://purl.humanatlas.io/graph/hra-ccf-body#VHBothSexes';
   }
 }
