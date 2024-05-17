@@ -160,14 +160,22 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
   for (const refOrgan of refOrgans) {
     extractionSets[refOrgan['@id']] = extractionSets[refOrgan['@id']] || [];
   }
-  // TODO: combine 'Landmarks' sets
   for (const landmarkSet of landmarkSets) {
     const refOrgan = landmarkSet.extraction_set_for;
     const sets = (extractionSets[refOrgan] = extractionSets[refOrgan] || []);
-    sets.push(landmarkSet);
+    const sameSet = sets.find((set) => set.label === landmarkSet.label);
+    if (sameSet) {
+      sameSet.extractionSites = sameSet.extractionSites.concat(landmarkSet.extractionSites);
+    } else {
+      if (landmarkSet.label === 'Landmarks') {
+        sets.unshift(landmarkSet);
+      } else {
+        sets.push(landmarkSet);
+      }
+    }
   }
 
-  // TODO: get simplified scene nodes into the KG so we don't have to load/compute this on the fly
+  // Y3 TODO: get simplified scene nodes into the KG so we don't have to load/compute this on the fly
   const simpleSceneNodes = await simplifyScene(Object.values(sceneNodeLookup));
   const simpleSceneNodeLookup = simpleSceneNodes.reduce((acc, node) => {
     acc[node['@id']] = node;
