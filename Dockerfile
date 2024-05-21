@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 RUN npm ci --include=dev
 COPY --chown=node:node . .
-RUN npm run build && npm prune --production
+RUN mkdir file-cache && npm run build && npm prune --production
 
 EXPOSE 8080
 CMD [ "pm2-runtime", "./dist/server.js" ]
