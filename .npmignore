@@ -1,0 +1,9 @@
+/dist/clients
+/src/openapi-spec/
+/file-cache
+/Dockerfile
+/.github
+/openapi-clients
+/openapitools.json
+/scripts
+/eui-client-side
