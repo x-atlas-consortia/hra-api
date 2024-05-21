@@ -9,15 +9,22 @@ export function expandIri(iri) {
     : iri;
 }
 
-export function normalizeJsonLd(jsonld, arrayFields = new Set()) {
+const DEFAULT_STRING_FIELDS = ['creator', 'creator_first_name', 'creator_last_name'];
+
+export function normalizeJsonLd(jsonld, arrayFields = new Set(), stringFields = new Set(DEFAULT_STRING_FIELDS)) {
   return JSON.parse(JSON.stringify(jsonld), (key, value) => {
     if (arrayFields.has(key)) {
       value = ensureArray(value);
     }
-    if (typeof value === 'object' && value?.['@type'] && value['@value'] && (
-        value['@type'].startsWith('xsd:') || 
-        value['@type'].startsWith('http://www.w3.org/2001/XMLSchema#')
-      )) {
+    if (stringFields.has(key)) {
+      value = ensureString(value);
+    }
+    if (
+      typeof value === 'object' &&
+      value?.['@type'] &&
+      value['@value'] &&
+      (value['@type'].startsWith('xsd:') || value['@type'].startsWith('http://www.w3.org/2001/XMLSchema#'))
+    ) {
       switch (value['@type']) {
         case 'http://www.w3.org/2001/XMLSchema#integer':
         case 'http://www.w3.org/2001/XMLSchema#double':
@@ -40,8 +47,10 @@ export function normalizeJsonLd(jsonld, arrayFields = new Set()) {
   });
 }
 
-export function ensureString(value) {
-  if (value?.['@value']) {
+export function ensureString(value, arrayElementSeparator = '; ') {
+  if (Array.isArray(value)) {
+    return value.map(ensureString).join(arrayElementSeparator);
+  } else if (value?.['@value']) {
     return value['@value'];
   } else {
     return value;

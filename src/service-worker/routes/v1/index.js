@@ -13,6 +13,7 @@ import {
   getOntologyTreeModel,
   getReferenceOrgans,
   getRuiLocations,
+  getRuiReferenceData,
   getScene,
   getTissueBlocks,
   getTissueProviderNames,
@@ -44,7 +45,8 @@ function routes(app) {
     .post('/api/v1/get-spatial-placement', getSpatialPlacementHandler())
     .get('/api/v1/biomarker-tree-model', forwardFilteredRequest(getBiomarkerTreeModel))
     .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences))
-    .get('/anatomical-systems-tree-model', forwardFilteredRequest(getAnatomicalSystemsTreeModel));
+    .get('/api/v1/anatomical-systems-tree-model', forwardFilteredRequest(getAnatomicalSystemsTreeModel))
+    .get('/api/v1/rui-reference-data', forwardFilteredRequest(getRuiReferenceData));
 }
 
 export default routes;

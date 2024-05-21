@@ -2,11 +2,11 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 SELECT DISTINCT ?root ?child ?parent ?label ?synonymLabel
-FROM CCF:
+FROM HRA:
 WHERE {
   BIND(body: as ?root)
 

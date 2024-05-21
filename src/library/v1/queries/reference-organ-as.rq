@@ -1,0 +1,63 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX schema: <https://schema.org/>
+PREFIX skin: <http://purl.obolibrary.org/obo/UBERON_0002097>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
+
+CONSTRUCT {
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
+            ccf:has_reference_organ ?refOrgan ;
+            ccf:representation_of ?representation_of ;
+            dcterms:creator ?creator ;
+            ccf:creator_first_name ?creator_first_name ;
+            ccf:creator_last_name ?creator_last_name ;
+            dcterms:created ?created ;
+            ccf:x_dimension ?x_dimension ;
+            ccf:y_dimension ?y_dimension ;
+            ccf:z_dimension ?z_dimension ;
+            ccf:dimension_unit ?dimension_units ;
+            rdfs:label ?label ;
+            ccf:sex ?sex ;
+            ccf:organ_side ?organ_side ;
+            ccf:rui_rank ?rui_rank ;
+            ccf:has_object_reference ?object .
+  ?object rdf:type ccf:SpatialObjectReference ;
+          ccf:file_url ?file ;
+          ccf:file_format ?file_format ;
+          ccf:file_subpath ?file_subpath .
+}
+FROM HRA:
+WHERE {
+    ?refOrganAs rdf:type ccf:SpatialEntity ;
+            ccf:has_reference_organ ?refOrgan ;
+            ccf:representation_of ?representation_of ;
+            dcterms:creator [
+              schema:name ?creator ;
+              schema:givenName ?creator_first_name ;
+              schema:familyName ?creator_last_name ;
+            ] ;
+            dcterms:created ?created ;
+            ccf:x_dimension ?x_dimension ;
+            ccf:y_dimension ?y_dimension ;
+            ccf:z_dimension ?z_dimension ;
+            ccf:dimension_unit ?dimension_units ;
+            skos:prefLabel ?pref_label ;
+            ccf:organ_owner_sex ?sex ;
+            ccf:rui_rank ?rui_rank ;
+            ccf:has_object_reference ?object .
+  ?object rdf:type ccf:SpatialObjectReference ;
+          ccf:file_url ?file ;
+          ccf:file_format ?file_format ;
+          ccf:file_subpath ?file_subpath .
+  OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
+  BIND(STR(LCASE(?pref_label)) as ?label)
+  # BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
+  FILTER(?refOrganAs != ?refOrgan)
+}
+ORDER BY ?rui_rank

@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+    {
+      "extractionSites": {
+        "@reverse": "http://purl.org/ccf/extraction_set"
+      },
+      "extraction_set_for": {
+        "@id": "http://purl.org/ccf/extraction_set_for",
+        "@type": "@id"
+      },
+      "extraction_set": {
+        "@id": "http://purl.org/ccf/extraction_set",
+        "@type": "@id"
+      }
+    }
+  ],
+  "@type": "http://purl.org/ccf/ExtractionSet",
+  "extractionSites": {
+    "@type": "http://purl.org/ccf/SpatialEntity"
+  }
+}

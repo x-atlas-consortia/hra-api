@@ -1,6 +1,6 @@
 {
   "name": "hra-api",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "The Human Reference Atlas (HRA) API deployed to https://apps.humanatlas.io/api/",
   "keywords": [
     "hra",
@@ -17,9 +17,11 @@
   "type": "module",
   "scripts": {
     "start": "npm-run-all build start:server",
-    "build": "npm-run-all build:openapi-spec build:code",
+    "build": "npm-run-all build:openapi-spec build:code build:cache",
     "build:openapi-spec": "npx @redocly/cli bundle ./src/openapi-spec/openapi.yaml -o hra-api-spec.yaml",
     "build:code": "node ./scripts/build.js",
+    "build:cache": "node ./scripts/generate-cache.js",
+    "build:clients": "node ./scripts/build-clients.js",
     "start:server": "nodemon ./dist/server.js -w dist",
     "lint:openapi-spec": "npx @redocly/cli lint ./src/openapi-spec/openapi.yaml --format stylish"
   },
@@ -36,12 +38,19 @@
   ],
   "dependencies": {
     "@jcubic/wayne": "^0.11.2",
+    "@loaders.gl/core": "^3.4.0",
+    "@loaders.gl/draco": "^3.4.0",
+    "@loaders.gl/gltf": "^3.4.0",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
+    "cannon-es": "^0.18.0",
+    "commander": "^12.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-queue": "^0.0.13",
+    "glob": "^10.3.12",
     "graphology": "^0.25.4",
+    "graphology-operators": "^1.6.0",
     "graphology-shortest-path": "^2.0.2",
     "helmet": "^7.1.0",
     "http-proxy-middleware": "^2.0.6",
@@ -49,9 +58,13 @@
     "mathjs": "^11.11.2",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1",
-    "uuid": "^9.0.1"
+    "shelljs": "^0.8.5",
+    "tslib": "^2.5.0",
+    "uuid": "^9.0.1",
+    "yaml": "^2.4.2"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.6.0",
     "esbuild": "^0.19.5",
     "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5"

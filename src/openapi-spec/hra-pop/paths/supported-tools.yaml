@@ -5,11 +5,7 @@ get:
   tags: [hra-pop]
   responses:
     '200':
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/IdLabelListing.yaml
+      $ref: ../components/responses/IdLabelsResponse.yaml
     '404':
       $ref: ../../v1/components/responses/ErrorMessage.yaml
     '500':

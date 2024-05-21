@@ -1,22 +1,10 @@
-#   This SPARQL query constructs a result set representing detailed information about tissue donors, samples, spatial entities,
-#   datasets, and their relationships. It combines data from the CCF ontology and experimental data sources.
-#  
-#  * Query Structure:
-#       The query uses the CONSTRUCT statement to build a result set containing information about tissue donors, samples, spatial entities,
-#       datasets, and their relationships. It retrieves data from the CCF ontology and external data sources.
-#       The query constructs nodes for various entities, including tissue donors, samples, spatial entities, datasets, and spatial placements.
-#       It also captures details such as sex, age, BMI, consortium names, creator information, dimensions, annotations, and more.
-#
-#  * Note: The filter parameters (e.g., age, sex, BMI) can be added dynamically by the API user.
-#          The string filter commented below serves as a placeholder and will be replaced with the appropriate filter conditions
-#          when used in the API call.
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 CONSTRUCT {
   ?donor rdf:type ccf:Donor ;
@@ -67,18 +55,20 @@ CONSTRUCT {
             rdfs:comment ?sectionDescription ;
             ccf:url ?sectionLink ;
             ccf:generates_dataset ?sectionDataset .
-  ?dataset rdf:type ccf:Dataset ;
-           ccf:technology ?technology ;
-           ccf:thumbnail ?thumbnail ;
+  ?dataset rdf:type ccf:Dataset ; 
+           rdfs:label ?datasetLabel ;
            rdfs:comment ?datasetDescription ;
-           rdfs:label ?datasetLabel .
+           ccf:technology ?technology ;
+           ccf:thumbnail ?thumbnail .
+           
   ?sectionDataset rdf:type ccf:Dataset ;
-                  ccf:technology ?sectionTechnology ;
-                  ccf:thumbnail ?sectionThumbnail ;
+                  rdfs:label ?sectionDatasetLabel ;
                   rdfs:comment ?sectionDatasetDescription ;
-                  rdfs:label ?sectionDatasetLabel .
+                  ccf:technology ?sectionTechnology ;
+                  ccf:thumbnail ?sectionThumbnail .
+                  
 }
-FROM CCF:
+FROM HRA:
 FROM HRApop:
 WHERE {
   {
@@ -150,32 +140,40 @@ WHERE {
          ccf:tissue_provider_name ?provider ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
+         # skos:prefLabel ?donorLabel ;
+         # dcterms:description ?donorDescription ;
          ccf:url ?link .
 
   OPTIONAL {
     ?block ccf:generates_dataset ?dataset . 
     ?dataset ccf:technology ?technology ;
-           ccf:thumbnail ?thumbnail ;
-           rdfs:comment ?datasetDescription ;
-           rdfs:label ?datasetLabel .
+           rdfs:label ?donorLabel ;
+           rdfs:comment ?donorDescription ;
+           # skos:prefLabel ?donorLabel ;
+           # dcterms:description ?donorDescription ;
+           ccf:thumbnail ?thumbnail .
   }
   
   OPTIONAL {
     ?block ccf:subdivided_into_sections ?section .
     ?section rdf:type ccf:Sample ;
-            ccf:sample_type ?sectionType ;
-            ccf:section_number ?sectionNumber ;
             rdfs:label ?sectionLabel ;
             rdfs:comment ?sectionDescription ;
+            # skos:prefLabel ?sectionLabel ;
+            # dcterms:description ?sectionDescription ;
+            ccf:sample_type ?sectionType ;
+            ccf:section_number ?sectionNumber ;
             ccf:url ?sectionLink 
             .
     
     OPTIONAL {
       ?section ccf:generates_dataset ?sectionDataset . 
       ?sectionDataset ccf:technology ?sectionTechnology ;
-                ccf:thumbnail ?sectionThumbnail ;
+                rdfs:label ?sectionDatasetLabel ;
                 rdfs:comment ?sectionDatasetDescription ;
-                rdfs:label ?sectionDatasetLabel .
+                # skos:prefLabel ?sectionDatasetLabel ;
+                # dcterms:description ?sectionDatasetDescription ;
+                ccf:thumbnail ?sectionThumbnail .
     }
   }
   OPTIONAL { ?donor ccf:age ?age . }

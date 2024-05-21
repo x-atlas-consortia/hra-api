@@ -1,6 +1,7 @@
 import { Euler, Matrix4, toDegrees, toRadians } from '@math.gl/core';
 import { OrientedBoundingBox } from '@math.gl/culling';
 import graphology from 'graphology';
+import reverse from 'graphology-operators/reverse.js';
 import shortestPath from 'graphology-shortest-path/unweighted.js';
 import { v4 as uuidV4 } from 'uuid';
 import dimensionsQuery from '../../v1/queries/spatial-entity-dimensions.rq';
@@ -34,10 +35,10 @@ function getScaleFactor(units) {
   switch (units) {
     case 'centimeter':
       return 0.01;
+    default:
     case 'millimeter':
       return 0.001;
     case 'meter':
-    default:
       return 1;
   }
 }
@@ -55,11 +56,6 @@ export class SpatialGraph {
       select(dimensionsQuery, this.endpoint),
     ]);
     for (const placement of placements.concat(hraPlacements)) {
-      for (const key of Object.keys(placement)) {
-        if (key.startsWith('x_') || key.startsWith('y_') || key.startsWith('z_')) {
-          placement[key] = Number(placement[key]);
-        }
-      }
       graph.mergeDirectedEdge(placement.source, placement.target, { placement });
     }
 
@@ -122,35 +118,60 @@ export class SpatialGraph {
     }
 
     if (matrix) {
-      const euler = new Euler().fromRotationMatrix(matrix, Euler.XYZ);
-      const T = matrix.getTranslation().map((n) => n * 1000);
-      const R = euler.toVector3().map(toDegrees);
-      const S = matrix.getScale().map((n) => (n < 1 && n > 0.999999 ? 1 : n));
-
-      return {
-        '@context': 'https://hubmapconsortium.github.io/hubmap-ontology/ccf-context.jsonld',
-        '@id': `http://purl.org/ccf/1.5/${uuidV4()}_placement`,
-        '@type': 'SpatialPlacement',
-        source: source['@id'],
-        target: targetIri,
-        placement_date: new Date().toISOString().split('T')[0],
-        x_scaling: S[0],
-        y_scaling: S[1],
-        z_scaling: S[2],
-        scaling_units: 'ratio',
-        x_rotation: R[0],
-        y_rotation: R[1],
-        z_rotation: R[2],
-        rotation_order: 'XYZ',
-        rotation_units: 'degree',
-        x_translation: T[0],
-        y_translation: T[1],
-        z_translation: T[2],
-        translation_units: 'millimeter',
-      };
+      return this.matrixToSpatialPlacement(matrix, source['@id'], targetIri);
     } else {
       return undefined;
     }
+  }
+
+  matrixToSpatialPlacement(matrix, sourceIri, targetIri) {
+    const euler = new Euler().fromRotationMatrix(matrix, Euler.XYZ);
+    const T = matrix.getTranslation().map((n) => n * 1000);
+    const R = euler.toVector3().map(toDegrees);
+    const S = matrix.getScale().map((n) => (n < 1 && n > 0.999999 ? 1 : n));
+
+    return {
+      '@context': 'https://hubmapconsortium.github.io/hubmap-ontology/ccf-context.jsonld',
+      '@id': `http://purl.org/ccf/1.5/${uuidV4()}_placement`,
+      '@type': 'SpatialPlacement',
+      source: sourceIri,
+      target: targetIri,
+      placement_date: new Date().toISOString().split('T')[0],
+      x_scaling: S[0],
+      y_scaling: S[1],
+      z_scaling: S[2],
+      scaling_units: 'ratio',
+      x_rotation: R[0],
+      y_rotation: R[1],
+      z_rotation: R[2],
+      rotation_order: 'XYZ',
+      rotation_units: 'degree',
+      x_translation: T[0],
+      y_translation: T[1],
+      z_translation: T[2],
+      translation_units: 'millimeter',
+    };
+  }
+
+  getSpatialPlacementsToTarget(targetIri) {
+    const graph = reverse(this.graph);
+    const sources = shortestPath.singleSource(graph, targetIri);
+    const results = [];
+    for (const [sourceIri, path] of Object.entries(sources)) {
+      if (sourceIri !== targetIri) {
+        const tx = new Matrix4(Matrix4.IDENTITY);
+        let target = '';
+        for (const source of path) {
+          if (target) {
+            const placement = graph.getEdgeAttribute(target, source, 'placement');
+            this.applySpatialPlacement(tx, placement);
+          }
+          target = source;
+        }
+        results.push(this.matrixToSpatialPlacement(tx, sourceIri, targetIri));
+      }
+    }
+    return results;
   }
 
   get3DObjectTransform(_sourceIri, targetIri, objectRefIri) {

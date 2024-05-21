@@ -4,11 +4,11 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 SELECT ?cell_source_type ?cell_source ?cell_source_label ?tool ?modality ?cell_id
   ?percentage
-FROM CCF:
+FROM HRA:
 FROM HRApop:
 WHERE {
   {

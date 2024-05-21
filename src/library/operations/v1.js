@@ -16,6 +16,7 @@ export * from '../v1/operations/ontology-tree-model.js';
 export * from '../v1/operations/reference-organ-scene.js';
 export * from '../v1/operations/reference-organs.js';
 export * from '../v1/operations/rui-locations.js';
+export * from '../v1/operations/rui-reference-data.js';
 export * from '../v1/operations/scene.js';
 export * from '../v1/operations/technology-names.js';
 export * from '../v1/operations/tissue-blocks.js';

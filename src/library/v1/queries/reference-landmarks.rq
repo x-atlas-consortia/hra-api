@@ -1,0 +1,69 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX schema: <https://schema.org/>
+PREFIX skin: <http://purl.obolibrary.org/obo/UBERON_0002097>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
+
+CONSTRUCT {
+  ?extractionSetId rdf:type ccf:ExtractionSet ;
+    ccf:extraction_set_for ?refOrgan ;
+    rdfs:label ?extractionSetLabel .
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
+            ccf:extraction_set ?extractionSetId ;
+            ccf:representation_of ?representation_of ;
+            dcterms:creator ?creator ;
+            ccf:creator_first_name ?creator_first_name ;
+            ccf:creator_last_name ?creator_last_name ;
+            dcterms:created ?created ;
+            ccf:x_dimension ?x_dimension ;
+            ccf:y_dimension ?y_dimension ;
+            ccf:z_dimension ?z_dimension ;
+            ccf:dimension_unit ?dimension_units ;
+            rdfs:label ?label ;
+            ccf:sex ?sex ;
+            ccf:organ_side ?organ_side ;
+            ccf:rui_rank ?rui_rank ;
+            ccf:has_object_reference ?object .
+  ?object rdf:type ccf:SpatialObjectReference ;
+          ccf:file_url ?file ;
+          ccf:file_format ?file_format ;
+          ccf:file_subpath ?file_subpath .
+}
+FROM HRA:
+WHERE {
+  ?extractionSet rdf:type ccf:ExtractionSet ;
+    ccf:extraction_set_for ?refOrganGraph ;
+    skos:prefLabel ?extractionSetLabel .
+
+  ?refOrgan rdf:type ccf:SpatialEntity ;
+    ccf:has_reference_organ ?refOrgan .
+  FILTER(STRSTARTS(STR(?refOrgan), STR(?refOrganGraph)))
+
+  ?refOrganAs rdf:type ccf:SpatialEntity ;
+              ccf:extraction_set ?_extractionSet ;
+              dcterms:creator [
+                schema:name ?creator ;
+                schema:givenName ?creator_first_name ;
+                schema:familyName ?creator_last_name ;
+              ] ;
+              ccf:x_dimension ?x_dimension ;
+              ccf:y_dimension ?y_dimension ;
+              ccf:z_dimension ?z_dimension ;
+              ccf:dimension_unit ?dimension_units ;
+              skos:prefLabel ?label ;
+              ccf:has_object_reference ?object .
+  ?object rdf:type ccf:SpatialObjectReference ;
+          ccf:file_url ?file ;
+          ccf:file_format ?file_format ;
+          ccf:file_subpath ?file_subpath .
+  BIND(IRI(?_extractionSet) as ?extractionSet)
+
+  BIND(IRI(CONCAT(STR(?refOrgan), '$$', ?extractionSetLabel)) as ?extractionSetId)
+}
+ORDER BY ?rui_rank

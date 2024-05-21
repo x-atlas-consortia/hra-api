@@ -1,8 +1,11 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
-PREFIX CCF: <https://purl.humanatlas.io/graph/ccf>
+PREFIX skin: <http://purl.obolibrary.org/obo/UBERON_0002097>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 CONSTRUCT {
   ?refOrgan rdf:type ccf:SpatialSceneNode ;
@@ -15,31 +18,21 @@ CONSTRUCT {
     ccf:rui_rank ?rui_rank ;
     ccf:has_object_reference ?object .
 }
-FROM CCF:
+FROM HRA:
 WHERE {
   {
     ?refOrgan rdf:type ccf:SpatialEntity ;
               ccf:has_reference_organ ?refOrgan ;
+              ccf:has_reference_organ ?realRefOrgan ;
               ccf:representation_of ?representation_of ;
-              dcterms:creator ?creator ;
-              ccf:creator_first_name ?creator_first_name ;
-              ccf:creator_last_name ?creator_last_name ;
-              dcterms:created ?created ;
-              ccf:x_dimension ?x_dimension ;
-              ccf:y_dimension ?y_dimension ;
-              ccf:z_dimension ?z_dimension ;
-              ccf:dimension_unit ?dimension_units ;
-              rdfs:label ?label ;
-              ccf:organ_owner_sex ?_sex ;
-              ccf:rui_rank ?rui_rank ;
+              skos:prefLabel ?label ;
+              ccf:organ_owner_sex ?sex ;
               ccf:has_object_reference ?object .
     ?object rdf:type ccf:SpatialObjectReference ;
             ccf:file_url ?file ;
-            ccf:file_format ?file_format ;
             ccf:file_subpath ?file_subpath .
-    OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
-    BIND(STR(?_sex) as ?sex)
-    
+    BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
     #{{ORGAN_FILTER}}
   }
 }
+ORDER BY ?rui_rank ?label

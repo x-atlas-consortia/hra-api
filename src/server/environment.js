@@ -17,3 +17,7 @@ export function longCacheTimeout() {
 export function activeQueryLimit() {
   return process.env.ACTIVE_QUERIES || 4;
 }
+
+export function cacheDir() {
+  return process.env.FILE_CACHE_DIR || './file-cache';
+}

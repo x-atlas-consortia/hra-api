@@ -1,0 +1,13 @@
+title: ID - Label pair
+type: object
+required:
+  - id
+  - label
+properties:
+  id:
+    title: ID (iri) of the entity
+    type: string
+    format: uri
+  label:
+    title: Label of the entity
+    type: string
