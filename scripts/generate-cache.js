@@ -9,11 +9,13 @@ import {
   getReferenceOrgans,
   getRuiReferenceData,
 } from '../dist/operations/v1.js';
-import { cacheDir, sparqlEndpoint } from '../src/server/environment.js';
+import { cacheDir } from '../src/server/environment.js';
+
+const SPARQL_ENDPOINT = process.env.SPARQL_ENDPOINT ?? 'https://sparql.humanatlas.io/blazegraph/namespace/kb/sparql';
 
 async function runAndCache(operation, file) {
   const filePath = resolve(cacheDir(), file);
-  const results = JSON.stringify(await operation({}, sparqlEndpoint()), null, 2);
+  const results = JSON.stringify(await operation({}, SPARQL_ENDPOINT), null, 2);
   return writeFile(filePath, results);
 }
 
