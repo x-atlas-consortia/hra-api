@@ -8,7 +8,7 @@ PREFIX skin: <http://purl.obolibrary.org/obo/UBERON_0002097>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
-PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 CONSTRUCT {
   ?refOrgan rdf:type ccf:SpatialEntity ;

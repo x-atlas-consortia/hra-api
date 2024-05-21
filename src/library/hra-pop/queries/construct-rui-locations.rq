@@ -4,7 +4,7 @@ PREFIX ccf: <http://purl.org/ccf/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
-PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 CONSTRUCT {
   ?donor rdf:type ccf:Donor ;

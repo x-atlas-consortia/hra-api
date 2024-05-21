@@ -5,7 +5,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX skin: <http://purl.obolibrary.org/obo/UBERON_0002097>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX HRA: <https://purl.humanatlas.io/collection/hra-kg/draft>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
 CONSTRUCT {
   ?refOrgan rdf:type ccf:SpatialSceneNode ;
