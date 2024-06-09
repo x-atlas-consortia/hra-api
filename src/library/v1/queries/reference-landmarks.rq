@@ -47,11 +47,12 @@ WHERE {
 
   ?refOrganAs rdf:type ccf:SpatialEntity ;
               ccf:extraction_set ?_extractionSet ;
-              dcterms:creator [
-                schema:name ?creator ;
-                schema:givenName ?creator_first_name ;
-                schema:familyName ?creator_last_name ;
-              ] ;
+              # TODO: Uncomment after next release
+              # dcterms:creator [
+              #   schema:name ?creator ;
+              #   schema:givenName ?creator_first_name ;
+              #   schema:familyName ?creator_last_name ;
+              # ] ;
               ccf:x_dimension ?x_dimension ;
               ccf:y_dimension ?y_dimension ;
               ccf:z_dimension ?z_dimension ;
