@@ -43,7 +43,7 @@ export async function fetchAllRows(url, pageLimit, afterRIDValue) {
       const lastRowRID = responseRows[responseRows.length - 1].RID;
 
       // go for the next page
-      const nextRows = await fetchPageByPage(url, pageLimit, lastRowRID);
+      const nextRows = await fetchAllRows(url, pageLimit, lastRowRID);
       // append the current page of results with the other ones.
       return responseRows.concat(nextRows);
     } else {
