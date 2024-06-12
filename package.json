@@ -53,6 +53,7 @@
     "graphology-operators": "^1.6.0",
     "graphology-shortest-path": "^2.0.2",
     "helmet": "^7.1.0",
+    "hra-rui-locations-processor": "github:hubmapconsortium/hra-rui-locations-processor",
     "http-proxy-middleware": "^2.0.6",
     "jsonld": "^8.3.1",
     "mathjs": "^11.11.2",
