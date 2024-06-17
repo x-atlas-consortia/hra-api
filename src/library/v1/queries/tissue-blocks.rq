@@ -18,57 +18,35 @@ CONSTRUCT {
           ccf:subdivided_into_sections ?section ;
           ccf:section_count ?sectionCount ;
           ccf:section_size ?sectionSize ;
-          ccf:section_size_unit ?sectionUnits ;
-  .
+          ccf:section_size_unit ?sectionUnits .
   ?donor rdf:type ccf:Donor ;
          rdfs:label ?donorLabel ;
          rdfs:comment ?donorDescription ;
          ccf:url ?donorLink ;
-         ccf:tissue_provider_name ?provider ;
-  .
+         ccf:tissue_provider_name ?provider .
   ?section rdf:type ccf:Sample ;
            rdfs:label ?sectionLabel ;
            rdfs:comment ?sectionDescription ;
            ccf:url ?sectionLink ;
            ccf:sample_type ?sectionType ;
            ccf:generates_dataset ?sectionDataset ;
-           ccf:section_number ?sectionNumber ;
-  .
+           ccf:section_number ?sectionNumber .
   ?dataset rdf:type ccf:Dataset ;
            rdfs:label ?datasetLabel ;
            rdfs:comment ?datasetDescription ;
            ccf:url ?datasetLink ;
            ccf:technology ?technology ;
-           ccf:thumbnail ?thumbnail ;
-  .
+           ccf:thumbnail ?thumbnail .
   ?sectionDataset rdf:type ccf:Dataset ;
                   rdfs:label ?sectionDatasetLabel ;
                   rdfs:comment ?sectionDatasetDescription ;
                   ccf:url ?sectionDatasetLink ;
                   ccf:technology ?sectionTechnology ;
-                  ccf:thumbnail ?sectionThumbnail ;
-  .
+                  ccf:thumbnail ?sectionThumbnail .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
-  ?block rdf:type ccf:Sample ;
-          rdfs:label ?sampleLabel ;
-          rdfs:comment ?sampleDescription ;
-          # skos:prefLabel ?sampleLabel ;
-          # dcterms:description ?sampleDescription ;
-          ccf:url ?sampleLink ;
-          ccf:sample_type ?sampleType ;
-          ccf:has_registration_location ?rui_location ;
-          ccf:comes_from ?donor ;
-  .
-  ?donor rdf:type ccf:Donor ;
-         rdfs:label ?donorLabel ;
-         rdfs:comment ?donorDescription ;
-         #  skos:prefLabel ?donorLabel ;
-         #  dcterms:description ?donorDescription ;
-         ccf:url ?donorLink ;
-         ccf:tissue_provider_name ?provider ;
-  .
 
   OPTIONAL {
     ?block ccf:section_count ?sectionCount ;
@@ -85,8 +63,7 @@ WHERE {
             # dcterms:description ?sectionDescription ;
             ccf:url ?sectionLink ;
             ccf:sample_type ?sectionType ;
-            ccf:section_number ?sectionNumber ;
-    .
+            ccf:section_number ?sectionNumber .
 
     OPTIONAL {
       ?section ccf:generates_dataset ?sectionDataset .
@@ -97,8 +74,7 @@ WHERE {
                   # dcterms:description ?sectionDatasetDescription ;
                   ccf:url ?sectionDatasetLink ;
                   ccf:technology ?sectionTechnology ;
-                  ccf:thumbnail ?sectionThumbnail ;
-      .
+                  ccf:thumbnail ?sectionThumbnail .
     }
   }
 
@@ -111,9 +87,25 @@ WHERE {
             #  dcterms:description ?datasetDescription ;
              ccf:url ?datasetLink ;
              ccf:technology ?technology ;
-             ccf:thumbnail ?thumbnail ;
-    .
+             ccf:thumbnail ?thumbnail .
   }
+
+  ?block rdf:type ccf:Sample ;
+          rdfs:label ?sampleLabel ;
+          rdfs:comment ?sampleDescription ;
+          # skos:prefLabel ?sampleLabel ;
+          # dcterms:description ?sampleDescription ;
+          ccf:url ?sampleLink ;
+          ccf:sample_type ?sampleType ;
+          ccf:has_registration_location ?rui_location ;
+          ccf:comes_from ?donor .
+  ?donor rdf:type ccf:Donor ;
+         rdfs:label ?donorLabel ;
+         rdfs:comment ?donorDescription ;
+         #  skos:prefLabel ?donorLabel ;
+         #  dcterms:description ?donorDescription ;
+         ccf:url ?donorLink ;
+         ccf:tissue_provider_name ?provider .
 
   #{{FILTER}}
 }

@@ -9,9 +9,20 @@ CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?anatomical_structure (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
+    {
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with ?anatomical_structure .
+      }
+    }
+    UNION
+    {
+      BIND(body: as ?anatomical_structure)
+    }
+
     ?block ccf:comes_from ?donor ;
       ccf:has_registration_location ?rui_location .
     OPTIONAL {
@@ -23,16 +34,7 @@ WHERE {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
-
-    {
-      GRAPH DSGraphsExtra: {
-        ?rui_location ccf:collides_with ?anatomical_structure .
-      }
-    }
-    UNION
-    {
-      BIND(body: as ?anatomical_structure)
-    }
+    
     #{{FILTER}}
   }
   GROUP BY ?anatomical_structure
