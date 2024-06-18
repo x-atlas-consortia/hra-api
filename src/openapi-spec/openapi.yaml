@@ -45,6 +45,8 @@ x-preprocessor:
       Delete one or more properties at the specified paths.
       Will also delete the property from the `required` list if applicable.
 paths:
+  /v1/session-token:
+    $ref: v1/paths/session-token.yaml
   /v1/db-status:
     $ref: v1/paths/db-status.yaml
   /v1/sparql:

@@ -1,0 +1,46 @@
+title: Filter
+description: Filter object
+type: object
+properties:
+  sex:
+    type: string
+    enum:
+      - Both
+      - Male
+      - Female
+  ageRange:
+    $ref: ./MinMaxArray.yaml
+  bmiRange:
+    $ref: ./MinMaxArray.yaml
+  consortiums:
+    type: array
+    items:
+      type: string
+  tmc:
+    type: array
+    items:
+      type: string
+  technologies:
+    type: array
+    items:
+      type: string
+  ontologyTerms:
+    type: array
+    items:
+      type: string
+      format: uri
+  cellTypeTerms:
+    type: array
+    items:
+      type: string
+      format: uri
+  biomarkerTerms:
+    type: array
+    items:
+      type: string
+      format: uri
+  spatialSearches:
+    type: array
+    items:
+      $ref: ./SpatialSearch.yaml
+additionalProperties: false

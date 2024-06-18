@@ -4,8 +4,8 @@
  * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Object} - An object containing database status information
  */
-export async function getDbStatus(_filter, _endpoint = 'https://lod.humanatlas.io/sparql') {
-  try {
+export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+  if (!filter.sessionToken) {
     const results = {
       status: 'Ready',
       message: 'Database successfully loaded',
@@ -13,9 +13,15 @@ export async function getDbStatus(_filter, _endpoint = 'https://lod.humanatlas.i
       loadTime: 22594,
       timestamp: new Date().toISOString(),
     };
-
     return results;
-  } catch (error) {
-    console.error('Error executing SPARQL query:', error.message);
+  } else {
+    const results = {
+      status: 'Ready',
+      message: 'Database successfully loaded',
+      checkback: 3600000,
+      loadTime: 22594,
+      timestamp: new Date().toISOString(),
+    };
+    return results;
   }
 }

@@ -40,3 +40,22 @@ export async function construct(query, endpoint, frame = undefined) {
     return json;
   }
 }
+
+export async function update(updateQuery, endpoint) {
+  return fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/sparql-update',
+    },
+    body: updateQuery,
+  });
+}
+
+export async function deleteGraph(graph, endpoint) {
+  return update(`CLEAR GRAPH <${graph}>;`, endpoint);
+}
+
+export async function deleteGraphs(graphs, endpoint) {
+  const updateQuery = graphs.map((graph) => `CLEAR GRAPH <${graph}>;`).join('\n');
+  return update(updateQuery, endpoint);
+}

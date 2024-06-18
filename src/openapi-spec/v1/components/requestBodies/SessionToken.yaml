@@ -1,0 +1,10 @@
+description: >-
+  Request format for requesting a session token
+required: true
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/SessionTokenRequest.yaml
+    example:
+      dataSources: [ 'https://purl.humanatlas.io/ds-graph/hubmap' ]
+      filter: { sex: 'Female' }

@@ -3,6 +3,6 @@ type: object
 required:
   - error
 properties:
-  message:
+  error:
     title: Human readable description of the error
     type: string

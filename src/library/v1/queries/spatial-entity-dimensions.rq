@@ -1,12 +1,9 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
-PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
-PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
 
 SELECT *
-FROM DSGraphs:
-FROM NAMED DSGraphsExtra:
 WHERE {
+  [] ccf:has_registration_location ?rui_location .
   ?rui_location
     rdf:type ccf:SpatialEntity ;
     ccf:x_dimension ?x ;

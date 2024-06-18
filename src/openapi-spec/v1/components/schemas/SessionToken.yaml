@@ -1,0 +1,8 @@
+title: Session Token
+type: object
+required:
+  - token
+properties:
+  token:
+    title: Session token 
+    type: string

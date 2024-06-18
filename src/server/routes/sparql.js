@@ -1,9 +1,9 @@
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
-import { sparqlEndpoint } from '../environment.js';
+import { exposedSparqlEndpoint } from '../environment.js';
 
 // Define the proxy middleware for SPARQL requests
 const proxyOptions = {
-  target: sparqlEndpoint(),
+  target: exposedSparqlEndpoint(),
   changeOrigin: true,
   pathRewrite: (path) => {
     const params = new URL(path, 'http://localhost').searchParams;
