@@ -17,14 +17,19 @@ export const EXTENSION_MAPPING = {
   turtle: 'text/turtle',
   ttl: 'text/turtle',
   html: 'text/html',
-  htm: 'text/html'
+  htm: 'text/html',
 };
 
-export async function getQuads(url) {
+export async function getQuads(url, preferredFormat = 'text/turtle') {
   const parsers = formats.parsers;
+  const otherFormats = Array.from(parsers.keys())
+    .filter((k) => k !== preferredFormat)
+    .sort()
+    .reverse();
+
   const res = await fetch(url, {
     headers: new Headers({
-      accept: [...parsers.keys()].sort().reverse().join(', '),
+      accept: [preferredFormat, ...otherFormats].join(', '),
     }),
   });
 
