@@ -60,6 +60,7 @@
     "jsonld": "^8.3.1",
     "mathjs": "^11.11.2",
     "md5": "^2.3.0",
+    "mini-queue": "^0.0.14",
     "node-fetch": "^3.3.2",
     "nodeify-fetch": "^3.1.0",
     "papaparse": "^5.4.1",
