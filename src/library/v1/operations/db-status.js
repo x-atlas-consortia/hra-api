@@ -1,3 +1,5 @@
+import { clearSpatialGraph } from '../../shared/spatial/spatial-graph.js';
+
 /**
  * Retrieves the database status
  * @param {Object} filter - An object containing query filters (unused)
@@ -15,6 +17,9 @@ export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/
     };
     return results;
   } else {
+    // Reset the spatial graph after loading a new dataset
+    clearSpatialGraph();
+
     const results = {
       status: 'Ready',
       message: 'Database successfully loaded',

@@ -1,5 +1,5 @@
-import { update } from '../../shared/utils/sparql.js';
-import query from '../queries/ds-graph-enrichment.rq';
+import { update } from '../../../shared/utils/sparql.js';
+import query from '../../queries/ds-graph-enrichment.rq';
 
 export async function enrichDatasetGraph(dsGraph, dsGraphEnrichments, endpoint) {
   const updateQuery = query
