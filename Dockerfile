@@ -23,7 +23,7 @@ RUN chmod +x /blazegraph/entrypoint.sh
 
 # use --env on the docker run command line to override
 ENV BLAZEGRAPH_MEMORY 8G
-ENV BLAZEGRAPH_TIMEOUT 60000
+ENV BLAZEGRAPH_TIMEOUT 360000
 ENV BLAZEGRAPH_READONLY false
 ENV BLAZEGRAPH_PORT 8081
 ENV NODE_ENV production
