@@ -18,7 +18,7 @@ LOAD <${url}> INTO GRAPH <${graph}>;
       graphs.add(graph);
     }
   }
-  update(updateQuery, endpoint);
+  await update(updateQuery, endpoint);
   return graphs;
 }
 
