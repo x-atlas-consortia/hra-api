@@ -1,0 +1,26 @@
+PREFIX hraApi: <urn:hra-api#>
+PREFIX schema: <http://schema.org/>
+PREFIX DSGraphs: <urn:hra-api:eb18d466cc145765fbdd6aec8ab4a310:ds-graph>
+
+WITH DSGraphs:
+DELETE {
+  DSGraphs: a hraApi:Dataset ;
+    ?key ?value .
+}
+INSERT {
+  DSGraphs: a hraApi:Dataset ;
+    hraApi:status "Loading" ;
+    hraApi:message "Job is queued to be run..." ;
+    hraApi:startTime ?startTime ;
+    hraApi:updateTime ?startTime ;
+
+    hraApi:dataSource <https://purl.humanatlas.io/ds-graph/hubmap>, <https://purl.humanatlas.io/ds-graph/sennet> ;
+    hraApi:filter '{"sex": "Female"}'
+}
+WHERE {
+  OPTIONAL {
+    DSGraphs: a hraApi:Dataset ;
+      ?key ?value .
+  }
+  BIND(NOW() as ?startTime)
+}

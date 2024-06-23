@@ -1,0 +1,29 @@
+PREFIX hraApi: <urn:hra-api#>
+PREFIX schema: <http://schema.org/>
+PREFIX DSGraphs: <urn:hra-api:eb18d466cc145765fbdd6aec8ab4a310:ds-graph>
+
+WITH DSGraphs:
+DELETE {
+  DSGraphs: a hraApi:Dataset ;
+    hraApi:status ?status ;
+    hraApi:message ?message ;
+    hraApi:updateTime ?updateTime .
+}
+INSERT {
+  DSGraphs: a hraApi:Dataset ;
+    hraApi:status ?newStatus ;
+    hraApi:message ?newMessage ;
+    hraApi:updateTime ?newUpdateTime .
+}
+WHERE {
+  OPTIONAL {
+    DSGraphs: a hraApi:Dataset ;
+      hraApi:status ?status ;
+      hraApi:message ?message ;
+      hraApi:updateTime ?updateTime .
+  }
+
+  BIND("Loading" as ?newStatus)
+  BIND("Adding ..." as ?newMessage)
+  BIND(NOW() as ?newUpdateTime)
+}
