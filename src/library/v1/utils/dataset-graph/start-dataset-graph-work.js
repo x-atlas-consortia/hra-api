@@ -13,8 +13,8 @@ QUEUE.on('process', (job, jobDone) => {
 });
 
 export async function startDatasetWork(token, request, endpoint) {
-  const updateQuery = query.replace('urn:hra-api:TOKEN:ds-graph', `urn:hra-api:${token}:ds-graph`);
-  update(updateQuery, endpoint);
+  const updateQuery = query.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`);
+  await update(updateQuery, endpoint);
 
   QUEUE.createJob({ token, request, endpoint });
 }

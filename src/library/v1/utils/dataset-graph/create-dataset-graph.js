@@ -16,7 +16,7 @@ export const DEFAULT_GRAPHS = [
 async function  updateDatasetInfo(status, message, token, endpoint) {
   console.log(new Date().toISOString(), token, status, message);
   const updateQuery = query
-    .replace('urn:hra-api:TOKEN:ds-graph', `urn:hra-api:${token}:ds-graph`)
+    .replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`)
     .replace('{{STATUS}}', status)
     .replace('{{MESSAGE}}', message);
   return update(updateQuery, endpoint);
@@ -32,7 +32,7 @@ export async function createDatasetGraph(token, request, endpoint) {
     const dsGraphEnrichments = 'https://purl.humanatlas.io/graph/ds-graphs-enrichments';
     if (!graphs.has(dsGraph)) {
       for (const source of request.dataSources) {
-        await updateDatasetInfo('Loading', `Adding ${source} to dataset`, token, endpoint);
+        await updateDatasetInfo('Loading', `Adding dataset`, token, endpoint);
         const quads = await getQuads(source);
         await addToEndpoint(dsGraph, quads, endpoint);
       }
@@ -40,10 +40,10 @@ export async function createDatasetGraph(token, request, endpoint) {
       // Update the dataset graph enrichments
       await updateDatasetInfo('Loading', `Enriching dataset`, token, endpoint);
       await enrichDatasetGraph(dsGraph, dsGraphEnrichments, endpoint);
-      await updateDatasetInfo('Ready', `Dataset ready`, token, endpoint);
     }
+    await updateDatasetInfo('Ready', `Dataset ready`, token, endpoint);
   } catch (err) {
-    await updateDatasetInfo('Error', `Error processing dataset`, token, endpoint)
     console.error('ERROR', token, request, endpoint, err);
+    await updateDatasetInfo('Error', `Error processing dataset`, token, endpoint)
   }
 }

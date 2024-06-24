@@ -19,7 +19,7 @@ export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/
     };
     return results;
   } else {
-    const infoQuery = query.replace('urn:hra-api:TOKEN:ds-graph', `urn:hra-api:${filter.sessionToken}:ds-graph`);
+    const infoQuery = query.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${filter.sessionToken}:ds-info`);
     const status = await select(infoQuery, endpoint);
 
     const results =
@@ -33,7 +33,9 @@ export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/
             timestamp: new Date().toISOString(),
           };
 
-    results.loadTime = results.loadTime || new Date(results.timestamp) - new Date(results.startTime);
+    results.loadTime =
+      results.loadTime ||
+      (results.status === 'Loading' ? new Date() : new Date(results.timestamp)) - new Date(results.startTime);
 
     if (results.status === 'Ready') {
       // Reset the spatial graph after loading a new dataset
