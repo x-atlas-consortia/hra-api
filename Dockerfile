@@ -34,12 +34,21 @@ WORKDIR /data
 RUN gunzip -c /blazegraph/empty-blazegraph.jnl.gz > blazegraph.jnl
 ADD ./blazegraph/blazegraph.properties .
 
+###### Add blazegraph-runner #####
+# Code snippet from https://github.com/INCATools/ubergraph/blob/master/Dockerfile#L18C1-L23C53
+ENV BR=1.7
+ENV PATH "/tools/blazegraph-runner/bin:$PATH"
+RUN wget -nv https://github.com/balhoff/blazegraph-runner/releases/download/v$BR/blazegraph-runner-$BR.tgz \
+&& tar -zxvf blazegraph-runner-$BR.tgz \
+&& mkdir -p /tools && mv blazegraph-runner-$BR /tools/blazegraph-runner
+
 # Setup hra-api
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --include=dev
 COPY . .
 RUN mkdir -p file-cache && npm run build && npm prune --production
+RUN scripts/setup-blazegraph-db.sh /data/blazegraph.jnl
 
 EXPOSE $PORT $BLAZEGRAPH_PORT
 CMD [ "pm2-runtime", "start", "ecosystem.config.cjs" ]

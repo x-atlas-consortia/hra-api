@@ -1,6 +1,6 @@
 PREFIX hraApi: <urn:hra-api#>
 PREFIX schema: <http://schema.org/>
-PREFIX DSGraphs: <urn:hra-api:eb18d466cc145765fbdd6aec8ab4a310:ds-graph>
+PREFIX DSGraphs: <urn:hra-api:TOKEN:ds-graph>
 
 WITH DSGraphs:
 DELETE {
@@ -23,7 +23,7 @@ WHERE {
       hraApi:updateTime ?updateTime .
   }
 
-  BIND("Loading" as ?newStatus)
-  BIND("Adding ..." as ?newMessage)
+  BIND("{{STATUS}}" as ?newStatus)
+  BIND("{{MESSAGE}}" as ?newMessage)
   BIND(NOW() as ?newUpdateTime)
 }

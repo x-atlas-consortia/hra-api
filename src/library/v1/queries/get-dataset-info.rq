@@ -2,7 +2,7 @@ PREFIX hraApi: <urn:hra-api#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX schema: <http://schema.org/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX DSGraphs: <urn:hra-api:eb18d466cc145765fbdd6aec8ab4a310:ds-graph>
+PREFIX DSGraphs: <urn:hra-api:TOKEN:ds-graph>
 
 SELECT ?status ?message ?checkback ?loadTime ?timestamp ?startTime
 FROM DSGraphs:

@@ -1,6 +1,6 @@
 PREFIX hraApi: <urn:hra-api#>
 PREFIX schema: <http://schema.org/>
-PREFIX DSGraphs: <urn:hra-api:eb18d466cc145765fbdd6aec8ab4a310:ds-graph>
+PREFIX DSGraphs: <urn:hra-api:TOKEN:ds-graph>
 
 WITH DSGraphs:
 DELETE {
