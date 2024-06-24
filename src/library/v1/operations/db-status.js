@@ -33,7 +33,7 @@ export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/
             timestamp: new Date().toISOString(),
           };
 
-    results.loadTime = results.loadTime || new Date(results.timestamp) - new Date(results.startDate);
+    results.loadTime = results.loadTime || new Date(results.timestamp) - new Date(results.startTime);
 
     if (results.status === 'Ready') {
       // Reset the spatial graph after loading a new dataset
