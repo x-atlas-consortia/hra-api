@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import qs from 'qs';
 import { longCache, noCache } from './cache-middleware.js';
 import { activeQueryLimit } from './environment.js';
+import './fetch-polyfill.js';
 import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
