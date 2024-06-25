@@ -1,33 +1,73 @@
-import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
+import { Router } from 'express';
+import { fetchSparql } from '../../library/shared/utils/sparql.js';
 import { exposedSparqlEndpoint } from '../environment.js';
 
-// Define the proxy middleware for SPARQL requests
-const proxyOptions = {
-  target: exposedSparqlEndpoint(),
-  changeOrigin: true,
-  pathRewrite: (path) => {
-    const params = new URL(path, 'http://localhost').searchParams;
-    if (params.has('format')) {
-      params.delete('format');
+function parseString(value) {
+  return typeof value === 'string' ? value : undefined;
+}
+
+const sparql = async (req, res, _next) => {
+  let queryBody;
+  const format = parseString(req.query.format);
+  switch (req.method) {
+    case 'POST':
+      if (req.is('urlencoded')) {
+        queryBody = parseString(req.body?.query);
+      } else if (req.is('application/sparql-query')) {
+        queryBody = parseString(req.body);
+      }
+      break;
+    case 'GET':
+      queryBody = parseString(req.query.query);
+      break;
+  }
+
+  if (!queryBody) {
+    res.status(405).send('Unsupported operation.');
+    res.end();
+    return;
+  }
+
+  /** Content Negotiation */
+  let mediaType = 'application/sparql-results+json';
+  if (format) {
+    mediaType = format;
+    if (['simple', 'stats', 'table', 'tree'].includes(format)) {
+      res.type('text/plain');
+    } else {
+      res.type(format);
     }
-    return `?${params.toString()}`;
-  },
-  onProxyReq: (proxyReq, req) => {
-    if (req.query.format) {
-      proxyReq.setHeader('accept', req.query.format);
-    }
-    if (req.method === 'POST') {
-      proxyReq.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-      fixRequestBody(proxyReq, req);
-    }
-  },
-  onError(err, req, res) {
-    console.error(err);
-    res.status(500).send('Proxy Error');
-  },
-  timeout: 90000,
+  } else {
+    const mediaTypes = [
+      'application/json',
+      'application/ld+json',
+      'application/n-quads',
+      'application/n-triples',
+      'application/rdf+xml',
+      'application/sparql-results+json',
+      'application/sparql-results+xml',
+      'application/trig',
+      'text/csv',
+      'text/n3',
+      'text/tab-separated-values',
+      'text/turtle',
+      'text/plain',
+    ].reduce((acc, type) => {
+      acc[type] = () => {
+        mediaType = type;
+      };
+      return acc;
+    }, {});
+    res.format(mediaTypes);
+  }
+
+  const results = await fetchSparql(queryBody, exposedSparqlEndpoint(), mediaType);
+  for await (const chunk of results.body) {
+    res.write(chunk.toString());
+  }
+  res.end();
 };
 
-const sparqlProxy = createProxyMiddleware('/v1/sparql', proxyOptions);
+const routes = Router().get('/', sparql).post('/', sparql);
 
-export default sparqlProxy;
+export default routes;

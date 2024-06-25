@@ -10,7 +10,7 @@ import browserRoute from './routes/browser.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
 import ruiRoute from './routes/rui.js';
-import sparqlProxy from './routes/sparql.js';
+import sparqlRoute from './routes/sparql.js';
 import v1Routes from './routes/v1';
 
 const app = express();
@@ -50,7 +50,7 @@ app.use(
 );
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.text({ type: 'text/*' }));
+app.use(express.text({ type: ['text/*', 'application/sparql-query'] }));
 app.use(express.json());
 app.set('json spaces', 2);
 
@@ -60,7 +60,7 @@ app.use('/', longCache, ruiRoute);
 
 const procesingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
 app.use('/v1', procesingQueue, v1Routes);
-app.use('/v1/sparql', noCache, sparqlProxy);
+app.use('/v1/sparql', noCache, sparqlRoute);
 app.use('/hra-pop', procesingQueue, hraPopRoutes);
 
 // app.use(function (err, req, res, next) {
