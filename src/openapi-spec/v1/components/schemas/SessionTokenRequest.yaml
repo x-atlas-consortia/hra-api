@@ -1,0 +1,11 @@
+title: session-token request body
+type: object
+required:
+  - dataSources
+properties:
+  dataSources:
+    type: array
+    items:
+      type: string
+  filter:
+    $ref: ./Filter.yaml

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
-const euiRoute = (_req, res, _next) => {
+const euiRoute = (req, res, _next) => {
+  const token = req.query.token ?? '';
   res.send(`<!doctype html>
 <html lang="en">
 <head>
@@ -15,7 +16,7 @@ const euiRoute = (_req, res, _next) => {
   <script src="wc.js" async></script>
 </head>
 <body>
-  <ccf-eui use-remote-api="true" hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
+  <ccf-eui use-remote-api="true" hubmap-token="${token}" hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const eui = document.querySelector('ccf-eui');

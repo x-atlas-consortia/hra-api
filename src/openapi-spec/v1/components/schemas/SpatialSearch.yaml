@@ -18,3 +18,10 @@ properties:
   target:
     title: The target spatial entity IRI
     type: string
+required:
+  - x
+  - y
+  - z
+  - radius
+  - target
+additionalProperties: false

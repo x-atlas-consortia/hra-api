@@ -1,5 +1,15 @@
+const DEFAULT_SPARQL_ENDPOINT = 'https://lod.humanatlas.io/sparql';
+
 export function sparqlEndpoint() {
-  return process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql';
+  return process.env.SPARQL_ENDPOINT ?? DEFAULT_SPARQL_ENDPOINT;
+}
+
+export function isWritable() {
+  return process.env.SPARQL_WRITABLE === 'true';
+}
+
+export function exposedSparqlEndpoint() {
+  return process.env.EXPOSED_SPARQL_ENDPOINT ?? (isWritable() ? DEFAULT_SPARQL_ENDPOINT : sparqlEndpoint());
 }
 
 export function port() {

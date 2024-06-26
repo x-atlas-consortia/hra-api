@@ -27,6 +27,13 @@ const server = {
   }
 };
 
+const createDsGraphServerWorker = {
+  ...sharedBuildOptions,
+  entryPoints: ['src/server/create-dataset-graph.worker.js'],
+  platform: 'node',
+  packages: 'external'
+};
+
 const serviceWorker = {
   ...sharedBuildOptions,
   entryPoints: ['src/service-worker/sw.js', 'src/service-worker/sw-loader.js'],
@@ -54,7 +61,7 @@ const mainLibrary = {
   packages: 'external',
 };
 
-const all = [server, serviceWorker, library, mainLibrary];
+const all = [server, createDsGraphServerWorker, serviceWorker, library, mainLibrary];
 
 let ops;
 if (watch) {
