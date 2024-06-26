@@ -13,9 +13,6 @@ INSERT {
     hraApi:message "Job is queued to be run..." ;
     hraApi:startTime ?startTime ;
     hraApi:updateTime ?startTime ;
-
-    hraApi:dataSource <https://purl.humanatlas.io/ds-graph/hubmap>, <https://purl.humanatlas.io/ds-graph/sennet> ;
-    hraApi:filter '{"sex": "Female"}'
 }
 WHERE {
   OPTIONAL {
