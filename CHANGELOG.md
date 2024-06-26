@@ -2,6 +2,14 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.7.0 - 2024-MM-DD
+
+## Added in 0.7.0
+
+- Added a new route /v1/session-token for creating a new dataset graph for immediate querying by the HRA-API
+- Updated the Docker container to create and launch an internal blazegraph db for storing and querying dataset graphs
+- Added a staging deployment of the hra-api for beta testing releases
+
 ## 0.6.0 - 2024-05-21
 
 ### Added in 0.6.0
