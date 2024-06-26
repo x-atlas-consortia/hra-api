@@ -1,6 +1,6 @@
 import fetch, { Headers, Request, Response } from 'node-fetch';
 import { workerData } from 'worker_threads';
-import { createDatasetGraph } from './create-dataset-graph.js';
+import { createDatasetGraph } from '../library/v1/utils/dataset-graph.js';
 
 // Use node-fetch's fetch
 globalThis.fetch = fetch;

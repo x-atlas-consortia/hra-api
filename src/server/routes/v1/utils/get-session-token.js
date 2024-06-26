@@ -1,5 +1,20 @@
+import Queue from 'mini-queue';
+import { Worker } from 'worker_threads';
 import { createSessionToken } from '../../../../library/v1/operations/session-token.js';
 import { isWritable, sparqlEndpoint } from '../../../environment.js';
+
+const QUEUE = new Queue({ activeLimit: 4 });
+
+QUEUE.on('process', (job, jobDone) => {
+  const worker = new Worker('./dist/create-dataset-graph.worker.js', {
+    workerData: job.data,
+  });
+  worker.on('exit', (_exitCode) => jobDone());
+});
+
+async function startDatasetWork(token, request, endpoint) {
+  QUEUE.createJob({ token, request, endpoint });
+}
 
 export function getSessionTokenHandler() {
   return async (req, res, _next) => {
@@ -11,7 +26,7 @@ export function getSessionTokenHandler() {
     }
 
     try {
-      const token = await createSessionToken(req.body, sparqlEndpoint());
+      const token = await createSessionToken(req.body, sparqlEndpoint(), startDatasetWork);
       res.json(token);
     } catch (err) {
       res.status(500).json({

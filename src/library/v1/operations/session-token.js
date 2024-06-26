@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { startDatasetWork } from '../utils/dataset-graph/start-dataset-graph-work.js';
+import { createDatasetGraph, initializeDatasetGraph } from '../utils/dataset-graph.js';
 
 function isValidUrl(url) {
   try {
@@ -13,7 +13,7 @@ function isValidUrl(url) {
   }
 }
 
-export async function createSessionToken(request, endpoint) {
+export async function createSessionToken(request, endpoint, startDatasetWork = createDatasetGraph) {
   const token = md5(JSON.stringify(request));
 
   if (request?.dataSources?.length > 0) {
@@ -21,6 +21,7 @@ export async function createSessionToken(request, endpoint) {
       return { error: 'One or more data sources had an invalid URL.' };
     }
 
+    await initializeDatasetGraph(token, request, endpoint);
     await startDatasetWork(token, request, endpoint);
   }
 

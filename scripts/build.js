@@ -29,7 +29,7 @@ const server = {
 
 const createDsGraphServerWorker = {
   ...sharedBuildOptions,
-  entryPoints: ['src/library/v1/utils/dataset-graph/create-dataset-graph.worker.js'],
+  entryPoints: ['src/server/create-dataset-graph.worker.js'],
   platform: 'node',
   packages: 'external'
 };
