@@ -12,6 +12,8 @@ END
 
 DB=$1
 
+rm -f $DB # Start with an empty database
+
 TMP_GRAPH=$(tempfile -p graph -s .ttl)
 for graph in $DEFAULT_GRAPHS; do
   echo $graph
