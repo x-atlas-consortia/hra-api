@@ -19,7 +19,7 @@ export async function initializeDatasetGraph(token, _request, endpoint) {
   await update(updateQuery, endpoint);
 }
 
-async function updateDatasetInfo(status, message, token, endpoint) {
+export async function updateDatasetInfo(status, message, token, endpoint) {
   console.log(new Date().toISOString(), token, status, message);
   const updateQuery = updateInfoQuery
     .replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`)
