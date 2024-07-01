@@ -27,9 +27,9 @@ console.log('=== Publishing Commands ===\n');
 for (const clientConfig of clients) {
   const name = basename(clientConfig, '.yaml');
   if (name === 'python-client') {
-    console.log(`pushd ${BUILD_DIR}/${name}; twine upload dist/*; popd`); // publishing command
+    console.log(`pushd ${BUILD_DIR}/${name}; twine upload dist/*; popd # U: __token__`); // publishing command
   } else if (name === 'angular-client') {
-    console.log(`pushd ${BUILD_DIR}/${name}; npm publish dist --access public; popd`);
+    console.log(`pushd ${BUILD_DIR}/${name}/dist; npm publish --access public; popd`);
   } else {
     console.log(`pushd ${BUILD_DIR}/${name}; npm publish --access public; popd`);
   }

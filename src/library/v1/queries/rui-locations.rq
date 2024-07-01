@@ -87,6 +87,7 @@ CONSTRUCT {
   .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   ?block rdf:type ccf:Sample ;
           rdfs:label ?sampleLabel ;

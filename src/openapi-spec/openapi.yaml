@@ -6,7 +6,7 @@ info:
     Reference Atlas (HRA).
 
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 2.0.0
+  version: 0.7.0
   contact:
     name: "HuBMAP Help Desk"
     email: "help@hubmapconsortium.org"
@@ -17,19 +17,20 @@ externalDocs:
   description: API Documentation
   url: https://github.com/x-atlas-consortia/hra-api#readme
 servers:
-  - description: HRA 2.0 Production
+  - description: HRA-API Production
     url: https://apps.humanatlas.io/api
-  - description: HRA 1.x Production
+  - description: HRA-API Staging
+    url: https://apps.humanatlas.io/api--staging
+  - description: CCF-API (deprecated) Production
     url: https://apps.humanatlas.io/hra-api
-  - description: HRA 1.x Staging
-    url: https://apps.humanatlas.io/hra-api--staging
+  
   - description: Local Server
     url: /
 security: []
 
 tags:
   - name: v1
-    description: HRA-API v1.x Routes
+    description: HRA-API v1 Routes
   - name: hra-pop
     description: HRApop Routes
 
@@ -45,6 +46,8 @@ x-preprocessor:
       Delete one or more properties at the specified paths.
       Will also delete the property from the `required` list if applicable.
 paths:
+  /v1/session-token:
+    $ref: v1/paths/session-token.yaml
   /v1/db-status:
     $ref: v1/paths/db-status.yaml
   /v1/sparql:

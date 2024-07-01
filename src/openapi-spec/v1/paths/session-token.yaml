@@ -1,0 +1,13 @@
+post:
+  summary: Get a session token
+  operationId: session-token
+  tags: [v1]
+  requestBody:
+    $ref: ../components/requestBodies/SessionToken.yaml
+  responses:
+    '200':
+      $ref: ../components/responses/SessionToken.yaml
+    '405':
+      $ref: ../components/responses/ErrorMessage.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

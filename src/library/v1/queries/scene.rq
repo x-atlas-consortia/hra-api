@@ -16,6 +16,7 @@ CONSTRUCT {
     ccf:dimension_unit ?dimension_units .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   ?block ccf:comes_from ?donor ;
     ccf:has_registration_location ?rui_location .

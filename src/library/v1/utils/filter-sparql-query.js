@@ -116,8 +116,20 @@ async function getFilterQuery(filter, endpoint) {
   }
 }
 
+function setDatasetGraph(filter, query) {
+  if (filter.sessionToken) {
+    const token = filter.sessionToken;
+    const dsGraph = `urn:hra-api:${token}:ds-graph`;
+    query = query.replace(
+      'PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>',
+      `PREFIX DSGraphs: <${dsGraph}>`
+    );
+  }
+  return query;
+}
+
 export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
   const sparqlFilter = await getFilterQuery(filter, endpoint);
-  const filteredQuery = sparqlQuery.replace('#{{FILTER}}', sparqlFilter);
+  const filteredQuery = setDatasetGraph(filter, sparqlQuery.replace('#{{FILTER}}', sparqlFilter));
   return filteredQuery;
 }

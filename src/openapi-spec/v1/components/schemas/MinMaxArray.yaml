@@ -1,0 +1,9 @@
+title: Number Range
+description: >
+  Represents a range of numbers using a minimum and maximum.
+  First element should be less than or equal to the second element.
+type: array
+minItems: 2
+maxItems: 2
+items:
+  type: number

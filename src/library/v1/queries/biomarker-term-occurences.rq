@@ -8,9 +8,20 @@ CONSTRUCT {
   ?biomarker ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?biomarker (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
+    {
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with_bm ?biomarker .
+      }
+    }
+    UNION
+    {
+      BIND(ccf:Biomarker as ?biomarker)
+    }
+
     ?block ccf:comes_from ?donor ;
       ccf:has_registration_location ?rui_location .
     OPTIONAL {
@@ -23,15 +34,6 @@ WHERE {
       }
     }
 
-    {
-      GRAPH DSGraphsExtra: {
-        ?rui_location ccf:collides_with_bm ?biomarker .
-      }
-    }
-    UNION
-    {
-      BIND(ccf:Biomarker as ?biomarker)
-    }
     #{{FILTER}}
   }
   GROUP BY ?biomarker

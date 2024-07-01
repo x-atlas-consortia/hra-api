@@ -131,6 +131,15 @@ function parseSpatial(value) {
   return undefined;
 }
 
+function parseSessionToken(value) {
+  // Check if the token looks like an md5 hash
+  if (typeof value === 'string' && /^[a-f0-9]{32}$/.test(value)) {
+    return value;
+  } else {
+    return undefined;
+  }
+}
+
 // ----------------------
 // Implementation
 // ----------------------
@@ -189,6 +198,10 @@ function processParameter(result, key, value) {
     case 'biomarkerterms':
     case 'biomarker-terms':
       setIfDefined(result, 'biomarkerTerms', parseAndFilterArray(value, SKIPPABLE_BM));
+      break;
+
+    case 'token':
+      setIfDefined(result, 'sessionToken', parseSessionToken(value));
       break;
   }
 }

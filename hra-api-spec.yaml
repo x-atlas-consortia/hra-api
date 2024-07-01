@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 2.0.0
+  version: 0.7.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -12,24 +12,39 @@ info:
     name: MIT License
     url: https://spdx.org/licenses/MIT.html
 servers:
-  - description: HRA 2.0 Production
+  - description: HRA-API Production
     url: https://apps.humanatlas.io/api
-  - description: HRA 1.x Production
+  - description: HRA-API Staging
+    url: https://apps.humanatlas.io/api--staging
+  - description: CCF-API (deprecated) Production
     url: https://apps.humanatlas.io/hra-api
-  - description: HRA 1.x Staging
-    url: https://apps.humanatlas.io/hra-api--staging
   - description: Local Server
     url: /
 security: []
 tags:
   - name: v1
-    description: HRA-API v1.x Routes
+    description: HRA-API v1 Routes
   - name: hra-pop
     description: HRApop Routes
 externalDocs:
   description: API Documentation
   url: https://github.com/x-atlas-consortia/hra-api#readme
 paths:
+  /v1/session-token:
+    post:
+      summary: Get a session token
+      operationId: session-token
+      tags:
+        - v1
+      requestBody:
+        $ref: '#/components/requestBodies/SessionToken'
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionToken'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+        '405':
+          $ref: '#/components/responses/ErrorMessage'
   /v1/db-status:
     get:
       summary: Get current status of database
@@ -507,174 +522,121 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorMessage'
 components:
-  parameters:
-    Token:
-      name: token
-      description: Authentication token to use for authenticated searches
-      in: query
-      required: false
-      schema:
-        type: string
-    Query:
-      name: query
-      description: SPARQL query to use
-      in: query
-      required: true
-      schema:
-        type: string
-      example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
-    Format:
-      name: format
-      description: Override SPARQL response format (Note that not all formats are supported for all SPARQL query types)
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-          - application/json
-          - application/ld+json
-          - application/n-quads
-          - application/n-triples
-          - application/sparql-results+json
-          - application/sparql-results+xml
-          - application/trig
-          - simple
-          - stats
-          - table
-          - text/csv
-          - text/n3
-          - text/tab-separated-values
-          - text/turtle
-          - tree
-    Age:
-      name: age
-      description: Filter result by age.
-      in: query
-      required: false
-      schema:
-        $ref: '#/components/schemas/MinMax'
-    AgeRange:
-      name: age-range
-      description: Filter result by age.
-      in: query
-      deprecated: true
-      required: false
-      schema:
-        type: string
-        example: 10,100
-    Bmi:
-      name: bmi
-      description: Filter result by bmi.
-      in: query
-      required: false
-      schema:
-        $ref: '#/components/schemas/MinMax'
-    BmiRange:
-      name: bmi-range
-      description: Filter result by bmi.
-      in: query
-      deprecated: true
-      required: false
-      schema:
-        type: string
-        example: 0,40
-    Cache:
-      name: cache
-      description: Hint to cache (or not) the response of this request
-      in: query
-      required: false
-      schema:
-        type: boolean
-        default: true
-    OntologyTerms:
-      name: ontology-terms
-      description: Filter result by ontology terms.
-      in: query
-      required: false
-      schema:
-        title: Terms
-        type: array
-        items:
-          type: string
-    CellTypeTerms:
-      name: cell-type-terms
-      description: Filter result by ontology terms.
-      in: query
-      required: false
-      schema:
-        title: Terms
-        type: array
-        items:
-          type: string
-    Consortiums:
-      name: consortiums
-      description: Filter result by consortiums.
-      in: query
-      required: false
-      schema:
-        title: Consortiums
-        type: array
-        items:
-          type: string
-    Providers:
-      name: providers
-      description: Filter result by providers.
-      in: query
-      required: false
-      schema:
-        title: Providers
-        type: array
-        items:
-          type: string
-    Sex:
-      name: sex
-      description: Filter result by sex.
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-          - both
-          - female
-          - male
-    SpatialSearches:
-      name: spatial
-      description: Filter result by spatial searches.
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/SpatialSearch'
-        example:
-          - x: 10
-            'y': 10
-            z: 10
-            radius: 100
-            target: http://purl.org/ccf/latest/ccf.owl#VHMale
-          - x: 11
-            'y': 11
-            z: 11
-            radius: 101
-            target: http://purl.org/ccf/latest/ccf.owl#VHFemale
-    Technologies:
-      name: technologies
-      description: Filter result by technologies.
-      in: query
-      required: false
-      schema:
-        title: Technologies
-        type: array
-        items:
-          type: string
-    OrganIri:
-      name: organ-iri
-      description: Filter result by organ.
-      in: query
-      required: true
-      schema:
-        type: string
   schemas:
+    MinMaxArray:
+      title: Number Range
+      description: |
+        Represents a range of numbers using a minimum and maximum. First element should be less than or equal to the second element.
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        type: number
+    SpatialSearch:
+      title: Probing Sphere
+      description: |
+        Specification for a Spatial Search via Probing Sphere
+      type: object
+      properties:
+        x:
+          title: X coordinate relative to target in millimeters
+          type: number
+        'y':
+          title: Y coordinate relative to target in millimeters
+          type: number
+        z:
+          title: Z coordinate relative to target in millimeters
+          type: number
+        radius:
+          title: Size of the probing sphere in millimeters
+          type: number
+        target:
+          title: The target spatial entity IRI
+          type: string
+      required:
+        - x
+        - 'y'
+        - z
+        - radius
+        - target
+      additionalProperties: false
+    Filter:
+      title: Filter
+      description: Filter object
+      type: object
+      properties:
+        sex:
+          type: string
+          enum:
+            - Both
+            - Male
+            - Female
+        ageRange:
+          $ref: '#/components/schemas/MinMaxArray'
+        bmiRange:
+          $ref: '#/components/schemas/MinMaxArray'
+        consortiums:
+          type: array
+          items:
+            type: string
+        tmc:
+          type: array
+          items:
+            type: string
+        technologies:
+          type: array
+          items:
+            type: string
+        ontologyTerms:
+          type: array
+          items:
+            type: string
+            format: uri
+        cellTypeTerms:
+          type: array
+          items:
+            type: string
+            format: uri
+        biomarkerTerms:
+          type: array
+          items:
+            type: string
+            format: uri
+        spatialSearches:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpatialSearch'
+      additionalProperties: false
+    SessionTokenRequest:
+      title: session-token request body
+      type: object
+      required:
+        - dataSources
+      properties:
+        dataSources:
+          type: array
+          items:
+            type: string
+        filter:
+          $ref: '#/components/schemas/Filter'
+    SessionToken:
+      title: Session Token
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          title: Session token
+          type: string
+    ErrorMessage:
+      title: Error Message
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          title: Human readable description of the error
+          type: string
     DatabaseStatus:
       title: Database Status
       type: object
@@ -699,15 +661,6 @@ components:
         message:
           title: Human readable description of the current status
           type: string
-    ErrorMessage:
-      title: Error Message
-      type: object
-      required:
-        - error
-      properties:
-        message:
-          title: Human readable description of the error
-          type: string
     SparqlQueryRequest:
       title: SPARQL query request body
       type: object
@@ -728,27 +681,6 @@ components:
           type: number
         max:
           type: number
-    SpatialSearch:
-      title: Probing Sphere
-      description: |
-        Specification for a Spatial Search via Probing Sphere
-      type: object
-      properties:
-        x:
-          title: X coordinate relative to target in millimeters
-          type: number
-        'y':
-          title: Y coordinate relative to target in millimeters
-          type: number
-        z:
-          title: Z coordinate relative to target in millimeters
-          type: number
-        radius:
-          title: Size of the probing sphere in millimeters
-          type: number
-        target:
-          title: The target spatial entity IRI
-          type: string
     AggregateCount:
       title: Aggregated Count \w Label
       type: object
@@ -1401,107 +1333,19 @@ components:
         label:
           title: Label of the entity
           type: string
-  responses:
-    DatabaseStatus:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DatabaseStatus'
-    ErrorMessage:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-    SparqlResponse:
-      description: Successful operation. SPARQL responses vary by format/content negotiation.
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: object
-        text/csv:
-          schema:
-            type: string
-    AggregateResults:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/AggregateCount'
-    SpatialPlacement:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/FlatSpatialPlacement'
-    TermOccurences:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: object
-            additionalProperties:
-              type: integer
-    OntologyTree:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OntologyTree'
-    Strings:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: string
-    SpatialEntities:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/SpatialEntity'
-    SpatialSceneNodes:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/SpatialSceneNode'
-    TissueBlocks:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/TissueBlock'
-    RuiReferenceData:
-      description: Successful operation. RUI Reference Data.
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: object
-    IdLabelsResponse:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/IdLabelPair'
   requestBodies:
+    SessionToken:
+      description: Request format for requesting a session token
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SessionTokenRequest'
+          example:
+            dataSources:
+              - https://purl.humanatlas.io/ds-graph/hubmap
+            filter:
+              sex: Female
     SparqlQuery:
       description: Request format for a SPARQL query
       required: true
@@ -1643,6 +1487,279 @@ components:
               y_translation: 109.963
               z_translation: 38.79
               translation_units: millimeter
+  responses:
+    SessionToken:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SessionToken'
+    ErrorMessage:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    DatabaseStatus:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatabaseStatus'
+    SparqlResponse:
+      description: Successful operation. SPARQL responses vary by format/content negotiation.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+        text/csv:
+          schema:
+            type: string
+    AggregateResults:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AggregateCount'
+    SpatialPlacement:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FlatSpatialPlacement'
+    TermOccurences:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+    OntologyTree:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OntologyTree'
+    Strings:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+    SpatialEntities:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SpatialEntity'
+    SpatialSceneNodes:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SpatialSceneNode'
+    TissueBlocks:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TissueBlock'
+    RuiReferenceData:
+      description: Successful operation. RUI Reference Data.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+    IdLabelsResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/IdLabelPair'
+  parameters:
+    Token:
+      name: token
+      description: Authentication token to use for authenticated searches
+      in: query
+      required: false
+      schema:
+        type: string
+    Query:
+      name: query
+      description: SPARQL query to use
+      in: query
+      required: true
+      schema:
+        type: string
+      example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
+    Format:
+      name: format
+      description: Override SPARQL response format (Note that not all formats are supported for all SPARQL query types)
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - application/json
+          - application/ld+json
+          - application/n-quads
+          - application/n-triples
+          - application/sparql-results+json
+          - application/sparql-results+xml
+          - application/trig
+          - simple
+          - stats
+          - table
+          - text/csv
+          - text/n3
+          - text/tab-separated-values
+          - text/turtle
+          - tree
+    Age:
+      name: age
+      description: Filter result by age.
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/MinMax'
+    AgeRange:
+      name: age-range
+      description: Filter result by age.
+      in: query
+      deprecated: true
+      required: false
+      schema:
+        type: string
+        example: 10,100
+    Bmi:
+      name: bmi
+      description: Filter result by bmi.
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/MinMax'
+    BmiRange:
+      name: bmi-range
+      description: Filter result by bmi.
+      in: query
+      deprecated: true
+      required: false
+      schema:
+        type: string
+        example: 0,40
+    Cache:
+      name: cache
+      description: Hint to cache (or not) the response of this request
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: true
+    OntologyTerms:
+      name: ontology-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
+          type: string
+    CellTypeTerms:
+      name: cell-type-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
+          type: string
+    Consortiums:
+      name: consortiums
+      description: Filter result by consortiums.
+      in: query
+      required: false
+      schema:
+        title: Consortiums
+        type: array
+        items:
+          type: string
+    Providers:
+      name: providers
+      description: Filter result by providers.
+      in: query
+      required: false
+      schema:
+        title: Providers
+        type: array
+        items:
+          type: string
+    Sex:
+      name: sex
+      description: Filter result by sex.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - both
+          - female
+          - male
+    SpatialSearches:
+      name: spatial
+      description: Filter result by spatial searches.
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/SpatialSearch'
+        example:
+          - x: 10
+            'y': 10
+            z: 10
+            radius: 100
+            target: http://purl.org/ccf/latest/ccf.owl#VHMale
+          - x: 11
+            'y': 11
+            z: 11
+            radius: 101
+            target: http://purl.org/ccf/latest/ccf.owl#VHFemale
+    Technologies:
+      name: technologies
+      description: Filter result by technologies.
+      in: query
+      required: false
+      schema:
+        title: Technologies
+        type: array
+        items:
+          type: string
+    OrganIri:
+      name: organ-iri
+      description: Filter result by organ.
+      in: query
+      required: true
+      schema:
+        type: string
 x-preprocessor:
   description: |
     For some openapi-generator-cli generators our custom preprocessor

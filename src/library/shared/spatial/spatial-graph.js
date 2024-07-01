@@ -13,6 +13,10 @@ import { select } from '../utils/sparql.js';
 /** @type {Promise<SpatialGraph> | undefined} */
 let CACHED_GRAPH;
 
+export function clearSpatialGraph() {
+  CACHED_GRAPH = undefined;
+}
+
 /**
  * Get an initialized spatial graph for spatial queries
  *

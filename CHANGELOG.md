@@ -2,11 +2,13 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
-## 0.5.0 - 2024-01-29
+## 0.7.0 - 2024-MM-DD
 
-### Added in 0.5.0
+## Added in 0.7.0
 
-- Initial version that uses the dataset graphs and the CCF.OWL hosted by the HRA Knowledge Graph (HRA-KG) to implement the CCF-API v1 routes
+- Added a new route /v1/session-token for creating a new dataset graph for immediate querying by the HRA-API
+- Updated the Docker container to create and launch an internal blazegraph db for storing and querying dataset graphs
+- Added a staging deployment of the hra-api for beta testing releases
 
 ## 0.6.0 - 2024-05-21
 
@@ -16,3 +18,9 @@ Changelog for the Human Reference Atlas API (HRA-API)
 - Added code to build clients for Angular (@hra-api/ng-client), JavaScript (@hra-api/js-client), TypeScript (@hra-api/ts-client), and Python (hra_api_client). These built client libraries are published to NPM or PyPi depending on the client.
 - Added RUI support to the HRA-API. It can now generate the reference data needed by the RUI.
 - Added /eui/ and /rui/ routes that use the HRA-API instance it's hosted on for it's backend.
+
+## 0.5.0 - 2024-01-29
+
+### Added in 0.5.0
+
+- Initial version that uses the dataset graphs and the CCF.OWL hosted by the HRA Knowledge Graph (HRA-KG) to implement the CCF-API v1 routes

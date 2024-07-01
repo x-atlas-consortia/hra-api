@@ -1,6 +1,6 @@
 {
   "name": "hra-api",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The Human Reference Atlas (HRA) API deployed to https://apps.humanatlas.io/api/",
   "keywords": [
     "hra",
@@ -43,6 +43,8 @@
     "@loaders.gl/gltf": "^3.4.0",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
+    "@rdfjs/formats-common": "^3.1.0",
+    "@rdfjs/to-ntriples": "^3.0.1",
     "cannon-es": "^0.18.0",
     "commander": "^12.0.0",
     "cors": "^2.8.5",
@@ -55,11 +57,16 @@
     "helmet": "^7.1.0",
     "hra-rui-locations-processor": "github:hubmapconsortium/hra-rui-locations-processor",
     "http-proxy-middleware": "^2.0.6",
+    "is-stream": "^4.0.1",
     "jsonld": "^8.3.1",
     "mathjs": "^11.11.2",
+    "md5": "^2.3.0",
+    "mini-queue": "^0.0.14",
     "node-fetch": "^3.3.2",
+    "nodeify-fetch": "^3.1.0",
     "papaparse": "^5.4.1",
     "shelljs": "^0.8.5",
+    "stream-browserify": "^3.0.0",
     "tslib": "^2.5.0",
     "uuid": "^9.0.1",
     "yaml": "^2.4.2"

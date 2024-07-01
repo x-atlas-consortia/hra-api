@@ -25,6 +25,7 @@ CONSTRUCT {
      ccf:count ?dataset_count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   {
     SELECT 

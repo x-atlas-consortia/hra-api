@@ -9,9 +9,20 @@ CONSTRUCT {
   ?cell_type ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?cell_type (COUNT(DISTINCT(?block)) AS ?count)
   WHERE {
+    {
+      GRAPH DSGraphsExtra: {
+        ?rui_location ccf:collides_with_ct ?cell_type .
+      }
+    }
+    UNION
+    {
+      BIND(cell: as ?cell_type)
+    }
+
     ?block ccf:comes_from ?donor ;
       ccf:has_registration_location ?rui_location .
     OPTIONAL {
@@ -23,16 +34,7 @@ WHERE {
         ?section ccf:generates_dataset ?sectionDataset .
       }
     }
-
-    {
-      GRAPH DSGraphsExtra: {
-        ?rui_location ccf:collides_with_ct ?cell_type .
-      }
-    }
-    UNION
-    {
-      BIND(cell: as ?cell_type)
-    }
+    
     #{{FILTER}}
   }
   GROUP BY ?cell_type
