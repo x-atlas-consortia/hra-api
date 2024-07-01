@@ -1,6 +1,6 @@
 import { convertToJsonLd } from 'hra-rui-locations-processor/src/core/main.js';
 import { normalizeRegistration } from 'hra-rui-locations-processor/src/core/normalizer.js';
-import { fetchAllRows } from './utils/atlas-d2k-fetch.js';
+import { fetchAllRows } from '../utils/atlas-d2k-fetch.js';
 
 const ENDPOINT = 'https://www.atlas-d2k.org';
 const EXTRACTION_SITES = `${ENDPOINT}/ermrest/catalog/2/attribute/Gene_Expression:HRA_3D_Coordinate/RID,File_URL`;
@@ -71,6 +71,3 @@ export async function atlasD2kRegistrations() {
   // Reformat the response to standard rui_locations.jsonld format
   return await reformatResponse(entries);
 }
-
-const results = await atlasD2kRegistrations();
-console.log(JSON.stringify(results, null, 2));

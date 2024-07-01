@@ -7,6 +7,7 @@ import { longCache, noCache } from './cache-middleware.js';
 import { activeQueryLimit } from './environment.js';
 import './fetch-polyfill.js';
 import browserRoute from './routes/browser.js';
+import dsGraphRoutes from './routes/ds-graph.js';
 import euiRoute from './routes/eui.js';
 import hraPopRoutes from './routes/hra-pop.js';
 import ruiRoute from './routes/rui.js';
@@ -58,10 +59,11 @@ app.use('/', longCache, browserRoute);
 app.use('/', longCache, euiRoute);
 app.use('/', longCache, ruiRoute);
 
-const procesingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
-app.use('/v1', procesingQueue, v1Routes);
+const processingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
+app.use('/v1', processingQueue, v1Routes);
 app.use('/v1/sparql', noCache, sparqlRoute);
-app.use('/hra-pop', procesingQueue, hraPopRoutes);
+app.use('/hra-pop', processingQueue, hraPopRoutes);
+app.use('/ds-graph', dsGraphRoutes);
 
 // app.use(function (err, req, res, next) {
 //   const debugMode = req.app.get('env') === 'development';
