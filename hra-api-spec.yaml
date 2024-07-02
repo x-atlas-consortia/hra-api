@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.7.0
+  version: 0.8.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -526,7 +526,6 @@ paths:
   /ds-graph/hubmap:
     get:
       summary: Get Dataset Graph
-      operationId: ds-graph-results
       tags:
         - ds-graph
       parameters:
@@ -543,7 +542,6 @@ paths:
   /ds-graph/sennet:
     get:
       summary: Get Dataset Graph
-      operationId: ds-graph-results
       tags:
         - ds-graph
       parameters:
@@ -560,7 +558,6 @@ paths:
   /ds-graph/gtex:
     get:
       summary: Get Dataset Graph
-      operationId: ds-graph-results
       tags:
         - ds-graph
       parameters:
@@ -577,7 +574,6 @@ paths:
   /ds-graph/atlas-d2k:
     get:
       summary: Get Dataset Graph
-      operationId: ds-graph-results
       tags:
         - ds-graph
       parameters:
