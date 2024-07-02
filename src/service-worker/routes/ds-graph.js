@@ -1,16 +1,14 @@
-import { Router } from 'express';
 import {
   atlasD2kRegistrations,
   gtexRegistrations,
   hubmapRegistrations,
   sennetRegistrations,
 } from '../../library/operations/ds-graph.js';
-import { longCache } from '../cache-middleware.js';
 
 function forwardFilteredRequest(method) {
   return async (req, res) => {
     try {
-      const { query } = req;
+      const query = getQuery(req.url);
       const token = query.token ?? undefined;
       const result = await method(token);
       res.json(result);
@@ -22,10 +20,12 @@ function forwardFilteredRequest(method) {
   };
 }
 
-const routes = Router()
-  .get('/atlas-d2k', longCache, forwardFilteredRequest(atlasD2kRegistrations))
-  .get('/gtex', longCache, forwardFilteredRequest(gtexRegistrations))
-  .get('/hubmap', longCache, forwardFilteredRequest(hubmapRegistrations))
-  .get('/sennet', longCache, forwardFilteredRequest(sennetRegistrations));
+function routes(app) {
+  return app
+    .get('/api/ds-graph/atlas-d2k', forwardFilteredRequest(atlasD2kRegistrations))
+    .get('/api/ds-graph/gtex', forwardFilteredRequest(gtexRegistrations))
+    .get('/api/ds-graph/hubmap', forwardFilteredRequest(hubmapRegistrations))
+    .get('/api/ds-graph/sennet', forwardFilteredRequest(sennetRegistrations));
+}
 
 export default routes;
