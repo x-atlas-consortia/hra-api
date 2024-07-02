@@ -14,7 +14,7 @@ const sharedBuildOptions = {
   format: 'esm',
   lineLimit: 120,
   outdir: 'dist',
-  logLevel: 'info'
+  logLevel: 'info',
 };
 
 const server = {
@@ -23,15 +23,15 @@ const server = {
   platform: 'node',
   packages: 'external',
   banner: {
-    'js': '#!/usr/bin/env node'
-  }
+    js: '#!/usr/bin/env node',
+  },
 };
 
 const createDsGraphServerWorker = {
   ...sharedBuildOptions,
   entryPoints: ['src/server/create-dataset-graph.worker.js'],
   platform: 'node',
-  packages: 'external'
+  packages: 'external',
 };
 
 const serviceWorker = {
@@ -41,13 +41,17 @@ const serviceWorker = {
   minify: true,
   sourcemap: 'linked',
   banner: {
-    'js': `const SPARQL_ENDPOINT = '${process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql'}';`
-  }
+    js: `const SPARQL_ENDPOINT = '${process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql'}';`,
+  },
 };
 
 const library = {
   ...sharedBuildOptions,
-  entryPoints: ['src/library/operations/v1.js', 'src/library/operations/hra-pop.js'],
+  entryPoints: [
+    'src/library/operations/ds-graph.js',
+    'src/library/operations/hra-pop.js',
+    'src/library/operations/v1.js',
+  ],
   outdir: 'dist/operations',
   platform: 'node',
   packages: 'external',

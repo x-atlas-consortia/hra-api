@@ -6,7 +6,7 @@ info:
     Reference Atlas (HRA).
 
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.7.0
+  version: 0.8.0
   contact:
     name: "HuBMAP Help Desk"
     email: "help@hubmapconsortium.org"
@@ -31,6 +31,8 @@ security: []
 tags:
   - name: v1
     description: HRA-API v1 Routes
+  - name: ds-graph
+    description: Dataset Graph Routes
   - name: hra-pop
     description: HRApop Routes
 
@@ -101,3 +103,12 @@ paths:
     $ref: hra-pop/paths/supported-reference-organs.yaml
   /hra-pop/supported-tools:
     $ref: hra-pop/paths/supported-tools.yaml
+
+  /ds-graph/hubmap:
+    $ref: ds-graph/paths/ds-graph.yaml
+  /ds-graph/sennet:
+    $ref: ds-graph/paths/ds-graph.yaml
+  /ds-graph/gtex:
+    $ref: ds-graph/paths/ds-graph.yaml
+  /ds-graph/atlas-d2k:
+    $ref: ds-graph/paths/ds-graph.yaml

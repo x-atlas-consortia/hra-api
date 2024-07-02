@@ -1,0 +1,15 @@
+get:
+  summary: Get Dataset Graph
+  operationId: ds-graph-results
+  tags: [ds-graph]
+  parameters:
+    - $ref: ../../v1/components/parameters/Token.yaml
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

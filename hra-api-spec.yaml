@@ -24,6 +24,8 @@ security: []
 tags:
   - name: v1
     description: HRA-API v1 Routes
+  - name: ds-graph
+    description: Dataset Graph Routes
   - name: hra-pop
     description: HRApop Routes
 externalDocs:
@@ -520,6 +522,74 @@ paths:
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
+          $ref: '#/components/responses/ErrorMessage'
+  /ds-graph/hubmap:
+    get:
+      summary: Get Dataset Graph
+      operationId: ds-graph-results
+      tags:
+        - ds-graph
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+  /ds-graph/sennet:
+    get:
+      summary: Get Dataset Graph
+      operationId: ds-graph-results
+      tags:
+        - ds-graph
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+  /ds-graph/gtex:
+    get:
+      summary: Get Dataset Graph
+      operationId: ds-graph-results
+      tags:
+        - ds-graph
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+  /ds-graph/atlas-d2k:
+    get:
+      summary: Get Dataset Graph
+      operationId: ds-graph-results
+      tags:
+        - ds-graph
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
           $ref: '#/components/responses/ErrorMessage'
 components:
   schemas:
