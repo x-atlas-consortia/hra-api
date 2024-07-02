@@ -2,7 +2,13 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
-## 0.7.0 - 2024-MM-DD
+## 0.8.0 - 2024-07-02
+
+## Added in 0.8.0
+
+- Added routes for HuBMAP, SenNet, GTEx, and Atlas-D2K that generate ds-graph data on the fly using each Consortia's API.
+
+## 0.7.0 - 2024-06-27
 
 ## Added in 0.7.0
 
