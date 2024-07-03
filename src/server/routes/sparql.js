@@ -11,10 +11,10 @@ const sparql = async (req, res, _next) => {
   const format = parseString(req.query.format);
   switch (req.method) {
     case 'POST':
-      if (req.is('urlencoded')) {
-        queryBody = parseString(req.body?.query);
-      } else if (req.is('application/sparql-query')) {
+      if (req.is('application/sparql-query')) {
         queryBody = parseString(req.body);
+      } else {
+        queryBody = parseString(req.body?.query ?? '') || undefined;
       }
       break;
     case 'GET':
@@ -68,6 +68,6 @@ const sparql = async (req, res, _next) => {
   res.end();
 };
 
-const routes = Router().get('/', sparql).post('/', sparql);
+const routes = Router().use('/', sparql).post('/', sparql);
 
 export default routes;
