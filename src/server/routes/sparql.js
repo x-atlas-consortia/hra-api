@@ -14,7 +14,7 @@ const sparql = async (req, res, _next) => {
       if (req.is('application/sparql-query')) {
         queryBody = parseString(req.body);
       } else {
-        queryBody = parseString(req.body?.query ?? '') || undefined;
+        queryBody = parseString(req.body?.query);
       }
       break;
     case 'GET':
