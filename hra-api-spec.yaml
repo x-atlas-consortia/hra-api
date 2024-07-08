@@ -1577,9 +1577,7 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: object
+            type: object
         text/csv:
           schema:
             type: string
