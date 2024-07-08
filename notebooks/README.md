@@ -34,4 +34,17 @@ We also get a `404` error when trying out the API endpoint at https://apps.human
 `ontology_terms` is supposed to filter out any `SpatialSceneNodes`s that do not collide with the ontology ID provided. The filter seems to correctly remove tissue blocks not colliding with the onotloogy ID in the parameter but still returns all reference organs. Is this expected behavior?
 
 ## Running SPARQL query returns only a list with values: `['head', 'results']`
-This causes downstream issues when trying to create a report as the `queryResponse` is not in the correct format.
+This causes downstream issues when trying to create a report as the `queryResponse` is not in the correct format. We assemble the query correctly, and it runs well in yasgui and on the HRA API documentation website. The query is:
+```PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+
+SELECT DISTINCT (STR(?asLabel) as ?as_label) (STR(?qlabel) as ?cell_label) ?as_iri ?cell_iri WHERE {
+  ?cell_iri ccf:ccf_located_in ?as_iri .
+  ?cell_iri rdfs:label ?qlabel .
+  ?as_iri rdfs:label ?asLabel .
+
+  FILTER (?as_iri in (<http://purl.obolibrary.org/obo/UBERON_0004539>, <http://purl.obolibrary.org/obo/UBERON_0002015>, <http://purl.obolibrary.org/obo/UBERON_0001227>, <http://purl.obolibrary.org/obo/UBERON_0002189>, <http://purl.obolibrary.org/obo/UBERON_0008716>, <http://purl.obolibrary.org/obo/UBERON_0001284>, <http://purl.obolibrary.org/obo/UBERON_0006517>, <http://purl.obolibrary.org/obo/UBERON_0001226>, <http://purl.obolibrary.org/obo/UBERON_0004200>, <http://purl.obolibrary.org/obo/UBERON_0001224>, <http://purl.obolibrary.org/obo/UBERON_0002113>, <http://purl.obolibrary.org/obo/UBERON_0000362>, <http://purl.obolibrary.org/obo/UBERON_0000056>, <http://purl.obolibrary.org/obo/UBERON_0001228>, <http://purl.obolibrary.org/obo/UBERON_0001225>, <http://purl.obolibrary.org/obo/UBERON_0013702>, <http://purl.obolibrary.org/obo/UBERON_0001223>, <http://purl.obolibrary.org/obo/UBERON_0004538>))
+
+}
+```
