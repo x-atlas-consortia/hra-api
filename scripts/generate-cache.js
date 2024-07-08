@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { writeFile } from 'fs/promises';
+import { mkdir, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import {
   getAnatomicalSystemsTreeModel,
@@ -17,6 +17,7 @@ async function runAndCache(operation, file) {
   return writeFile(filePath, results);
 }
 
+await mkdir(cacheDir(), { recursive: true });
 await Promise.all([
   runAndCache(getAnatomicalSystemsTreeModel, 'anatomical-systems-tree-model.json'),
   runAndCache(getOntologyTreeModel, 'ontology-tree-model.json'),
