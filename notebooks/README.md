@@ -1,6 +1,6 @@
 Example notebooks showcasing how to use the HRA-API from Python via the [hra-api-client](https://pypi.org/project/hra-api-client/) module.
 
-# Updates:
+# Updates for [hra-api-client-usage](hra-api-client-usage)
 
 ## Run a Sparql query (POST) 
 Andi gets a `405` error when running `Run a SPARQL query (POST)`:
@@ -28,3 +28,10 @@ HTTP response body: error='Placement path not found from rui_location to targetI
 We also get a `404` error when trying out the API endpoint at https://apps.humanatlas.io/api/#post-/v1/get-spatial-placement: 
 ![image](https://github.com/x-atlas-consortia/hra-api/assets/22821046/0e4de29e-1f9b-4241-913f-4245cc394cae)
 
+# Updates for [hra-api-client-usecase](hra-api-client-usecase)
+
+## `scene` parameter `ontology_terms` does not filter out organs?
+`ontology_terms` is supposed to filter out any `SpatialSceneNodes`s that do not collide with the ontology ID provided. The filter seems to correctly remove tissue blocks not colliding with the onotloogy ID in the parameter but still returns all reference organs. Is this expected behavior?
+
+## Running SPARQL query returns only a list with values: `['head', 'results']`
+This causes downstream issues when trying to create a report as the `queryResponse` is not in the correct format.
