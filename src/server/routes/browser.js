@@ -12,11 +12,15 @@ const browserRoute = (_req, res, _next) => {
       <rapi-doc
         spec-url="hra-api-spec.yaml"
         fill-request-fields-with-example="false"
-        theme="light"
         show-header="false"
         render-style="view"
         layout="column"
         allow-authentication="false"
+        theme="light"
+        bg-color="#E6EAF0"
+        text-color="#201E3D"
+        header-color="#201E3D"
+        primary-color="#FF0043"
       ></rapi-doc>
     </body>
   </html>`);
