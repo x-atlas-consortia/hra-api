@@ -15,6 +15,4 @@ We also get a `404` error when trying out the API endpoint at https://apps.human
 ![image](https://github.com/x-atlas-consortia/hra-api/assets/22821046/0e4de29e-1f9b-4241-913f-4245cc394cae)
 
 # Updates for [hra-api-client-usecase](hra-api-client-usecase)
-
-## `scene` parameter `ontology_terms` does not filter out organs?
-`ontology_terms` is supposed to filter out any `SpatialSceneNodes`s that do not collide with the ontology ID provided. The filter seems to correctly remove tissue blocks not colliding with the onotloogy ID in the parameter but still returns all reference organs. Is this expected behavior?
+None
