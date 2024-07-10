@@ -15,6 +15,7 @@ sh.exec(`node ./scripts/preprocess-openapi.js -i hra-api-spec.yaml -o ${BUILD_DI
 
 for (const clientConfig of clients) {
     const name = basename(clientConfig, '.yaml');
+    sh.mkdir('-p', `${BUILD_DIR}/${name}`);
     sh.exec(`npx openapi-generator-cli generate -c ${clientConfig} -i ${BUILD_DIR}/spec.yaml -o ${BUILD_DIR}/${name}`);
 
     if (name === 'python-client') {
