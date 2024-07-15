@@ -2,6 +2,6 @@ generatorName: javascript
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/javascript.md
 additionalProperties:
   projectName: "@hra-api/js-client"
-  projectVersion: 0.8.0
+  projectVersion: 0.9.0
   useES6: true
   usePromises: true
