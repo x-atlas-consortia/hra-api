@@ -15,4 +15,4 @@ We also get a `404` error when trying out the API endpoint at https://apps.human
 ![image](https://github.com/x-atlas-consortia/hra-api/assets/22821046/0e4de29e-1f9b-4241-913f-4245cc394cae)
 
 # Updates for [hra-api-client-usecase](hra-api-client-usecase)
-None
+None.
