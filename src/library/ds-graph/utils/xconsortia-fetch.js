@@ -28,7 +28,6 @@ const INCLUDED_DATA_FIELDS = [
   'descendants.sennet_id',
   'descendants.dataset_type',
   'descendants.thumbnail_file',
-  'descendants.metadata.files.rel_path',
   'rui_location',
   'sample_category',
 ];
