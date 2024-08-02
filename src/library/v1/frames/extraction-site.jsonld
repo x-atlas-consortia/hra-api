@@ -1,0 +1,7 @@
+{
+  "@context": "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
+  "@type": "ccf:SpatialEntity",
+  "placement": {
+    "@type": "ccf:SpatialPlacement"
+  }
+}

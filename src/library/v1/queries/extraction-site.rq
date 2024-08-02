@@ -1,0 +1,84 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+
+CONSTRUCT {
+  ?rui_location rdf:type ccf:SpatialEntity ;
+                dcterms:created ?creation_date ;
+                dcterms:creator ?creator ;
+                ccf:creator_first_name ?creator_first_name ;
+                ccf:creator_last_name ?creator_last_name ;
+                ccf:dimension_unit ?dimension_units ;
+                ccf:x_dimension ?x_dimension ;
+                ccf:y_dimension ?y_dimension ;
+                ccf:z_dimension ?z_dimension ;
+                ccf:collides_with ?anatomical_structure ;
+                ccf:slice_count ?slice_count ;
+                ccf:slice_thickness ?slice_thickness ;
+  .
+  ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
+                    dcterms:created ?placement_date ;
+                    ccf:x_scaling ?x_scaling ;
+                    ccf:y_scaling ?y_scaling ;
+                    ccf:z_scaling ?z_scaling ;
+                    ccf:scaling_unit ?scaling_units ;
+                    ccf:x_rotation ?x_rotation ;
+                    ccf:y_rotation ?y_rotation ;
+                    ccf:z_rotation ?z_rotation ;
+                    ccf:rotation_order ?rotation_order ;
+                    ccf:rotation_unit ?rotation_units ;
+                    ccf:x_translation ?x_translation ;
+                    ccf:y_translation ?y_translation ;
+                    ccf:z_translation ?z_translation ;
+                    ccf:translation_unit ?translation_units ;
+                    ccf:placement_relative_to ?target ;
+                    ccf:placement_for ?rui_location ;
+  .
+}
+WHERE {
+  ?rui_location rdf:type ccf:SpatialEntity ;
+                dcterms:creator ?creator ;
+                # ccf:creator_first_name ?creator_first_name ;
+                # ccf:creator_last_name ?creator_last_name ;
+                dcterms:created ?creation_date ;
+                ccf:x_dimension ?x_dimension ;
+                ccf:y_dimension ?y_dimension ;
+                ccf:z_dimension ?z_dimension ;
+                ccf:dimension_unit ?dimension_units ;
+  .
+  OPTIONAL {
+    ?rui_location ccf:collides_with ?anatomical_structure .
+  }
+  OPTIONAL {
+    ?rui_location ccf:creator_first_name ?creator_first_name ;
+      ccf:creator_last_name ?creator_last_name .
+  }
+  OPTIONAL {
+    ?rui_location ccf:slice_count ?slice_count ;
+                  ccf:slice_thickness ?slice_thickness .
+  }
+  ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
+                    # dcterms:created ?placement_date ;
+                    ccf:x_scaling ?x_scaling ;
+                    ccf:y_scaling ?y_scaling ;
+                    ccf:z_scaling ?z_scaling ;
+                    ccf:scaling_unit ?scaling_units ;
+                    ccf:x_rotation ?x_rotation ;
+                    ccf:y_rotation ?y_rotation ;
+                    ccf:z_rotation ?z_rotation ;
+                    ccf:rotation_order ?rotation_order ;
+                    ccf:rotation_unit ?rotation_units ;
+                    ccf:x_translation ?x_translation ;
+                    ccf:y_translation ?y_translation ;
+                    ccf:z_translation ?z_translation ;
+                    ccf:translation_unit ?translation_units ;
+                    ccf:placement_relative_to ?target ;
+                    ccf:placement_for ?rui_location ;
+  .
+  #{{FILTER}}
+}

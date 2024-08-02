@@ -1,0 +1,14 @@
+get:
+  summary: Lookup Extraction Site
+  tags: [v1]
+  parameters:
+    - $ref: ../../v1/components/parameters/ExtractionSiteIri.yaml
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

@@ -8,6 +8,7 @@ export * from '../v1/operations/biomarker-tree-model.js';
 export * from '../v1/operations/cell-type-term-occurences.js';
 export * from '../v1/operations/cell-type-tree-model.js';
 export * from '../v1/operations/db-status.js';
+export * from '../v1/operations/extraction-site.js';
 export * from '../v1/operations/get-spatial-placement.js';
 export * from '../v1/operations/gtex-rui-locations.js';
 export * from '../v1/operations/hubmap-rui-locations.js';

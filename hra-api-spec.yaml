@@ -446,6 +446,22 @@ paths:
           $ref: '#/components/responses/OntologyTree'
         '404':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/extraction-site:
+    get:
+      summary: Lookup Extraction Site
+      tags:
+        - v1
+      parameters:
+        - $ref: '#/components/parameters/ExtractionSiteIri'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
     post:
       summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.
@@ -1824,6 +1840,14 @@ components:
       required: true
       schema:
         type: string
+    ExtractionSiteIri:
+      name: iri
+      description: extraction site iri to search for
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uri
 x-preprocessor:
   description: |
     For some openapi-generator-cli generators our custom preprocessor

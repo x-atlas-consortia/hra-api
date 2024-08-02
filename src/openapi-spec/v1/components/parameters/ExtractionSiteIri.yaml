@@ -1,0 +1,7 @@
+name: iri
+description: extraction site iri to search for
+in: query
+required: true
+schema:
+  type: string
+  format: uri

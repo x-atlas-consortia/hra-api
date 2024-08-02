@@ -21,6 +21,7 @@ import {
 } from '../../../library/operations/v1.js';
 import { fileCache, longCache, noCache, shortCache } from '../../cache-middleware.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
+import { getExtractionSiteHandler } from './utils/get-extraction-site.js';
 import { getSessionTokenHandler } from './utils/get-session-token.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
@@ -74,6 +75,7 @@ const routes = Router()
     longCache,
     fileCache('rui-reference-data.json'),
     forwardFilteredRequest(getRuiReferenceData)
-  );
+  )
+  .get('/extraction-site', noCache, getExtractionSiteHandler());
 
 export default routes;
