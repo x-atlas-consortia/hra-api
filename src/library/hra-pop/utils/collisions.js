@@ -1,7 +1,6 @@
+const DEFAULT_ENDPOINT = 'https://apps.humanatlas.io/api/v1/collisions';
 
-const DEFAULT_ENDPOINT='https://pfn8zf2gtu.us-east-2.awsapprunner.com/get-collisions';
-
-export async function getCollisions(ruiLocation, endpoint=DEFAULT_ENDPOINT) {
+export async function getCollisions(ruiLocation, endpoint = DEFAULT_ENDPOINT) {
   const resp = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

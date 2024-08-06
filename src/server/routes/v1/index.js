@@ -76,6 +76,6 @@ const routes = Router()
     fileCache('rui-reference-data.json'),
     forwardFilteredRequest(getRuiReferenceData)
   )
-  .get('/extraction-site', noCache, getExtractionSiteHandler());
+  .get('/extraction-site', shortCache, getExtractionSiteHandler());
 
 export default routes;

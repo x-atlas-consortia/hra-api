@@ -1,20 +1,29 @@
+import { getCollisions } from '../../hra-pop/utils/collisions.js';
 import { construct } from '../../shared/utils/sparql.js';
 import frame from '../frames/extraction-site.jsonld';
 import query from '../queries/extraction-site.rq';
 import { normalizeJsonLd } from '../utils/jsonld-compat.js';
 
-function reformatResponse(jsonld) {
+async function reformatResponse(jsonld) {
   const results = normalizeJsonLd(jsonld, new Set(['ccf_annotations']));
   if (!results['@id']) {
     console.log(results);
     return undefined;
   } else {
-    results.ccf_annotations = results.ccf_annotations || [];
     if (results.placement && !results.placement.placement_date && results.creation_date) {
       results.placement.placement_date = results.creation_date;
     }
+    if (!results.ccf_annotations) {
+      const collisions = await getCollisions(results);
+      console.log(collisions);
+      if (collisions?.length > 0) {
+        results.ccf_annotations = Array.from(new Set(collisions.map((c) => c.representation_of)));
+      } else {
+        results.ccf_annotations = [];
+      }
+    }
     return results;
-  } 
+  }
 }
 
 /**
