@@ -22,7 +22,7 @@ const euiRoute = (req, res, _next) => {
       const eui = document.querySelector('ccf-eui');
       eui.homeUrl = location.href;
       // Set the remote api endpoint to the "this server"
-      eui.remoteApiEndpoint = new URL(location.pathname.replace(/\\/[^\\/]+$/, '/') + '../', location.origin).toString();
+      eui.remoteApiEndpoint = new URL(location.pathname.replace(/\\/[^\\/]+$/, '/') + '../', location.origin).toString().replace(/\\/$/,'');
     });
   </script>
 </body>
