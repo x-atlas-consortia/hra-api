@@ -1,8 +1,9 @@
 import { addToEndpoint } from '../../shared/utils/add-to-endpoint.js';
 import { ensureNamedGraphs } from '../../shared/utils/ensure-named-graphs.js';
 import { getQuads } from '../../shared/utils/fetch-linked-data.js';
-import { update } from '../../shared/utils/sparql.js';
+import { deleteGraphs, select, update } from '../../shared/utils/sparql.js';
 import enrichQuery from '../queries/ds-graph-enrichment.rq';
+import prunableDatasetsQuery from '../queries/prunable-datasets.rq';
 import initializeQuery from '../queries/start-dataset-info.rq';
 import updateInfoQuery from '../queries/update-dataset-info.rq';
 
@@ -15,7 +16,9 @@ export const DEFAULT_GRAPHS = [
 ];
 
 export async function initializeDatasetGraph(token, _request, endpoint) {
-  const updateQuery = initializeQuery.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`);
+  const updateQuery = initializeQuery
+    .replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`)
+    .replace('urn:hra-api:TOKEN:ds-graph', `urn:hra-api:${token}:ds-graph`);
   await update(updateQuery, endpoint);
 }
 
@@ -68,4 +71,14 @@ export async function enrichDatasetGraph(dsGraph, dsGraphEnrichments, endpoint) 
     console.error(await result.text());
   }
   return result;
+}
+
+export async function pruneDatasetGraphs(endpoint) {
+  const datasets = await select(prunableDatasetsQuery, endpoint);
+  console.log(datasets.length, 'datasets to prune');
+  if (datasets.length > 0) {
+    const graphs = datasets.reduce((acc, row) => acc.concat([row.dsInfo, row.dsGraph]), []);
+    console.log('deleting', graphs);
+    await deleteGraphs(graphs, endpoint);
+  }
 }

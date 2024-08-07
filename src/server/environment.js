@@ -20,6 +20,10 @@ export function shortCacheTimeout() {
   return process.env.CACHE_TIMEOUT || 3600;
 }
 
+export function pruningSchedule() {
+  return process.env.PRUNING_SCHEDULE || '*/1 * * * *'; // '0 1 * * *';
+}
+
 export function longCacheTimeout() {
   return process.env.LONG_CACHE_TIMEOUT || shortCacheTimeout() * 24;
 }

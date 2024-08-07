@@ -1,0 +1,17 @@
+PREFIX hraApi: <urn:hra-api#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?age ?maxAge ?dsInfo ?dsGraph ?status ?updateTime
+WHERE {
+  GRAPH ?dsInfo {
+    ?dsInfo a hraApi:Dataset ;
+      hraApi:namedGraph ?dsGraph ;
+      hraApi:status ?status ;
+      hraApi:updateTime ?updateTime .
+
+    # Max dataset age is currently set to 24 hours
+    BIND((xsd:dateTime("2001-01-02T00:00:00Z") - xsd:dateTime("2001-01-01T00:00:00Z")) as ?maxAge)
+    BIND(NOW() - ?updateTime as ?age)
+    FILTER((NOW() - ?updateTime) > ?maxAge || ?status = 'Error')
+  }
+}

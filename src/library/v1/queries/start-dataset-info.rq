@@ -1,22 +1,24 @@
 PREFIX hraApi: <urn:hra-api#>
 PREFIX schema: <http://schema.org/>
-PREFIX DSGraphs: <urn:hra-api:TOKEN:ds-info>
+PREFIX DSGraphInfo: <urn:hra-api:TOKEN:ds-info>
+PREFIX DSGraph: <urn:hra-api:TOKEN:ds-graph>
 
-WITH DSGraphs:
+WITH DSGraphInfo:
 DELETE {
-  DSGraphs: a hraApi:Dataset ;
+  DSGraphInfo: a hraApi:Dataset ;
     ?key ?value .
 }
 INSERT {
-  DSGraphs: a hraApi:Dataset ;
+  DSGraphInfo: a hraApi:Dataset ;
     hraApi:status "Loading" ;
     hraApi:message "Job is queued to be run..." ;
+    hraApi:namedGraph DSGraph: ;
     hraApi:startTime ?startTime ;
     hraApi:updateTime ?startTime ;
 }
 WHERE {
   OPTIONAL {
-    DSGraphs: a hraApi:Dataset ;
+    DSGraphInfo: a hraApi:Dataset ;
       ?key ?value .
   }
   BIND(NOW() as ?startTime)
