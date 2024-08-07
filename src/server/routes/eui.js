@@ -16,7 +16,7 @@ const euiRoute = (req, res, _next) => {
   <script src="wc.js" async></script>
 </head>
 <body>
-  <ccf-eui use-remote-api="true" hubmap-token="${token}" hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
+  <ccf-eui token="${token}" login-disabled="true" logo-tooltip=""></ccf-eui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const eui = document.querySelector('ccf-eui');
