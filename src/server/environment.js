@@ -21,7 +21,7 @@ export function shortCacheTimeout() {
 }
 
 export function pruningSchedule() {
-  return process.env.PRUNING_SCHEDULE || '*/1 * * * *'; // '0 1 * * *';
+  return process.env.PRUNING_SCHEDULE || '0 1 * * *';
 }
 
 export function longCacheTimeout() {
