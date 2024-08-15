@@ -8,6 +8,7 @@ https://purl.humanatlas.io/graph/hra-pop
 https://purl.humanatlas.io/collection/ds-graphs
 https://purl.humanatlas.io/graph/ds-graphs-enrichments
 https://purl.humanatlas.io/millitome/generic-pancreas-female
+https://purl.humanatlas.io/millitome/generic-pancreas-male
 END
 );
 
