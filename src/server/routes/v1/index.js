@@ -8,12 +8,12 @@ import {
   getCellTypeTreeModel,
   getDatasetTechnologyNames,
   getDbStatus,
+  getDsGraph,
   getGtexRuiLocations,
   getHubmapRuiLocations,
   getOntologyTermOccurences,
   getOntologyTreeModel,
   getReferenceOrgans,
-  getRuiLocations,
   getRuiReferenceData,
   getScene,
   getTissueBlocks,
@@ -46,9 +46,9 @@ const routes = Router()
     fileCache('cell-type-tree-model.json'),
     forwardFilteredRequest(getCellTypeTreeModel)
   )
-  .get('/rui-locations', shortCache, forwardFilteredRequest(getRuiLocations))
   .get('/aggregate-results', shortCache, forwardFilteredRequest(getAggregateResults))
   .get('/db-status', noCache, forwardFilteredRequest(getDbStatus))
+  .get('/ds-graph', shortCache, forwardFilteredRequest(getDsGraph))
   .get('/hubmap-rui-locations', shortCache, forwardFilteredRequest(getHubmapRuiLocations))
   .get('/gtex-rui-locations', shortCache, forwardFilteredRequest(getGtexRuiLocations))
   .get('/hubmap/rui_locations.jsonld', shortCache, forwardFilteredRequest(getHubmapRuiLocations))

@@ -12,11 +12,11 @@ function reformatResponse(jsonld) {
 }
 
 /**
- * Retrieves RUI locations
+ * Retrieves a Dataset Graph
  * @param {Object} filter - An object containing query filters
  * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Promise<Object>} - A promise that resolves to RUI location data
  */
-export async function getRuiLocations(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+export async function getDsGraph(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   return reformatResponse(await executeFilteredConstructQuery(query, filter, frame, endpoint));
 }

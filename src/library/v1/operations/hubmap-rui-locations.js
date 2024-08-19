@@ -1,4 +1,4 @@
-import { getRuiLocations } from './rui-locations.js';
+import { getDsGraph } from './ds-graph.js';
 
 /**
  * Retrieves HuBMAP RUI locations
@@ -7,5 +7,5 @@ import { getRuiLocations } from './rui-locations.js';
  * @returns {Promise<Object>} - A promise that resolves to HuBMAP RUI location data
  */
 export async function getHubmapRuiLocations(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return getRuiLocations({ ...filter, consortiums: ['HuBMAP'] }, endpoint);
+  return getDsGraph({ ...filter, consortiums: ['HuBMAP'] }, endpoint);
 }

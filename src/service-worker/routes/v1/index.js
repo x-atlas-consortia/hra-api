@@ -7,12 +7,12 @@ import {
   getCellTypeTreeModel,
   getDatasetTechnologyNames,
   getDbStatus,
+  getDsGraph,
   getGtexRuiLocations,
   getHubmapRuiLocations,
   getOntologyTermOccurences,
   getOntologyTreeModel,
   getReferenceOrgans,
-  getRuiLocations,
   getRuiReferenceData,
   getScene,
   getTissueBlocks,
@@ -34,9 +34,9 @@ function routes(app) {
     .get('/api/v1/reference-organs', forwardFilteredRequest(getReferenceOrgans))
     .get('/api/v1/ontology-tree-model', forwardFilteredRequest(getOntologyTreeModel))
     .get('/api/v1/cell-type-tree-model', forwardFilteredRequest(getCellTypeTreeModel))
-    .get('/api/v1/rui-locations', forwardFilteredRequest(getRuiLocations))
     .get('/api/v1/aggregate-results', forwardFilteredRequest(getAggregateResults))
     .get('/api/v1/db-status', forwardFilteredRequest(getDbStatus))
+    .get('/api/v1/ds-graph', forwardFilteredRequest(getDsGraph))
     .get('/api/v1/hubmap-rui-locations', forwardFilteredRequest(getHubmapRuiLocations))
     .get('/api/v1/gtex-rui-locations', forwardFilteredRequest(getGtexRuiLocations))
     .get('/api/v1/hubmap/rui_locations.jsonld', forwardFilteredRequest(getHubmapRuiLocations))

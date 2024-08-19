@@ -1,4 +1,4 @@
-import { getRuiLocations } from './rui-locations.js';
+import { getDsGraph } from './ds-graph.js';
 
 /**
  * Retrieves GTEx RUI locations
@@ -7,5 +7,5 @@ import { getRuiLocations } from './rui-locations.js';
  * @returns {Promise<Object>} - A promise that resolves to GTEx RUI location data
  */
 export async function getGtexRuiLocations(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  return getRuiLocations({ ...filter, consortiums: ['GTEx'] }, endpoint);
+  return getDsGraph({ ...filter, consortiums: ['GTEx'] }, endpoint);
 }

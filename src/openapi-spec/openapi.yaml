@@ -94,6 +94,8 @@ paths:
     $ref: v1/paths/anatomical-systems-tree-model.yaml
   /v1/extraction-site:
     $ref: v1/paths/extraction-site.yaml
+  /v1/ds-graph:
+    $ref: v1/paths/ds-graph.yaml
 
   /hra-pop/cell-summary-report:
     $ref: hra-pop/paths/cell-summary-report.yaml

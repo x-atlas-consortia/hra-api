@@ -462,6 +462,36 @@ paths:
                 type: object
         '404':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/ds-graph:
+    get:
+      summary: Get dataset graph
+      description: Get potentially filtered experimental data in dataset graph format (previously referred to as rui_locations.jsonld format)
+      operationId: ds-graph
+      tags:
+        - v1
+      parameters:
+        - $ref: '#/components/parameters/Age'
+        - $ref: '#/components/parameters/AgeRange'
+        - $ref: '#/components/parameters/Bmi'
+        - $ref: '#/components/parameters/BmiRange'
+        - $ref: '#/components/parameters/Cache'
+        - $ref: '#/components/parameters/OntologyTerms'
+        - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/Consortiums'
+        - $ref: '#/components/parameters/Providers'
+        - $ref: '#/components/parameters/Sex'
+        - $ref: '#/components/parameters/SpatialSearches'
+        - $ref: '#/components/parameters/Technologies'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
     post:
       summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.
