@@ -2,6 +2,16 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.9.0 - 2024-08-20
+
+## Added in 0.9.0
+
+- Added 4 new /v1 routes: ds-graph, extraction-site, collisions, and corridor. See <https://apps.humanatlas.io/api/> for more information / interactive UI.
+- Added python notebooks to showcase using HRA-API from python in the [notebooks folder](https://github.com/x-atlas-consortia/hra-api/tree/main/notebooks).
+- The hra-api server now purges old datasets after 24 hours when it is using a writable SPARQL server.
+- Removed some old code/dependencies from the x-atlas-consortia dataset graph generator.
+- Added @andreasbueckle as a contributor. He is creating python notebooks to document and use the hra_api_client from python.
+
 ## 0.8.0 - 2024-07-02
 
 ## Added in 0.8.0

@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.8.1
+  version: 0.9.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -1515,7 +1515,7 @@ components:
           schema:
             $ref: '#/components/schemas/GetSpatialPlacementRequest'
           example:
-            target_iri: https://purl.humanatlas.io/ref-organ/kidney-female-right/v1.3#primary
+            target_iri: http://purl.org/ccf/latest/ccf.owl#VHFemale
             rui_location:
               '@context': https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld
               '@id': http://purl.org/ccf/1.5/f7130161-ad0a-4801-b5a4-f6297e0f1869

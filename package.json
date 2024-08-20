@@ -1,6 +1,6 @@
 {
   "name": "hra-api",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "The Human Reference Atlas (HRA) API deployed to https://apps.humanatlas.io/api/",
   "keywords": [
     "hra",
@@ -34,6 +34,10 @@
     {
       "name": "Aishwarya Vijay Sinhasane",
       "url": "https://github.com/aishwaryavijaysinhasane"
+    },
+    {
+      "name": "Andreas Bueckle",
+      "url": "https://github.com/andreasbueckle"
     }
   ],
   "dependencies": {
