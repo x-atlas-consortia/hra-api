@@ -1,7 +1,7 @@
 get:
   summary: >-
     Get all tools supported by HRApop
-  operationId: get-supported-tools
+  operationId: supported-tools
   tags: [hra-pop]
   responses:
     '200':

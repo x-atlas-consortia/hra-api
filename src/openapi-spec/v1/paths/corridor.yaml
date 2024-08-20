@@ -1,6 +1,7 @@
 post:
   summary: >-
     Given an extraction site, generate a corridor with the reference organ.
+  operationId: corridor
   tags: [v1]
   requestBody:
     $ref: ../components/requestBodies/ExtractionSite.yaml

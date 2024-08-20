@@ -3,7 +3,7 @@ post:
     Given a cell summary in csv format, retrieve a predicted cell summary report
     from HRApop showing relative anatomical structures, datasets,
     and rui locations.
-  operationId: get-cell-summary-report
+  operationId: cell-summary-report
   tags: [hra-pop]
   requestBody:
     $ref: ../components/requestBodies/GetCellSummaryReport.yaml

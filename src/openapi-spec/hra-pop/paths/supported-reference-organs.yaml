@@ -1,7 +1,7 @@
 get:
   summary: >-
     Get all reference organs supported by HRApop
-  operationId: get-supported-reference-organs
+  operationId: supported-reference-organs
   tags: [hra-pop]
   responses:
     '200':

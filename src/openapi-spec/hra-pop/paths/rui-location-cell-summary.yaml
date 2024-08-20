@@ -2,7 +2,7 @@ post:
   summary: >-
     Given a SpatialEntity already placed relative to a reference SpatialEntity,
     retrieve a predicted cell summary from HRApop
-  operationId: get-rui-location-cell-summary
+  operationId: rui-location-cell-summary
   tags: [hra-pop]
   requestBody:
     $ref: ../components/requestBodies/GetRuiLocationCellSummary.yaml

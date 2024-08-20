@@ -1,5 +1,6 @@
 get:
   summary: Lookup Extraction Site
+  operationId: extraction-site
   tags: [v1]
   parameters:
     - $ref: ../../v1/components/parameters/ExtractionSiteIri.yaml
