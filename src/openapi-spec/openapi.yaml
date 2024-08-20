@@ -115,10 +115,10 @@ paths:
     $ref: hra-pop/paths/supported-tools.yaml
 
   /ds-graph/hubmap:
-    $ref: ds-graph/paths/ds-graph.yaml
+    $ref: ds-graph/paths/hubmap.yaml
   /ds-graph/sennet:
-    $ref: ds-graph/paths/ds-graph.yaml
+    $ref: ds-graph/paths/sennet.yaml
   /ds-graph/gtex:
-    $ref: ds-graph/paths/ds-graph.yaml
+    $ref: ds-graph/paths/gtex.yaml
   /ds-graph/atlas-d2k:
-    $ref: ds-graph/paths/ds-graph.yaml
+    $ref: ds-graph/paths/atlas-d2k.yaml

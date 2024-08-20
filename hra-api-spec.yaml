@@ -631,7 +631,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/hubmap:
     get:
-      summary: Get Dataset Graph
+      summary: Get HuBMAP Dataset Graph
+      operationId: hubmap
       tags:
         - ds-graph
       parameters:
@@ -647,7 +648,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/sennet:
     get:
-      summary: Get Dataset Graph
+      summary: Get SenNet Dataset Graph
+      operationId: sennet
       tags:
         - ds-graph
       parameters:
@@ -663,7 +665,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/gtex:
     get:
-      summary: Get Dataset Graph
+      summary: Get GTEx Dataset Graph
+      operationId: gtex
       tags:
         - ds-graph
       parameters:
@@ -679,7 +682,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/atlas-d2k:
     get:
-      summary: Get Dataset Graph
+      summary: Get Atlas D2K Dataset Graph
+      operationId: atlas-d2k
       tags:
         - ds-graph
       parameters:
