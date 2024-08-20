@@ -6,7 +6,7 @@ info:
     Reference Atlas (HRA).
 
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.9.0
+  version: 0.10.0
   contact:
     name: "HuBMAP Help Desk"
     email: "help@hubmapconsortium.org"

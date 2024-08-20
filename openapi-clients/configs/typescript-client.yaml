@@ -2,7 +2,7 @@ generatorName: typescript-fetch
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-fetch.md
 additionalProperties:
   npmName: "@hra-api/ts-client"
-  npmVersion: 0.9.0
+  npmVersion: 0.10.0
   supportsES6: true
   useSingleRequestParameter: true
   importFileExtension: .js
