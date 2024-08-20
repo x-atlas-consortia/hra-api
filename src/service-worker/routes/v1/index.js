@@ -22,6 +22,7 @@ import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getCollisionsHandler } from './utils/get-collisions.js';
 import { getCorridorHandler } from './utils/get-corridor.js';
 import { getExtractionSiteHandler } from './utils/get-extraction-site.js';
+import { getMesh3dCellPopulationHandler } from './utils/get-mesh-3d-cell-population.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
 
@@ -52,7 +53,8 @@ function routes(app) {
     .get('/api/v1/rui-reference-data', forwardFilteredRequest(getRuiReferenceData))
     .get('/api/v1/extraction-site', getExtractionSiteHandler())
     .post('/api/v1/collisions', getCollisionsHandler())
-    .post('/api/v1/corridor', getCorridorHandler());
+    .post('/api/v1/corridor', getCorridorHandler())
+    .post('/api/v1/mesh-3d-cell-population', getMesh3dCellPopulationHandler);
 }
 
 export default routes;

@@ -532,6 +532,26 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/mesh-3d-cell-population:
+    post:
+      summary: Given a reference organ, 3d scene node, and cell population,  generate cells in that distribution to fit in that 3d scene node.
+      operationId: get-spatial-placement
+      tags:
+        - v1
+      requestBody:
+        $ref: '#/components/requestBodies/Mesh3dCellPopulation'
+      responses:
+        '200':
+          description: Successful response with CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+        '500':
+          $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
     post:
       summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.
@@ -1471,6 +1491,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TissueSection'
+    Mesh3dCellPopulationRequest:
+      title: mesh-3d-cell-population request body
+      type: object
+      required:
+        - file
+        - file_subpath
+        - num_nodes
+        - node_distribution
+      properties:
+        file:
+          type: string
+          format: uri
+        file_subpath:
+          type: string
+        num_nodes:
+          type: integer
+        node_distribution:
+          type: object
+          additionalProperties:
+            type: number
     IdLabelPair:
       title: ID - Label pair
       type: object
@@ -1487,7 +1527,8 @@ components:
           type: string
   requestBodies:
     SessionToken:
-      description: Request format for requesting a session token
+      description: |
+        Request format for requesting a session token
       required: true
       content:
         application/json:
@@ -1558,7 +1599,8 @@ components:
                 z_translation: 38.79
                 translation_units: millimeter
     ExtractionSite:
-      description: Request format for routes using posted extraction sites
+      description: |
+        Request format for routes using posted extraction sites
       required: true
       content:
         application/json:
@@ -1598,6 +1640,21 @@ components:
               y_translation: 79.067
               z_translation: 34.77
               translation_units: millimeter
+    Mesh3dCellPopulation:
+      description: |
+        Request format for requesting a mesh-based 3d cell population.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Mesh3dCellPopulationRequest'
+          example:
+            file: https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-left/v1.3/assets/3d-vh-f-kidney-l.glb
+            file_subpath: VH_F_renal_pyramid_L_a
+            num_nodes: 10
+            node_distribution:
+              KEY1: 0.1
+              KEY2: 0.3
     GetCellSummaryReport:
       description: Request format for requesting a cell summary report for a given csv file. Must provide a minimum of cell_id and percentage columns.
       required: true

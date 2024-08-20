@@ -100,6 +100,8 @@ paths:
     $ref: v1/paths/collisions.yaml
   /v1/corridor:
     $ref: v1/paths/corridor.yaml
+  /v1/mesh-3d-cell-population:
+    $ref: v1/paths/mesh-3d-cell-population.yaml
 
   /hra-pop/cell-summary-report:
     $ref: hra-pop/paths/cell-summary-report.yaml
