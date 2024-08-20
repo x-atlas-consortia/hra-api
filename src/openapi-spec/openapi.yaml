@@ -96,6 +96,10 @@ paths:
     $ref: v1/paths/extraction-site.yaml
   /v1/ds-graph:
     $ref: v1/paths/ds-graph.yaml
+  /v1/collisions:
+    $ref: v1/paths/collisions.yaml
+  /v1/corridor:
+    $ref: v1/paths/corridor.yaml
 
   /hra-pop/cell-summary-report:
     $ref: hra-pop/paths/cell-summary-report.yaml

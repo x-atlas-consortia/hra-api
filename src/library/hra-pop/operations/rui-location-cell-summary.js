@@ -1,4 +1,4 @@
-import { getCollisions } from '../utils/collisions.js';
+import { getCollisions } from '../../v1/operations/collisions.js';
 import { select } from '../../shared/utils/sparql.js';
 import asWeightedCellSummariesQuery from '../queries/as-weighted-cell-summaries.rq';
 

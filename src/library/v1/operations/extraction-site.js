@@ -1,4 +1,4 @@
-import { getCollisions } from '../../hra-pop/utils/collisions.js';
+import { getCollisions } from './collisions.js';
 import { construct } from '../../shared/utils/sparql.js';
 import frame from '../frames/extraction-site.jsonld';
 import query from '../queries/extraction-site.rq';

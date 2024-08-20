@@ -1,0 +1,17 @@
+post:
+  summary: >-
+    Given an extraction site, get mesh-based collisions with the reference organ.
+  tags: [v1]
+  requestBody:
+    $ref: ../components/requestBodies/ExtractionSite.yaml
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../components/responses/ErrorMessage.yaml

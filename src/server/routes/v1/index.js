@@ -21,6 +21,8 @@ import {
 } from '../../../library/operations/v1.js';
 import { fileCache, longCache, noCache, shortCache } from '../../cache-middleware.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
+import { getCollisionsHandler } from './utils/get-collisions.js';
+import { getCorridorHandler } from './utils/get-corridor.js';
 import { getExtractionSiteHandler } from './utils/get-extraction-site.js';
 import { getSessionTokenHandler } from './utils/get-session-token.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
@@ -76,6 +78,8 @@ const routes = Router()
     fileCache('rui-reference-data.json'),
     forwardFilteredRequest(getRuiReferenceData)
   )
-  .get('/extraction-site', shortCache, getExtractionSiteHandler());
+  .get('/extraction-site', shortCache, getExtractionSiteHandler())
+  .post('/collisions', shortCache, getCollisionsHandler())
+  .post('/corridor', shortCache, getCorridorHandler());
 
 export default routes;

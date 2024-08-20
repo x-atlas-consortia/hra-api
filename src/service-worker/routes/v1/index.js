@@ -19,6 +19,8 @@ import {
   getTissueProviderNames,
 } from '../../../library/operations/v1.js';
 import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
+import { getCollisionsHandler } from './utils/get-collisions.js';
+import { getCorridorHandler } from './utils/get-corridor.js';
 import { getExtractionSiteHandler } from './utils/get-extraction-site.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
@@ -48,7 +50,9 @@ function routes(app) {
     .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences))
     .get('/api/v1/anatomical-systems-tree-model', forwardFilteredRequest(getAnatomicalSystemsTreeModel))
     .get('/api/v1/rui-reference-data', forwardFilteredRequest(getRuiReferenceData))
-    .get('/api/v1/extraction-site', getExtractionSiteHandler());
+    .get('/api/v1/extraction-site', getExtractionSiteHandler())
+    .post('/api/v1/collisions', getCollisionsHandler())
+    .post('/api/v1/corridor', getCorridorHandler());
 }
 
 export default routes;

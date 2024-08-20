@@ -1,0 +1,47 @@
+description: >-
+  Request format for routes using posted extraction sites
+required: true
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/SpatialEntity.yaml
+    example:
+      {
+        '@context': 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld',
+        '@id': 'http://purl.org/ccf/1.5/cc837df1-2788-4510-9c21-9eb0e9b310a5',
+        '@type': 'SpatialEntity',
+        'creator': 'demo demo',
+        'creator_first_name': 'demo',
+        'creator_last_name': 'demo',
+        'creation_date': '2024-08-20',
+        'ccf_annotations':
+          [
+            'http://purl.obolibrary.org/obo/UBERON_0002015',
+            'http://purl.obolibrary.org/obo/UBERON_0002189',
+          ],
+        'x_dimension': 10,
+        'y_dimension': 10,
+        'z_dimension': 10,
+        'dimension_units': 'millimeter',
+        'placement':
+          {
+            '@context': 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld',
+            '@id': 'http://purl.org/ccf/1.5/cc837df1-2788-4510-9c21-9eb0e9b310a5_placement',
+            '@type': 'SpatialPlacement',
+            'target': 'https://purl.humanatlas.io/ref-organ/kidney-female-right/v1.3#primary',
+            'placement_date': '2024-08-20',
+            'x_scaling': 1,
+            'y_scaling': 1,
+            'z_scaling': 1,
+            'scaling_units': 'ratio',
+            'x_rotation': 0,
+            'y_rotation': 0,
+            'z_rotation': 0,
+            'rotation_order': 'XYZ',
+            'rotation_units': 'degree',
+            'x_translation': 72.366,
+            'y_translation': 79.067,
+            'z_translation': 34.77,
+            'translation_units': 'millimeter',
+          },
+      }
