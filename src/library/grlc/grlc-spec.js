@@ -1,5 +1,6 @@
 export async function getGrlcSpec(name) {
-  const url = `https://grlc.io/api-git/hubmapconsortium/ccf-grlc/subdir/${name}/swagger`;
+  // const url = `https://grlc.io/api-git/hubmapconsortium/ccf-grlc/subdir/${name}/swagger`;
+  const url = `https://raw.githubusercontent.com/hubmapconsortium/ccf-grlc/main/cached-specs/${name}.json`
   const spec = await fetch(url).then((r) => r.json());
 
   // Update spec metadata for better display
