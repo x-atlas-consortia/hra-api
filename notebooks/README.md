@@ -2,6 +2,8 @@
 
 Example notebooks showcasing how to use the HRA-API from Python via the [hra-api-client](https://pypi.org/project/hra-api-client/) module.
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/x-atlas-consortia/hra-api/tree/main/notebooks/HEAD)
+
 ## Notebooks:
 
 * Basic usage: [hra-api-client-usage.ipynb](./hra-api-client-usage.ipynb)
