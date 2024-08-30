@@ -24,6 +24,7 @@ import { forwardFilteredRequest } from './utils/forward-filtered-request.js';
 import { getCollisionsHandler } from './utils/get-collisions.js';
 import { getCorridorHandler } from './utils/get-corridor.js';
 import { getExtractionSiteHandler } from './utils/get-extraction-site.js';
+import { getMesh3dCellPopulationHandler } from './utils/get-mesh-3d-cell-population.js';
 import { getSessionTokenHandler } from './utils/get-session-token.js';
 import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
@@ -80,6 +81,7 @@ const routes = Router()
   )
   .get('/extraction-site', shortCache, getExtractionSiteHandler())
   .post('/collisions', shortCache, getCollisionsHandler())
-  .post('/corridor', shortCache, getCorridorHandler());
+  .post('/corridor', shortCache, getCorridorHandler())
+  .post('/mesh-3d-cell-population', shortCache, getMesh3dCellPopulationHandler());
 
 export default routes;

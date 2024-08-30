@@ -1,0 +1,19 @@
+title: mesh-3d-cell-population request body
+type: object
+required:
+  - file
+  - file_subpath
+  - num_nodes
+  - node_distribution
+properties:
+  file:
+    type: string
+    format: uri
+  file_subpath:
+    type: string
+  num_nodes:
+    type: integer
+  node_distribution:
+    type: object
+    additionalProperties:
+      type: number

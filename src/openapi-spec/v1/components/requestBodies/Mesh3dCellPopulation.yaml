@@ -1,0 +1,14 @@
+description: >
+  Request format for requesting a mesh-based 3d cell population.
+required: true
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/Mesh3dCellPopulationRequest.yaml
+    example:
+      file: 'https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-left/v1.3/assets/3d-vh-f-kidney-l.glb'
+      file_subpath: 'VH_F_renal_pyramid_L_a'
+      num_nodes: 10
+      node_distribution:
+        KEY1: 0.1
+        KEY2: 0.3

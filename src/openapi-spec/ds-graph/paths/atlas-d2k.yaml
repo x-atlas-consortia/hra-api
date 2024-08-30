@@ -1,9 +1,9 @@
 get:
-  summary: Lookup Extraction Site
-  operationId: extraction-site
-  tags: [v1]
+  summary: Get Atlas D2K Dataset Graph
+  operationId: atlas-d2k
+  tags: [ds-graph]
   parameters:
-    - $ref: ../../v1/components/parameters/ExtractionSiteIri.yaml
+    - $ref: ../../v1/components/parameters/Token.yaml
   responses:
     '200':
       description: Successful operation

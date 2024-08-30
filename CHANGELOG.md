@@ -2,6 +2,15 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.10.0 - 2024-08-20
+
+## Added in 0.10.0
+
+- Added /v1/mesh-3d-cell-population route
+- Added consortia to aggregate results
+- Improved operationIds which will make the API clients have better function names
+- Other OpenAPI improvements
+
 ## 0.9.0 - 2024-08-20
 
 ## Added in 0.9.0

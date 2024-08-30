@@ -1,0 +1,20 @@
+post:
+  summary: >-
+    Given a reference organ, 3d scene node, and cell population, 
+    generate cells in that distribution to fit in that 3d scene node.
+  operationId: mesh-3d-cell-population
+  tags: [v1]
+  requestBody:
+    $ref: ../components/requestBodies/Mesh3dCellPopulation.yaml
+  responses:
+    '200':
+      description: Successful response with CSV file
+      content:
+        text/csv:
+          schema:
+            type: string
+            format: binary
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../components/responses/ErrorMessage.yaml

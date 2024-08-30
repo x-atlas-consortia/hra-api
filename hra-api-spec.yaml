@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.9.0
+  version: 0.10.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -449,6 +449,7 @@ paths:
   /v1/extraction-site:
     get:
       summary: Lookup Extraction Site
+      operationId: extraction-site
       tags:
         - v1
       parameters:
@@ -495,6 +496,7 @@ paths:
   /v1/collisions:
     post:
       summary: Given an extraction site, get mesh-based collisions with the reference organ.
+      operationId: collisions
       tags:
         - v1
       requestBody:
@@ -513,6 +515,7 @@ paths:
   /v1/corridor:
     post:
       summary: Given an extraction site, generate a corridor with the reference organ.
+      operationId: corridor
       tags:
         - v1
       requestBody:
@@ -529,10 +532,30 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/mesh-3d-cell-population:
+    post:
+      summary: Given a reference organ, 3d scene node, and cell population,  generate cells in that distribution to fit in that 3d scene node.
+      operationId: mesh-3d-cell-population
+      tags:
+        - v1
+      requestBody:
+        $ref: '#/components/requestBodies/Mesh3dCellPopulation'
+      responses:
+        '200':
+          description: Successful response with CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+        '500':
+          $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
     post:
       summary: Given a cell summary in csv format, retrieve a predicted cell summary report from HRApop showing relative anatomical structures, datasets, and rui locations.
-      operationId: get-cell-summary-report
+      operationId: cell-summary-report
       tags:
         - hra-pop
       requestBody:
@@ -551,7 +574,7 @@ paths:
   /hra-pop/rui-location-cell-summary:
     post:
       summary: Given a SpatialEntity already placed relative to a reference SpatialEntity, retrieve a predicted cell summary from HRApop
-      operationId: get-rui-location-cell-summary
+      operationId: rui-location-cell-summary
       tags:
         - hra-pop
       requestBody:
@@ -570,7 +593,7 @@ paths:
   /hra-pop/supported-organs:
     get:
       summary: Get all organs supported by HRApop
-      operationId: get-supported-organs
+      operationId: supported-organs
       tags:
         - hra-pop
       responses:
@@ -583,7 +606,7 @@ paths:
   /hra-pop/supported-reference-organs:
     get:
       summary: Get all reference organs supported by HRApop
-      operationId: get-supported-reference-organs
+      operationId: supported-reference-organs
       tags:
         - hra-pop
       responses:
@@ -596,7 +619,7 @@ paths:
   /hra-pop/supported-tools:
     get:
       summary: Get all tools supported by HRApop
-      operationId: get-supported-tools
+      operationId: supported-tools
       tags:
         - hra-pop
       responses:
@@ -608,7 +631,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/hubmap:
     get:
-      summary: Get Dataset Graph
+      summary: Get HuBMAP Dataset Graph
+      operationId: hubmap
       tags:
         - ds-graph
       parameters:
@@ -624,7 +648,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/sennet:
     get:
-      summary: Get Dataset Graph
+      summary: Get SenNet Dataset Graph
+      operationId: sennet
       tags:
         - ds-graph
       parameters:
@@ -640,7 +665,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/gtex:
     get:
-      summary: Get Dataset Graph
+      summary: Get GTEx Dataset Graph
+      operationId: gtex
       tags:
         - ds-graph
       parameters:
@@ -656,7 +682,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/atlas-d2k:
     get:
-      summary: Get Dataset Graph
+      summary: Get Atlas D2K Dataset Graph
+      operationId: atlas-d2k
       tags:
         - ds-graph
       parameters:
@@ -1468,6 +1495,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TissueSection'
+    Mesh3dCellPopulationRequest:
+      title: mesh-3d-cell-population request body
+      type: object
+      required:
+        - file
+        - file_subpath
+        - num_nodes
+        - node_distribution
+      properties:
+        file:
+          type: string
+          format: uri
+        file_subpath:
+          type: string
+        num_nodes:
+          type: integer
+        node_distribution:
+          type: object
+          additionalProperties:
+            type: number
     IdLabelPair:
       title: ID - Label pair
       type: object
@@ -1484,7 +1531,8 @@ components:
           type: string
   requestBodies:
     SessionToken:
-      description: Request format for requesting a session token
+      description: |
+        Request format for requesting a session token
       required: true
       content:
         application/json:
@@ -1555,7 +1603,8 @@ components:
                 z_translation: 38.79
                 translation_units: millimeter
     ExtractionSite:
-      description: Request format for routes using posted extraction sites
+      description: |
+        Request format for routes using posted extraction sites
       required: true
       content:
         application/json:
@@ -1595,6 +1644,21 @@ components:
               y_translation: 79.067
               z_translation: 34.77
               translation_units: millimeter
+    Mesh3dCellPopulation:
+      description: |
+        Request format for requesting a mesh-based 3d cell population.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Mesh3dCellPopulationRequest'
+          example:
+            file: https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-left/v1.3/assets/3d-vh-f-kidney-l.glb
+            file_subpath: VH_F_renal_pyramid_L_a
+            num_nodes: 10
+            node_distribution:
+              KEY1: 0.1
+              KEY2: 0.3
     GetCellSummaryReport:
       description: Request format for requesting a cell summary report for a given csv file. Must provide a minimum of cell_id and percentage columns.
       required: true

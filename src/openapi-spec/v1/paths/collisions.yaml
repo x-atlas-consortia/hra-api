@@ -1,6 +1,7 @@
 post:
   summary: >-
     Given an extraction site, get mesh-based collisions with the reference organ.
+  operationId: collisions
   tags: [v1]
   requestBody:
     $ref: ../components/requestBodies/ExtractionSite.yaml

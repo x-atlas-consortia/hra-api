@@ -1,5 +1,6 @@
 get:
-  summary: Get Dataset Graph
+  summary: Get GTEx Dataset Graph
+  operationId: gtex
   tags: [ds-graph]
   parameters:
     - $ref: ../../v1/components/parameters/Token.yaml

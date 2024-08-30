@@ -15,6 +15,7 @@ export * from '../v1/operations/extraction-site.js';
 export * from '../v1/operations/get-spatial-placement.js';
 export * from '../v1/operations/gtex-rui-locations.js';
 export * from '../v1/operations/hubmap-rui-locations.js';
+export * from '../v1/operations/mesh-3d-cell-population.js';
 export * from '../v1/operations/ontology-term-occurences.js';
 export * from '../v1/operations/ontology-tree-model.js';
 export * from '../v1/operations/reference-organ-scene.js';
