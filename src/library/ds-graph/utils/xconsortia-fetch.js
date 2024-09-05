@@ -26,6 +26,7 @@ const INCLUDED_DATA_FIELDS = [
   'descendants.uuid',
   'descendants.hubmap_id',
   'descendants.sennet_id',
+  'descendants.submission_id',
   'descendants.dataset_type',
   'descendants.thumbnail_file',
   'rui_location',
