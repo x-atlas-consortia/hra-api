@@ -43,7 +43,6 @@ function formatSection(section) {
 }
 
 function reformatResponse(response) {
-  console.log(response.length);
   return response.map(formatSection);
 }
 
