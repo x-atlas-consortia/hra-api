@@ -14,6 +14,11 @@ const QUERY = {
           field: 'ancestors.rui_location',
         },
       },
+      {
+        exists: {
+          field: 'descendants.dataset_type',
+        },
+      },
     ],
   },
 };
@@ -38,6 +43,7 @@ function formatSection(section) {
 }
 
 function reformatResponse(response) {
+  console.log(response.length);
   return response.map(formatSection);
 }
 
