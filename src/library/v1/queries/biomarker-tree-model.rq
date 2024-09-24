@@ -37,5 +37,6 @@ WHERE {
 
   BIND(IF(?child = ?root, 'Biomarkers', STR(?label1)) as ?label)
   BIND(STR(?synonymLabel1) as ?synonymLabel)
+  FILTER(!CONTAINS(STR(?child), 'https://purl.humanatlas.io/asct-b/'))
 }
 ORDER BY ?label ?child
