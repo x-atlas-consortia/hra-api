@@ -96,7 +96,7 @@ WHERE {
 
   OPTIONAL {
     ?descriptor rdf:type ccf:CellMarkerDescriptor ;
-                ccf:primary_anatomical_structure ?as_parent ;
+                ccf:primary_anatomical_structure ?anatomical_structure ;
                 ccf:primary_cell_type ?cell_type .
     OPTIONAL {
       ?descriptor ccf:biomarker ?biomarker .
