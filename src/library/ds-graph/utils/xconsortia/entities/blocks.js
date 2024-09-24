@@ -48,6 +48,9 @@ function formatDonor(donor, portal) {
   if (!bmi && metadata.body_mass_index_value?.length > 0) {
     bmi = metadata.body_mass_index_value[0];
   }
+  if (typeof donor.metadata === 'string') {
+    donor.metadata = new Function('return ' + donor.metadata)();
+  }
   const donor_data = donor?.metadata?.organ_donor_data ?? donor?.metadata?.living_donor_data ?? [];
   for (const md of donor_data) {
     if (md.preferred_term === 'Feminine gender' || md.preferred_term === 'Female') {
