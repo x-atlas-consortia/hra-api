@@ -113,8 +113,19 @@ function formatRuiLocation(data, donor) {
     ruiLocation['@context'] = 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld';
   }
   if (spatialEntity) {
-    // Patch to fix RUI 0.5 Kidney and Spleen Placements
     const target = get(spatialEntity, ['placement', 'target']) ?? '';
+
+    // If a donor sex has not been set, determine it via the reference organ
+    if (!donor.sex) {
+      if (target.includes('#VHF') || target.includes('-female')) {
+        donor.sex = 'Female';
+        donor.label = donor.sex;
+      } else if (target.includes('#VHM') || target.includes('-male')) {
+        donor.sex = 'Male';
+        donor.label = donor.sex;
+      }
+    }
+    // Patch to fix RUI 0.5 Kidney and Spleen Placements
     if (target.startsWith('http://purl.org/ccf/latest/ccf.owl#VHSpleenCC')) {
       if (donor.sex === 'Male') {
         set(spatialEntity, ['placement', 'target'], target.replace('#VHSpleenCC', '#VHMSpleenCC'));
