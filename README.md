@@ -8,7 +8,7 @@ Human Reference Atlas API (official)
 
 HRA-API library and server code is published to NPM at <https://www.npmjs.com/package/hra-api>.
 
-### Client Librarires
+### Client Libraries
 
 Clients are published to NPM and PyPi:
 
