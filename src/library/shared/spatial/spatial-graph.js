@@ -17,6 +17,11 @@ export function clearSpatialGraph() {
   CACHED_GRAPH = undefined;
 }
 
+export async function reloadSpatialGraph(endpoint) {
+  const graph = await getSpatialGraph(endpoint, false);
+  CACHED_GRAPH = graph;
+}
+
 /**
  * Get an initialized spatial graph for spatial queries
  *
