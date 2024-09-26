@@ -3,6 +3,7 @@ import { ensureNamedGraphs } from '../../shared/utils/ensure-named-graphs.js';
 import { getQuads } from '../../shared/utils/fetch-linked-data.js';
 import { deleteGraphs, select, update } from '../../shared/utils/sparql.js';
 import enrichQuery from '../queries/ds-graph-enrichment.rq';
+import getInfoQuery from '../queries/get-dataset-info.rq';
 import prunableDatasetsQuery from '../queries/prunable-datasets.rq';
 import initializeQuery from '../queries/start-dataset-info.rq';
 import updateInfoQuery from '../queries/update-dataset-info.rq';
@@ -29,6 +30,27 @@ export async function updateDatasetInfo(status, message, token, endpoint) {
     .replace('{{STATUS}}', status)
     .replace('{{MESSAGE}}', message);
   return update(updateQuery, endpoint);
+}
+
+export async function getDatasetInfo(token, endpoint) {
+  const infoQuery = getInfoQuery.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`);
+  const status = await select(infoQuery, endpoint);
+  const results =
+    status.length > 0
+      ? status[0]
+      : {
+          status: 'Error',
+          message: 'Unknown error while loading database',
+          checkback: 3600000,
+          loadTime: 22594,
+          timestamp: new Date().toISOString(),
+        };
+
+  results.loadTime =
+    results.loadTime ||
+    (results.status === 'Loading' ? new Date() : new Date(results.timestamp)) - new Date(results.startTime);
+
+  return results;
 }
 
 export async function createDatasetGraph(token, request, endpoint) {

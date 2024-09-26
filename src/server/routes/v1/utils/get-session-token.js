@@ -1,5 +1,6 @@
 import Queue from 'mini-queue';
 import { Worker } from 'worker_threads';
+import { clearSpatialGraph } from '../../../../library/shared/spatial/spatial-graph.js';
 import { createSessionToken } from '../../../../library/v1/operations/session-token.js';
 import { activeQueryLimit, isWritable, sparqlEndpoint } from '../../../environment.js';
 
@@ -9,7 +10,10 @@ QUEUE.on('process', (job, jobDone) => {
   const worker = new Worker('./dist/create-dataset-graph.worker.js', {
     workerData: job.data,
   });
-  worker.on('exit', (_exitCode) => jobDone());
+  worker.on('exit', (_exitCode) => {
+    clearSpatialGraph();
+    jobDone();
+  });
 });
 
 async function startDatasetWork(token, request, endpoint) {

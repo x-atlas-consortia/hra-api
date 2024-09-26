@@ -131,3 +131,6 @@ dist
 
 # HRA-API file cache
 /file-cache
+
+# VS Code Settings
+.vscode

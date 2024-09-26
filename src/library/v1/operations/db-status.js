@@ -1,6 +1,4 @@
-import { clearSpatialGraph } from '../../shared/spatial/spatial-graph.js';
-import { select } from '../../shared/utils/sparql.js';
-import query from '../queries/get-dataset-info.rq';
+import { getDatasetInfo } from '../utils/dataset-graph.js';
 
 /**
  * Retrieves the database status
@@ -19,29 +17,6 @@ export async function getDbStatus(filter, endpoint = 'https://lod.humanatlas.io/
     };
     return results;
   } else {
-    const infoQuery = query.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${filter.sessionToken}:ds-info`);
-    const status = await select(infoQuery, endpoint);
-
-    const results =
-      status.length > 0
-        ? status[0]
-        : {
-            status: 'Error',
-            message: 'Unknown error while loading database',
-            checkback: 3600000,
-            loadTime: 22594,
-            timestamp: new Date().toISOString(),
-          };
-
-    results.loadTime =
-      results.loadTime ||
-      (results.status === 'Loading' ? new Date() : new Date(results.timestamp)) - new Date(results.startTime);
-
-    if (results.status === 'Ready') {
-      // Reset the spatial graph after loading a new dataset
-      clearSpatialGraph();
-    }
-
-    return results;
+    return await getDatasetInfo(filter.sessionToken, endpoint);
   }
 }

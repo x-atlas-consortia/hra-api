@@ -31,6 +31,12 @@ export async function select(query, endpoint) {
   return data || [];
 }
 
+export async function ask(query, endpoint) {
+  const resp = await fetchSparql(query, endpoint, 'application/sparql-results+json');
+  const json = await resp.json();
+  return !!json.boolean;
+}
+
 export async function construct(query, endpoint, frame = undefined) {
   const resp = await fetchSparql(query, endpoint, 'application/ld+json');
   const json = await resp.json();
