@@ -5,7 +5,6 @@ required:
 properties:
   dataSources:
     type: array
-    items:
-      type: string
+    items: {}
   filter:
     $ref: ./Filter.yaml

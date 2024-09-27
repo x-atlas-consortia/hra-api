@@ -21,40 +21,51 @@ export const EXTENSION_MAPPING = {
 };
 
 export async function getQuads(url, preferredFormat = 'text/turtle') {
-  const parsers = formats.parsers;
-  const otherFormats = Array.from(parsers.keys())
-    .filter((k) => k !== preferredFormat)
-    .sort()
-    .reverse();
+  if (typeof url === 'string' && url.startsWith('http')) {
+    const parsers = formats.parsers;
+    const otherFormats = Array.from(parsers.keys())
+      .filter((k) => k !== preferredFormat)
+      .sort()
+      .reverse();
 
-  const res = await fetch(url, {
-    headers: new Headers({
-      accept: [preferredFormat, ...otherFormats].join(', '),
-    }),
-  });
+    const res = await fetch(url, {
+      headers: new Headers({
+        accept: [preferredFormat, ...otherFormats].join(', '),
+      }),
+    });
 
-  const type = res.headers.get('content-type').split(';')[0];
-  const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
-  const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
-  if (type === 'application/json' || guessedType === 'application/ld+json') {
-    const json = await res.json();
-    const quads = await jsonld.toRDF(json);
-    return quads;
-  } else if (guessedType) {
-    let body = res.body;
-    if (!isReadableStream(body)) {
-      body = patchResponse(res).body;
+    const type = res.headers.get('content-type').split(';')[0];
+    const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
+    const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
+    if (type === 'application/json' || guessedType === 'application/ld+json') {
+      const json = await res.json();
+      const quads = await jsonld.toRDF(json);
+      return quads;
+    } else if (guessedType) {
+      let body = res.body;
+      if (!isReadableStream(body)) {
+        body = patchResponse(res).body;
+      }
+      const stream = parsers.import(guessedType, body, { baseIRI: url });
+      const quads = [];
+      for await (const quad of stream) {
+        quads.push(quad);
+      }
+      return quads;
+    } else {
+      // Try to parse the response as a JSON-LD string
+      try {
+        const json = JSON.parse(await res.text());
+        const quads = await jsonld.toRDF(json);
+        return quads;
+      } catch (err) {
+        console.log(err);
+        return Promise.reject(new Error(`unknown content type: ${type}`));
+      }
     }
-    const stream = parsers.import(guessedType, body, { baseIRI: url });
-    const quads = [];
-    for await (const quad of stream) {
-      quads.push(quad);
-    }
-    return quads;
   } else {
-    // Try to parse the response as a JSON-LD string
     try {
-      const json = JSON.parse(await res.text());
+      const json = typeof url === 'string' ? JSON.parse(url) : url;
       const quads = await jsonld.toRDF(json);
       return quads;
     } catch (err) {

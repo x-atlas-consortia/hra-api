@@ -791,8 +791,7 @@ components:
       properties:
         dataSources:
           type: array
-          items:
-            type: string
+          items: {}
         filter:
           $ref: '#/components/schemas/Filter'
     SessionToken:
