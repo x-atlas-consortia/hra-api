@@ -2,6 +2,16 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.11.0 - 2024-09-30
+
+## Added in 0.11.0
+
+- Added support for uploading dataset graphs via embedded json-ld in the session-token request
+- Stability improvements when loading custom data sources via the session-token route
+- Updated example [notebooks](https://github.com/x-atlas-consortia/hra-api/tree/main/notebooks)
+- Updated queries for HuBMAP and SenNet dataset graphs to work with their evolving search APIs
+- Added [grlc](https://apps.humanatlas.io/api/grlc/) routes to run SPARQL queries against the HRA KG via Grlc
+
 ## 0.10.0 - 2024-08-20
 
 ## Added in 0.10.0
