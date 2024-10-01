@@ -29,7 +29,7 @@ export async function reloadSpatialGraph(endpoint) {
  * @param {boolean} useCache whether to create/use a cached SpatialGraph
  * @returns {Promise<SpatialGraph>} a promise for an initialized SpatialGraph
  */
-export async function getSpatialGraph(endpoint, useCache = true) {
+export async function getSpatialGraph(endpoint, useCache = false) {
   if (!useCache) {
     return new SpatialGraph(endpoint).initialize();
   } else {

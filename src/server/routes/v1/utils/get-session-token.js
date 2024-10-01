@@ -11,7 +11,7 @@ QUEUE.on('process', (job, jobDone) => {
     workerData: job.data,
   });
   worker.on('exit', async (_exitCode) => {
-    await reloadSpatialGraph(sparqlEndpoint());
+    // await reloadSpatialGraph(sparqlEndpoint());
     jobDone();
   });
 });
