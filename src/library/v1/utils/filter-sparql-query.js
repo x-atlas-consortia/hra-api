@@ -120,10 +120,13 @@ function setDatasetGraph(filter, query) {
   if (filter.sessionToken) {
     const token = filter.sessionToken;
     const dsGraph = `urn:hra-api:${token}:ds-graph`;
-    query = query.replace(
-      'PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>',
-      `PREFIX DSGraphs: <${dsGraph}>`
-    );
+    const dsGraphEnrichments = `urn:hra-api:${token}:ds-graph-enrichments`;
+    query = query
+      .replace('PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>', `PREFIX DSGraphs: <${dsGraph}>`)
+      .replace(
+        'PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>',
+        `PREFIX DSGraphsExtra: <${dsGraphEnrichments}>`
+      );
   }
   return query;
 }

@@ -60,7 +60,7 @@ export async function createDatasetGraph(token, request, endpoint) {
 
     // Add data sources to the new dataset graph
     const dsGraph = `urn:hra-api:${token}:ds-graph`;
-    const dsGraphEnrichments = 'https://purl.humanatlas.io/graph/ds-graphs-enrichments';
+    const dsGraphEnrichments = `urn:hra-api:${token}:ds-graph-enrichments`;
     if (!graphs.has(dsGraph)) {
       for (const source of request.dataSources) {
         await updateDatasetInfo('Loading', `Adding dataset`, token, endpoint);
