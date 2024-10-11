@@ -82,7 +82,7 @@ async function getFilterQuery(filter, endpoint) {
       FILTER(?consortium IN (${terms}))`);
   }
   if (spatialSearches?.length > 0) {
-    const spatialGraph = await getSpatialGraph(endpoint);
+    const spatialGraph = await getSpatialGraph(endpoint, true, filter.sessionToken);
     let results = new Set();
     for (const search of spatialSearches) {
       results = spatialGraph.probeExtractionSites(search, results);

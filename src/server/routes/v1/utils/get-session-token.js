@@ -1,6 +1,5 @@
 import Queue from 'mini-queue';
 import { Worker } from 'worker_threads';
-import { reloadSpatialGraph } from '../../../../library/shared/spatial/spatial-graph.js';
 import { createSessionToken } from '../../../../library/v1/operations/session-token.js';
 import { activeQueryLimit, isWritable, sparqlEndpoint } from '../../../environment.js';
 
@@ -11,7 +10,6 @@ QUEUE.on('process', (job, jobDone) => {
     workerData: job.data,
   });
   worker.on('exit', async (_exitCode) => {
-    // await reloadSpatialGraph(sparqlEndpoint());
     jobDone();
   });
 });

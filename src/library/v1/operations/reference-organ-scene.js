@@ -31,7 +31,7 @@ export async function getReferenceOrganScene(organIri, filter, endpoint = 'https
   const [extractionSites, refOrgans, spatialGraph] = await Promise.all([
     executeFilteredConstructQuery(query, filter, frame, endpoint),
     executeFilteredConstructQuery(filterRefOrganQuery(organIri, filter), filter, frame, endpoint),
-    getSpatialGraph(endpoint),
+    getSpatialGraph(endpoint, true, filter.sessionToken),
   ]);
   const refOrganNodes = ensureGraphArray(refOrgans);
   if (refOrganNodes.length > 0) {

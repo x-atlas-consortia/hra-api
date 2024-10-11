@@ -2,6 +2,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ccf: <http://purl.org/ccf/>
 
 SELECT *
+#{{FROM}}
 WHERE {
   [] ccf:has_registration_location ?rui_location .
   ?rui_location

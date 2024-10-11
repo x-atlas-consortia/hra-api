@@ -27,7 +27,7 @@ export async function getScene(filter, endpoint = 'https://lod.humanatlas.io/spa
   const [extractionSites, refOrgans, spatialGraph] = await Promise.all([
     executeFilteredConstructQuery(query, filter, frame, endpoint),
     executeFilteredConstructQuery(refOrganQuery, filter, frame, endpoint),
-    getSpatialGraph(endpoint),
+    getSpatialGraph(endpoint, true, filter.sessionToken),
   ]);
   const nodes = [...ensureGraphArray(refOrgans), ...ensureGraphArray(extractionSites)];
   return reformatSceneNodes(nodes, spatialGraph, getTargetIri(filter), true);

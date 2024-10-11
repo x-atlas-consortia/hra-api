@@ -3,6 +3,7 @@ import { OrientedBoundingBox } from '@math.gl/culling';
 import graphology from 'graphology';
 import reverse from 'graphology-operators/reverse.js';
 import shortestPath from 'graphology-shortest-path/unweighted.js';
+import { LRUCache } from 'lru-cache';
 import { v4 as uuidV4 } from 'uuid';
 import dimensionsQuery from '../../v1/queries/spatial-entity-dimensions.rq';
 import hraPlacementsQuery from '../../v1/queries/spatial-placements-hra.rq';
@@ -10,17 +11,12 @@ import placementsQuery from '../../v1/queries/spatial-placements.rq';
 import { ensureArray } from '../../v1/utils/jsonld-compat.js';
 import { select } from '../utils/sparql.js';
 
-/** @type {Promise<SpatialGraph> | undefined} */
-let CACHED_GRAPH;
-
-export function clearSpatialGraph() {
-  CACHED_GRAPH = undefined;
-}
-
-export async function reloadSpatialGraph(endpoint) {
-  const graph = await getSpatialGraph(endpoint, false);
-  CACHED_GRAPH = graph;
-}
+/** @type {LRUCache<string | undefined, Promise<SpatialGraph>>} */
+const CACHED_GRAPH = new LRUCache({
+  max: 20,
+  ttl: 1000 * 60 * 60 * 8, // 8 hours
+  ttlAutopurge: true,
+});
 
 /**
  * Get an initialized spatial graph for spatial queries
@@ -29,14 +25,17 @@ export async function reloadSpatialGraph(endpoint) {
  * @param {boolean} useCache whether to create/use a cached SpatialGraph
  * @returns {Promise<SpatialGraph>} a promise for an initialized SpatialGraph
  */
-export async function getSpatialGraph(endpoint, useCache = false) {
+export async function getSpatialGraph(endpoint, useCache = false, token = undefined) {
   if (!useCache) {
-    return new SpatialGraph(endpoint).initialize();
+    return new SpatialGraph(endpoint, token).initialize();
   } else {
-    if (!CACHED_GRAPH) {
-      CACHED_GRAPH = getSpatialGraph(endpoint, false);
+    if (!CACHED_GRAPH.has(token)) {
+      const graph = getSpatialGraph(endpoint, false, token);
+      CACHED_GRAPH.set(token, graph);
+      return graph;
+    } else {
+      return CACHED_GRAPH.get(token);
     }
-    return CACHED_GRAPH;
   }
 }
 
@@ -53,16 +52,18 @@ function getScaleFactor(units) {
 }
 
 export class SpatialGraph {
-  constructor(endpoint) {
+  constructor(endpoint, token = undefined) {
     this.endpoint = endpoint;
+    this.token = token;
   }
 
   async initialize() {
     const graph = (this.graph = new graphology.DirectedGraph());
+    const from = this.token ? `FROM <urn:hra-api:${this.token}:ds-graph>` : '';
     const [placements, hraPlacements, dimensions] = await Promise.all([
-      select(placementsQuery, this.endpoint),
+      select(placementsQuery.replace('#{{FROM}}', from), this.endpoint),
       select(hraPlacementsQuery, this.endpoint),
-      select(dimensionsQuery, this.endpoint),
+      select(dimensionsQuery.replace('#{{FROM}}', from), this.endpoint),
     ]);
     for (const placement of placements.concat(hraPlacements)) {
       graph.mergeDirectedEdge(placement.source, placement.target, { placement });
