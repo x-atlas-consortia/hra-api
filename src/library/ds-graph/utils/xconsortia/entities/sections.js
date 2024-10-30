@@ -1,7 +1,7 @@
 import { BASE_FIELDS, GROUP_UUID_MAPPING } from '../common.js';
 import { doApiSearch } from '../search.js';
 
-const FIELDS = [...BASE_FIELDS, 'sample_category', 'ancestor_ids'];
+const FIELDS = [...BASE_FIELDS, 'sample_category', 'ancestors.uuid'];
 
 const QUERY = {
   bool: {
@@ -38,7 +38,7 @@ function formatSection(section) {
     samples: [],
     datasets: [],
     uuid: section.uuid,
-    __ancestors: section.ancestor_ids,
+    __ancestors: section.ancestors.map(a => a.uuid),
   };
 }
 
