@@ -7,8 +7,10 @@ https://purl.humanatlas.io/graph/hra-ccf-patches
 https://purl.humanatlas.io/graph/hra-pop
 https://purl.humanatlas.io/collection/ds-graphs
 https://purl.humanatlas.io/graph/ds-graphs-enrichments
-https://purl.humanatlas.io/millitome/generic-pancreas-female
-https://purl.humanatlas.io/millitome/generic-pancreas-male
+https://purl.humanatlas.io/millitome/pancreas-female-pnnl
+https://purl.humanatlas.io/millitome/pancreas-male-pnnl
+https://purl.humanatlas.io/millitome/ovary-female-left-pnnl
+https://purl.humanatlas.io/millitome/ovary-female-right-pnnl
 END
 );
 
