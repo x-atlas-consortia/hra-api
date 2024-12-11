@@ -1,6 +1,7 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
@@ -46,6 +47,9 @@ WHERE {
       (27 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001255>)
       (28 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000995>)
       (29 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0004537>)
+      (30 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002205>)
+      (31 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000975>)
+      (32 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001224>)
     }
   }
   UNION {
@@ -68,8 +72,8 @@ WHERE {
       (<http://purl.obolibrary.org/obo/UBERON_0001911> <http://purl.org/sig/ont/fma/fma57991>)
       (<http://purl.obolibrary.org/obo/UBERON_0001911> <http://purl.org/sig/ont/fma/fma57987>)
       # Ovary
-      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.org/sig/ont/fma/fma7214>)
-      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.org/sig/ont/fma/fma7213>)
+      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.obolibrary.org/obo/UBERON_0002119>)
+      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.obolibrary.org/obo/UBERON_0002118>)
       # Palatine Tonsil
       (<http://purl.obolibrary.org/obo/UBERON_0002373> <http://purl.org/sig/ont/fma/fma54974>)
       (<http://purl.obolibrary.org/obo/UBERON_0002373> <http://purl.org/sig/ont/fma/fma54973>)
@@ -84,7 +88,14 @@ WHERE {
     FILTER(?parent != body:)
   }
   
-  ?child ccf:ccf_pref_label ?label1 .
+  {
+    ?child ccf:ccf_pref_label ?label1 .
+  }
+  UNION
+  {
+    [] a ?child, ccf:SpatialEntity ; skos:prefLabel ?label1 .
+  }
+  
   OPTIONAL {
     {
       ?child hasExactSynonym: ?synonymLabel1 .
