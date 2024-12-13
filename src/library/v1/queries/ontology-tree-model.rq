@@ -1,6 +1,7 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 PREFIX hasExactSynonym: <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
@@ -18,34 +19,37 @@ WHERE {
     VALUES (?rank ?parent ?child) {
       # Body
       (1 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000955>)
-      (2 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000029>)
+      (2 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002182>)
       (3 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000970>)
       (4 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0003889>)
       (5 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000948>)
       (6 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002113>)
       (7 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001465>)
-      (8 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001737>)
-      (9 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002107>)
-      (10 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002048>)
-      (11 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002182>)
-      (12 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001911>)
+      (8 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000059>)
+      (9 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001737>)
+      (10 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002107>)
+      (11 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002048>)
+      (12 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000029>)
       (13 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000992>)
-      (14 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002373>)
-      (15 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001264>)
-      (16 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001270>)
-      (17 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001987>)
-      (18 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002367>)
-      (19 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002097>)
-      (20 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002108>)
-      (21 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002240>)
-      (22 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000059>)
-      (23 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002106>)
-      (24 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002370>)
-      (25 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0003126>)
-      (26 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000056>)
-      (27 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001255>)
-      (28 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000995>)
-      (29 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0004537>)
+      (14 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001911>)
+      (15 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002205>)
+      (16 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002373>)
+      (17 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001264>)
+      (18 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001270>)
+      (19 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001987>)
+      (20 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002367>)
+      (21 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001224>)
+      (22 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002097>)
+      (23 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002108>)
+      (24 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002240>)
+      (25 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000975>)
+      (26 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002106>)
+      (27 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0002370>)
+      (28 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0003126>)
+      (29 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000056>)
+      (30 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0001255>)
+      (31 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0000995>)
+      (32 <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0004537>)
     }
   }
   UNION {
@@ -68,11 +72,14 @@ WHERE {
       (<http://purl.obolibrary.org/obo/UBERON_0001911> <http://purl.org/sig/ont/fma/fma57991>)
       (<http://purl.obolibrary.org/obo/UBERON_0001911> <http://purl.org/sig/ont/fma/fma57987>)
       # Ovary
-      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.org/sig/ont/fma/fma7214>)
-      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.org/sig/ont/fma/fma7213>)
+      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.obolibrary.org/obo/UBERON_0002119>)
+      (<http://purl.obolibrary.org/obo/UBERON_0000992> <http://purl.obolibrary.org/obo/UBERON_0002118>)
       # Palatine Tonsil
       (<http://purl.obolibrary.org/obo/UBERON_0002373> <http://purl.org/sig/ont/fma/fma54974>)
       (<http://purl.obolibrary.org/obo/UBERON_0002373> <http://purl.org/sig/ont/fma/fma54973>)
+      # Renal Pelvis
+      (<http://purl.obolibrary.org/obo/UBERON_0001224> <http://purl.obolibrary.org/obo/UBERON_0018116>)
+      (<http://purl.obolibrary.org/obo/UBERON_0001224> <http://purl.obolibrary.org/obo/UBERON_0018115>)
       # Ureter
       (<http://purl.obolibrary.org/obo/UBERON_0000056> <http://purl.obolibrary.org/obo/UBERON_0001223>)
       (<http://purl.obolibrary.org/obo/UBERON_0000056> <http://purl.obolibrary.org/obo/UBERON_0001222>)
@@ -84,7 +91,14 @@ WHERE {
     FILTER(?parent != body:)
   }
   
-  ?child ccf:ccf_pref_label ?label1 .
+  {
+    ?child ccf:ccf_pref_label ?label1 .
+  }
+  UNION
+  {
+    [] a ?child, ccf:SpatialEntity ; skos:prefLabel ?label1 .
+  }
+  
   OPTIONAL {
     {
       ?child hasExactSynonym: ?synonymLabel1 .
