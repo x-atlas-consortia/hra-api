@@ -27,5 +27,22 @@ export async function getGrlcSpec(name) {
   delete spec.next_commit;
   delete spec.prov;
 
+  // Find parameter defaults and set them as examples where appropriate to allow for better user experience
+  setExampleFromDefault(spec);
+
   return spec;
+}
+
+function setExampleFromDefault(spec) {
+  for (const pathSpec of Object.values(spec.paths ?? {})) {
+    for (const methodSpec of Object.values(pathSpec)) {
+      for (const paramSpec of methodSpec.parameters ?? []) {
+        if (paramSpec && paramSpec.name !== 'endpoint') {
+          if (paramSpec.schema?.default) {
+            paramSpec.schema.example = paramSpec.schema.default;
+          }
+        }
+      }
+    }
+  }
 }
