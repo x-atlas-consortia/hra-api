@@ -101,6 +101,8 @@ export async function pruneDatasetGraphs(endpoint) {
   if (datasets.length > 0) {
     const graphs = datasets.reduce((acc, row) => acc.concat([row.dsInfo, row.dsGraph]), []);
     console.log('deleting', graphs);
-    await deleteGraphs(graphs, endpoint);
+    for (const graph of graphs) {
+      await deleteGraphs([graph], endpoint);
+    }
   }
 }
