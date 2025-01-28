@@ -57,7 +57,9 @@ WHERE {
         }
       }
       OPTIONAL {
-        ?rui_location ccf:collides_with ?organ .
+        GRAPH DSGraphsExtra: {
+          ?rui_location ccf:collides_with ?organ .
+        }
         GRAPH HRA: {
           ?refOrgan ccf:has_reference_organ ?refOrgan ;
             ccf:representation_of ?organ .
