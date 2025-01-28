@@ -3,6 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
 
 CONSTRUCT {
   [] a ccf:AggregateResult ;
@@ -14,6 +15,9 @@ CONSTRUCT {
   [] a ccf:AggregateResult ;
      rdfs:label "Donors" ;
      ccf:count ?donor_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Organs" ;
+     ccf:count ?organ_count .
   [] a ccf:AggregateResult ;
      rdfs:label "Tissue Blocks" ;
      ccf:count ?block_count .
@@ -33,6 +37,7 @@ WHERE {
   {
     SELECT 
       (COUNT(DISTINCT ?donor) AS ?donor_count)
+      (COUNT(DISTINCT ?organ) AS ?organ_count)
       (COUNT(DISTINCT ?consortium) AS ?consortium_count)
       (COUNT(DISTINCT ?provider) AS ?provider_count)
       (COUNT(DISTINCT ?block) AS ?block_count)
@@ -51,7 +56,13 @@ WHERE {
           ?section ccf:generates_dataset ?sectionDataset .
         }
       }
-
+      OPTIONAL {
+        ?rui_location ccf:collides_with ?organ .
+        GRAPH HRA: {
+          ?refOrgan ccf:has_reference_organ ?refOrgan ;
+            ccf:representation_of ?organ .
+        }
+      }
       OPTIONAL {
         ?donor ccf:consortium_name ?consortium .
       }
