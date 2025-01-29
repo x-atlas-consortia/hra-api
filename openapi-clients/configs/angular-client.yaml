@@ -3,11 +3,11 @@ templateDir: openapi-clients/templates/angular-client
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-angular.md
 additionalProperties:
   npmName: "@hra-api/ng-client"
-  npmVersion: 0.11.0
+  npmVersion: 0.12.0
   apiModulePrefix: Hra
   configurationPrefix: HraApi
   fileNaming: kebab-case
-  ngVersion: "18.0.0"
+  ngVersion: "19.0.0"
   stringEnums: true
   supportsES6: true
   useSingleRequestParameter: true
