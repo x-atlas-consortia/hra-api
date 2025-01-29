@@ -2,6 +2,12 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.12.0 - 2025-01-29
+
+- Updated supported angular version to 19
+- Improved dataset graph handling
+- Bug fixes
+
 ## 0.11.0 - 2024-09-30
 
 ## Added in 0.11.0
