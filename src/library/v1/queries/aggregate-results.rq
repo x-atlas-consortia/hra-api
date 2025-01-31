@@ -19,11 +19,11 @@ CONSTRUCT {
      rdfs:label "Organs" ;
      ccf:count ?organ_count .
   [] a ccf:AggregateResult ;
-     rdfs:label "Tissue Blocks" ;
-     ccf:count ?block_count .
-  [] a ccf:AggregateResult ;
      rdfs:label "Extraction Sites" ;
      ccf:count ?rui_location_count .
+  [] a ccf:AggregateResult ;
+     rdfs:label "Tissue Blocks" ;
+     ccf:count ?block_count .
   [] a ccf:AggregateResult ;
      rdfs:label "Tissue Sections" ;
      ccf:count ?section_count .
