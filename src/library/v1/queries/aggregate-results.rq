@@ -43,17 +43,20 @@ WHERE {
       (COUNT(DISTINCT ?block) AS ?block_count)
       (COUNT(DISTINCT ?rui_location) AS ?rui_location_count)
       (COUNT(DISTINCT ?section) AS ?section_count)
-      (COUNT(DISTINCT ?dataset) + COUNT(DISTINCT ?sectionDataset) AS ?dataset_count)
+      (COUNT(DISTINCT ?dataset) AS ?dataset_count)
     WHERE {
       ?block ccf:comes_from ?donor ;
         ccf:has_registration_location ?rui_location .
       OPTIONAL {
-        ?block ccf:generates_dataset ?dataset .
+        ?block ccf:subdivided_into_sections ?section .
       }
       OPTIONAL {
-        ?block ccf:subdivided_into_sections ?section .
-        OPTIONAL {
-          ?section ccf:generates_dataset ?sectionDataset .
+        {
+          ?block ccf:subdivided_into_sections ?section .
+          ?section ccf:generates_dataset ?dataset .
+        }
+        UNION {
+          ?block ccf:generates_dataset ?dataset .
         }
       }
       OPTIONAL {
