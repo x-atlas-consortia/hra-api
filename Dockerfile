@@ -17,6 +17,7 @@ RUN mkdir /blazegraph \
 
 ADD ./blazegraph/readonly_cors.xml /blazegraph/readonly_cors.tmp.xml
 ADD ./blazegraph/entrypoint.sh /blazegraph/entrypoint.sh
+ADD ./blazegraph/startup.sh /blazegraph/startup.sh
 ADD ./blazegraph/setup-blazegraph-db.sh /blazegraph/setup-blazegraph-db.sh
 
 # use --env on the docker run command line to override

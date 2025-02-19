@@ -10,13 +10,13 @@ const HRA_API = {
     SPARQL_WRITABLE,
     SPARQL_ENDPOINT,
   },
-  cron_restart: '0 2 * * *'
+  cron_restart: '0 7 * * *'
 };
 
 const BLAZEGRAPH = {
   name: 'blazegraph',
-  script: '/blazegraph/entrypoint.sh',
-  cron_restart: '0 2 * * *'
+  script: '/blazegraph/startup.sh',
+  cron_restart: '0 7 * * *'
 };
 
 module.exports = {
