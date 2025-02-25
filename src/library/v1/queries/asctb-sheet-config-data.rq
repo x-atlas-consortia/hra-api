@@ -1,0 +1,49 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX schema: <http://schema.org/>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX uberon: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX LOD: <https://lod.humanatlas.io>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
+
+SELECT ?purl ?name ?version ?hraVersion ?representation_of ?csvUrl
+WHERE {
+  GRAPH LOD: {
+    ?purl a dcat:Dataset ;
+      schema:name ?name ;
+      schema:additionalType ?type ;
+      schema:version ?version ;
+      prov:wasDerivedFrom [
+        dcat:distribution [
+          dcat:mediaType ?mediaType ;
+          dcat:downloadURL ?csvUrl ;
+        ]
+      ] ;
+    .
+    FILTER(?type = 'asct-b' && !CONTAINS(?name, '-crosswalk') && ?mediaType = 'text/csv')
+    BIND(IRI(STRBEFORE(STR(?purl), CONCAT('/', ?version))) as ?purlNoVersion)
+  }
+
+  GRAPH LOD: {
+    [] a dcat:Dataset ;
+      schema:name ?hraName ;
+      schema:additionalType ?hraType ;
+      schema:version ?hraVersion ;
+      prov:hadMember ?purlStr .
+
+      FILTER(?hraName = 'hra' && ?hraType = 'collection' && CONTAINS(STR(?purlStr), '/asct-b/'))
+      BIND(IRI(STR(?purlStr)) as ?purl)
+  }
+
+  GRAPH HRA: {
+    ?row1 a ccf:AsctbRecord ;
+      ccf:anatomical_structure [
+        ccf:source_concept ?term ;
+        ccf:order_number 1 ;
+        ccf:record_number 1 ;
+      ] .
+    BIND(REPLACE(STR(?term), STR(uberon:), 'UBERON:') as ?representation_of)
+    BIND(IRI(CONCAT('https://purl.humanatlas.io/asct-b/', STRBEFORE(STRAFTER(STR(?row1), 'https://purl.humanatlas.io/asct-b/'), '/'))) as ?purlNoVersion)
+  }
+}
+ORDER BY ?name DESC(?version) ?hraVersion

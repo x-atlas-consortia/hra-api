@@ -432,6 +432,28 @@ paths:
           $ref: '#/components/responses/RuiReferenceData'
         '404':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/asctb-sheet-config:
+    get:
+      summary: Get sheet config data for the ASCT+B Reporter
+      operationId: asctb-sheet-config
+      tags:
+        - v1
+      responses:
+        '200':
+          $ref: '#/components/responses/AsctbReferenceData'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+  /v1/asctb-omap-sheet-config:
+    get:
+      summary: Get OMAP sheet config data for the ASCT+B Reporter
+      operationId: asctb-omap-sheet-config
+      tags:
+        - v1
+      responses:
+        '200':
+          $ref: '#/components/responses/AsctbReferenceData'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /v1/anatomical-systems-tree-model:
     get:
       summary: Get anatomical systems partonomy tree nodes
@@ -1830,6 +1852,14 @@ components:
               $ref: '#/components/schemas/TissueBlock'
     RuiReferenceData:
       description: Successful operation. RUI Reference Data.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+    AsctbReferenceData:
+      description: Successful operation. ASCT+B Reference Data.
       content:
         application/json:
           schema:

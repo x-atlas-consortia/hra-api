@@ -90,6 +90,10 @@ paths:
     $ref: v1/paths/gtex_rui_locations.jsonld.yaml
   /v1/rui-reference-data:
     $ref: v1/paths/rui-reference-data.yaml
+  /v1/asctb-sheet-config:
+    $ref: v1/paths/asctb-sheet-config.yaml
+  /v1/asctb-omap-sheet-config:
+    $ref: v1/paths/asctb-omap-sheet-config.yaml
   /v1/anatomical-systems-tree-model:
     $ref: v1/paths/anatomical-systems-tree-model.yaml
   /v1/extraction-site:

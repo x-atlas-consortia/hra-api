@@ -3,6 +3,8 @@
 
 export * from '../v1/operations/aggregate-results.js';
 export * from '../v1/operations/anatomical-systems-tree-model.js';
+export * from '../v1/operations/asctb-omap-sheet-config.js';
+export * from '../v1/operations/asctb-sheet-config.js';
 export * from '../v1/operations/biomarker-term-occurences.js';
 export * from '../v1/operations/biomarker-tree-model.js';
 export * from '../v1/operations/cell-type-term-occurences.js';

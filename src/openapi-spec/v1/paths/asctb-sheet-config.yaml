@@ -1,0 +1,9 @@
+get:
+  summary: Get sheet config data for the ASCT+B Reporter
+  operationId: asctb-sheet-config
+  tags: [v1]
+  responses:
+    '200':
+      $ref: ../components/responses/AsctbReferenceData.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

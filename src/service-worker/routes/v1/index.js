@@ -1,6 +1,8 @@
 import {
   getAggregateResults,
   getAnatomicalSystemsTreeModel,
+  getASCTBOmapSheetConfig,
+  getASCTBSheetConfig,
   getBiomarkerTermOccurences,
   getBiomarkerTreeModel,
   getCellTypeTermOccurences,
@@ -51,6 +53,8 @@ function routes(app) {
     .get('/api/v1/biomarker-term-occurences', forwardFilteredRequest(getBiomarkerTermOccurences))
     .get('/api/v1/anatomical-systems-tree-model', forwardFilteredRequest(getAnatomicalSystemsTreeModel))
     .get('/api/v1/rui-reference-data', forwardFilteredRequest(getRuiReferenceData))
+    .get('/api/v1/asctb-omap-sheet-config', forwardFilteredRequest(getASCTBOmapSheetConfig))
+    .get('/api/v1/asctb-sheet-config', forwardFilteredRequest(getASCTBSheetConfig))
     .get('/api/v1/extraction-site', getExtractionSiteHandler())
     .post('/api/v1/collisions', getCollisionsHandler())
     .post('/api/v1/corridor', getCorridorHandler())

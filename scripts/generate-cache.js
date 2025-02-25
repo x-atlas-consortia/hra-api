@@ -3,6 +3,8 @@ import { mkdir, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import {
   getAnatomicalSystemsTreeModel,
+  getASCTBOmapSheetConfig,
+  getASCTBSheetConfig,
   getBiomarkerTreeModel,
   getCellTypeTreeModel,
   getOntologyTreeModel,
@@ -25,4 +27,6 @@ await Promise.all([
   runAndCache(getBiomarkerTreeModel, 'biomarker-tree-model.json'),
   runAndCache(getReferenceOrgans, 'reference-organs.json'),
   runAndCache(getRuiReferenceData, 'rui-reference-data.json'),
+  runAndCache(getASCTBOmapSheetConfig, 'asctb-omap-sheet-config.json'),
+  runAndCache(getASCTBSheetConfig, 'asctb-sheet-config.json'),
 ]);

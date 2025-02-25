@@ -2,6 +2,8 @@ import { Router } from 'express';
 import {
   getAggregateResults,
   getAnatomicalSystemsTreeModel,
+  getASCTBOmapSheetConfig,
+  getASCTBSheetConfig,
   getBiomarkerTermOccurences,
   getBiomarkerTreeModel,
   getCellTypeTermOccurences,
@@ -78,6 +80,18 @@ const routes = Router()
     longCache,
     fileCache('rui-reference-data.json'),
     forwardFilteredRequest(getRuiReferenceData)
+  )
+  .get(
+    '/asctb-omap-sheet-config',
+    longCache,
+    fileCache('asctb-omap-sheet-config.json'),
+    forwardFilteredRequest(getASCTBOmapSheetConfig)
+  )
+  .get(
+    '/asctb-sheet-config',
+    longCache,
+    fileCache('asctb-sheet-config.json'),
+    forwardFilteredRequest(getASCTBSheetConfig)
   )
   .get('/extraction-site', shortCache, getExtractionSiteHandler())
   .post('/collisions', shortCache, getCollisionsHandler())

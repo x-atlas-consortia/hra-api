@@ -1,0 +1,51 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX schema: <http://schema.org/>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX uberon: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX LOD: <https://lod.humanatlas.io>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
+
+SELECT ?purl ?name ?version ?hraVersion ?representation_of ?organName ?csvUrl ?xslxUrl ?tissuePreservationMethod ?imagingMethod
+WHERE {
+  GRAPH LOD: {
+    ?purl a dcat:Dataset ;
+      schema:name ?name ;
+      schema:additionalType ?type ;
+      schema:version ?version ;
+      prov:wasDerivedFrom [
+        dcat:distribution [
+          dcat:mediaType ?mediaType ;
+          dcat:downloadURL ?csvUrl ;
+        ] ;
+      ] ;
+    .
+    FILTER(?type = 'omap' && !CONTAINS(?name, '-crosswalk') && ?mediaType = 'text/csv')
+    BIND(IRI(STRBEFORE(STR(?purl), CONCAT('/', ?version))) as ?purlNoVersion)
+  }
+
+  GRAPH LOD: {
+    [] a dcat:Dataset ;
+      schema:name ?hraName ;
+      schema:additionalType ?hraType ;
+      schema:version ?hraVersion ;
+      prov:hadMember ?purlStr .
+
+      FILTER(?hraName = 'hra' && ?hraType = 'collection' && CONTAINS(STR(?purlStr), '/omap/'))
+      BIND(IRI(STR(?purlStr)) as ?purl)
+  }
+
+  GRAPH HRA: {
+    # <https://purl.humanatlas.io/omap/20-kidney-ims-cycif/v1.0#OMAP-20>
+    ?row1 a ccf:MultiplexedAntibodyBasedImagingExperiment ;
+      ccf:sample_organ ?term ;
+      ccf:tissue_preservation ?tissuePreservationMethod ;
+      ccf:study_method ?imagingMethod ;
+    .
+    ?term rdfs:label ?organName .
+    BIND(REPLACE(STR(?term), STR(uberon:), 'UBERON:') as ?representation_of)
+    BIND(IRI(CONCAT('https://purl.humanatlas.io/omap/', STRBEFORE(STRAFTER(STR(?row1), 'https://purl.humanatlas.io/omap/'), '/'))) as ?purlNoVersion)
+  }
+}
+ORDER BY ?name DESC(?version) ?hraVersion
