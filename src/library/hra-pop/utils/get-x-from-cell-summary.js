@@ -27,6 +27,7 @@ function getSourceSimilarities(cellWeights, summaries) {
         cell_source: row.cell_source,
         cell_source_type: row.cell_source_type,
         cell_source_label: row.cell_source_label,
+        cell_source_link: row.cell_source_link,
         tool: row.tool,
         modality: row.modality,
         cellWeights: {},

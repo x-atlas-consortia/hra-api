@@ -6,7 +6,7 @@ PREFIX UBERON: <http://purl.obolibrary.org/obo/UBERON_>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
-SELECT ?cell_source_type ?cell_source ?cell_source_label ?tool ?modality ?cell_id
+SELECT ?cell_source_type ?cell_source ?cell_source_label ?cell_source_link ?tool ?modality ?cell_id
   ?percentage
 FROM HRA:
 FROM HRApop:
@@ -24,6 +24,9 @@ WHERE {
   }
   OPTIONAL {
     ?cell_source rdfs:label ?cell_source_label .
+  }
+  OPTIONAL {
+    ?cell_source ccf:url ?cell_source_link .
   }
   {
     #{{ORGAN_IRIs}}
