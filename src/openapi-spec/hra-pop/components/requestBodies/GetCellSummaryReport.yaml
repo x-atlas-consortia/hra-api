@@ -5,8 +5,8 @@ required: true
 content:
   application/json:
     schema:
-      type: object
-    example: 
+      $ref: ../schemas/CellSummaryReportRequest.yaml
+    example:
       organ: http://purl.obolibrary.org/obo/UBERON_0000948
       csvString: |-
         cell_id,cell_label,count,percentage

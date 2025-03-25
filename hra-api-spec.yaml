@@ -584,11 +584,7 @@ paths:
         $ref: '#/components/requestBodies/GetCellSummaryReport'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
+          $ref: '#/components/responses/CellSummaryReportResponse'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -603,11 +599,7 @@ paths:
         $ref: '#/components/requestBodies/GetRuiLocationCellSummary'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
+          $ref: '#/components/responses/RuiLocationCellSummaryResponse'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -1536,6 +1528,99 @@ components:
           type: object
           additionalProperties:
             type: number
+    CellSummaryReportRequest:
+      title: Cell summary report request body
+      type: object
+      required:
+        - organ
+        - csvString
+      properties:
+        organ:
+          title: Organ
+          type: string
+          format: uri
+        csvString:
+          title: Csv data
+          type: string
+    SourceSimilarityRow:
+      title: Source Similarity Row
+      type: object
+      required:
+        - tool
+        - modality
+        - cell_source
+        - cell_source_type
+        - cell_source_label
+        - cell_source_link
+        - similarity
+      properties:
+        tool:
+          title: Tool
+          type: string
+        modality:
+          title: Modality
+          type: string
+        cell_source:
+          title: Cell Source
+          type: string
+          format: uri
+        cell_source_type:
+          title: Cell Source Type
+          type: string
+        cell_source_link:
+          title: Cell Source Link
+          type: string
+          format: uri
+        similarity:
+          title: Similarity
+          type: number
+    CellSummaryReport:
+      title: Cell Summary Report
+      type: object
+      required:
+        - sources
+        - rui_locations
+      properties:
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceSimilarityRow'
+        rui_locations:
+          title: RUI Locations
+          type: object
+        error:
+          title: Error Message
+          type: object
+    CellSummaryRow:
+      title: Cell Summary Row
+      type: object
+      required:
+        - tool
+        - modality
+        - cell_id
+        - cell_label
+        - count
+        - percentage
+      properties:
+        tool:
+          title: Tool
+          type: string
+        modality:
+          title: Modality
+          type: string
+        cell_id:
+          title: Cell ID
+          type: string
+          format: uri
+        cell_label:
+          title: Cell Label
+          type: string
+        count:
+          title: Count
+          type: number
+        percentage:
+          title: Percentage
+          type: number
     IdLabelPair:
       title: ID - Label pair
       type: object
@@ -1686,7 +1771,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
+            $ref: '#/components/schemas/CellSummaryReportRequest'
           example:
             organ: http://purl.obolibrary.org/obo/UBERON_0000948
             csvString: |-
@@ -1866,6 +1951,20 @@ components:
             type: array
             items:
               type: object
+    CellSummaryReportResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CellSummaryReport'
+    RuiLocationCellSummaryResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CellSummaryRow'
     IdLabelsResponse:
       description: Successful operation
       content:

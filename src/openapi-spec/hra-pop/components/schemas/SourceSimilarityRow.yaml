@@ -1,0 +1,31 @@
+title: Source Similarity Row
+type: object
+required:
+  - tool
+  - modality
+  - cell_source
+  - cell_source_type
+  - cell_source_label
+  - cell_source_link
+  - similarity
+properties:
+  tool:
+    title: Tool
+    type: string
+  modality:
+    title: Modality
+    type: string
+  cell_source:
+    title: Cell Source
+    type: string
+    format: uri
+  cell_source_type:
+    title: Cell Source Type
+    type: string
+  cell_source_link:
+    title: Cell Source Link
+    type: string
+    format: uri
+  similarity:
+    title: Similarity
+    type: number

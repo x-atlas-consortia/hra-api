@@ -1,0 +1,16 @@
+title: Cell Summary Report
+type: object
+required:
+  - sources
+  - rui_locations
+properties:
+  sources:
+    type: array
+    items:
+      $ref: ./SourceSimilarityRow.yaml
+  rui_locations:
+    title: RUI Locations
+    type: object
+  error:
+    title: Error Message
+    type: object

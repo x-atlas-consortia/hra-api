@@ -5,6 +5,7 @@ Changelog for the Human Reference Atlas API (HRA-API)
 ## 0.12.1 - 2025-02-25
 
 - Added OMAP and ASCT+B sheet config routes to provide reference data to the ASCT+B Reporter
+- Improved typings in hra-pop OpenAPI routes
 
 ## 0.12.0 - 2025-01-29
 

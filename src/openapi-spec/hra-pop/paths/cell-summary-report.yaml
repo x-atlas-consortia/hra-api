@@ -9,11 +9,7 @@ post:
     $ref: ../components/requestBodies/GetCellSummaryReport.yaml
   responses:
     '200':
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: object
+      $ref: ../components/responses/CellSummaryReportResponse.yaml
     '404':
       $ref: ../../v1/components/responses/ErrorMessage.yaml
     '500':
