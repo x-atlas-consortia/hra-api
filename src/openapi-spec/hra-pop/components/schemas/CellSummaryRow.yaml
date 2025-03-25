@@ -1,0 +1,29 @@
+title: Cell Summary Row
+type: object
+required:
+  - tool
+  - modality
+  - cell_id
+  - cell_label
+  - count
+  - percentage
+properties:
+  tool:
+    title: Tool
+    type: string
+  modality:
+    title: Modality
+    type: string
+  cell_id:
+    title: Cell ID
+    type: string
+    format: uri
+  cell_label:
+    title: Cell Label
+    type: string
+  count:
+    title: Count
+    type: number
+  percentage:
+    title: Percentage
+    type: number
