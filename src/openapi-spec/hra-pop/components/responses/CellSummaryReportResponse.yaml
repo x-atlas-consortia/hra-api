@@ -2,19 +2,4 @@ description: Successful operation
 content:
   application/json:
     schema:
-      type: object
-      required:
-        - sources
-        - rui_locations
-        - error
-      properties:
-        sources:
-          type: array
-          items:
-            $ref: ../schemas/SourceSimilarityRow.yaml
-        rui_locations:
-          title: RUI Locations
-          type: object
-        error:
-          title: Error Message
-          type: object
+      $ref: ../schemas/CellSummaryReport.yaml

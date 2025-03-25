@@ -1528,6 +1528,20 @@ components:
           type: object
           additionalProperties:
             type: number
+    CellSummaryReportRequest:
+      title: Cell summary report request body
+      type: object
+      required:
+        - organ
+        - csvString
+      properties:
+        organ:
+          title: Organ
+          type: string
+          format: uri
+        csvString:
+          title: Csv data
+          type: string
     SourceSimilarityRow:
       title: Source Similarity Row
       type: object
@@ -1560,6 +1574,23 @@ components:
         similarity:
           title: Similarity
           type: number
+    CellSummaryReport:
+      title: Cell Summary Report
+      type: object
+      required:
+        - sources
+        - rui_locations
+      properties:
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceSimilarityRow'
+        rui_locations:
+          title: RUI Locations
+          type: object
+        error:
+          title: Error Message
+          type: object
     CellSummaryRow:
       title: Cell Summary Row
       type: object
@@ -1740,7 +1771,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
+            $ref: '#/components/schemas/CellSummaryReportRequest'
           example:
             organ: http://purl.obolibrary.org/obo/UBERON_0000948
             csvString: |-
@@ -1925,22 +1956,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - sources
-              - rui_locations
-              - error
-            properties:
-              sources:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SourceSimilarityRow'
-              rui_locations:
-                title: RUI Locations
-                type: object
-              error:
-                title: Error Message
-                type: object
+            $ref: '#/components/schemas/CellSummaryReport'
     RuiLocationCellSummaryResponse:
       description: Successful operation
       content:
