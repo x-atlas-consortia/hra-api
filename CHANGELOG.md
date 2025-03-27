@@ -2,6 +2,11 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.12.2 - 2025-02-27
+
+- The '/cell-summary-report' route in hra-pop now accepts an optional tool in requests
+- Further improved typings in hra-pop OpenAPI routes
+
 ## 0.12.1 - 2025-02-25
 
 - Added OMAP and ASCT+B sheet config routes to provide reference data to the ASCT+B Reporter
