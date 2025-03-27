@@ -156,7 +156,7 @@ export async function getRuiReferenceData(filter, endpoint = 'https://lod.humana
       scenegraph: organAs.object.file,
       scenegraphNode: organAs.object.file_subpath,
       transformMatrix,
-      tooltip: getLabel(organAs),
+      tooltip: organAs.label,
       unpickable: true,
       _lighting: 'pbr',
       zoomBasedOpacity: false,
