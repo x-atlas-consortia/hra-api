@@ -22,6 +22,9 @@ properties:
   cell_source_type:
     title: Cell Source Type
     type: string
+  cell_source_label:
+    title: Cell Source Label
+    type: string
   cell_source_link:
     title: Cell Source Link
     type: string
