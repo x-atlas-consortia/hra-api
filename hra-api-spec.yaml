@@ -1532,15 +1532,17 @@ components:
       title: Cell summary report request body
       type: object
       required:
-        - organ
         - csvString
       properties:
+        csvString:
+          title: Csv data
+          type: string
         organ:
           title: Organ
           type: string
           format: uri
-        csvString:
-          title: Csv data
+        tool:
+          title: Tool
           type: string
     SourceSimilarityRow:
       title: Source Similarity Row
@@ -1566,6 +1568,9 @@ components:
           format: uri
         cell_source_type:
           title: Cell Source Type
+          type: string
+        cell_source_label:
+          title: Cell Source Label
           type: string
         cell_source_link:
           title: Cell Source Link
