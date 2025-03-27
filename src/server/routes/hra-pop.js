@@ -29,7 +29,8 @@ const routes = Router()
   .post('/cell-summary-report', noCache, async function (req, res) {
     const cellSummarySheet = req.body.csvString;
     const organ = req.body.organ;
-    const report = await getSimilarCellSourcesReport(cellSummarySheet, organ);
+    const tool = req.body.tool;
+    const report = await getSimilarCellSourcesReport(cellSummarySheet, organ, tool);
     res.json(report);
   });
 
