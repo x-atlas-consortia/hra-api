@@ -1,13 +1,15 @@
 title: Cell summary report request body
 type: object
 required:
-  - organ
   - csvString
 properties:
+  csvString:
+    title: Csv data
+    type: string
   organ:
     title: Organ
     type: string
     format: uri
-  csvString:
-    title: Csv data
+  tool:
+    title: Tool
     type: string
