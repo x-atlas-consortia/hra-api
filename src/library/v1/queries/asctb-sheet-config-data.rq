@@ -1,5 +1,6 @@
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX ccf: <http://purl.org/ccf/>
 PREFIX uberon: <http://purl.obolibrary.org/obo/UBERON_>
@@ -9,7 +10,7 @@ PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
 SELECT ?purl ?name ?version ?hraVersion ?representation_of ?csvUrl
 WHERE {
   GRAPH LOD: {
-    ?purl a dcat:Dataset ;
+    ?lodPurl a dcat:Dataset ;
       schema:name ?name ;
       schema:additionalType ?type ;
       schema:version ?version ;
@@ -19,6 +20,7 @@ WHERE {
           dcat:downloadURL ?csvUrl ;
         ]
       ] ;
+      rdfs:seeAlso ?purl ;
     .
     FILTER(?type = 'asct-b' && !CONTAINS(?name, '-crosswalk') && ?mediaType = 'text/csv')
     BIND(IRI(STRBEFORE(STR(?purl), CONCAT('/', ?version))) as ?purlNoVersion)

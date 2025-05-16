@@ -10,7 +10,7 @@ PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
 SELECT ?purl ?name ?version ?hraVersion ?representation_of ?organName ?csvUrl ?xslxUrl ?tissuePreservationMethod ?imagingMethod
 WHERE {
   GRAPH LOD: {
-    ?purl a dcat:Dataset ;
+    ?lodPurl a dcat:Dataset ;
       schema:name ?name ;
       schema:additionalType ?type ;
       schema:version ?version ;
@@ -20,6 +20,7 @@ WHERE {
           dcat:downloadURL ?csvUrl ;
         ] ;
       ] ;
+      rdfs:seeAlso ?purl ;
     .
     FILTER(?type = 'omap' && !CONTAINS(?name, '-crosswalk') && ?mediaType = 'text/csv')
     BIND(IRI(STRBEFORE(STR(?purl), CONCAT('/', ?version))) as ?purlNoVersion)
