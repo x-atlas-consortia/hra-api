@@ -49,6 +49,7 @@ const library = {
   ...sharedBuildOptions,
   entryPoints: [
     'src/library/operations/ds-graph.js',
+    'src/library/operations/hra-kg.js',
     'src/library/operations/hra-pop.js',
     'src/library/operations/v1.js',
   ],
