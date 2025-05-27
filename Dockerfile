@@ -49,7 +49,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --include=dev
 COPY . .
-RUN mkdir -p file-cache && npm run build && npm prune --production
+RUN nohup bash -c "/blazegraph/entrypoint.sh &" && sleep 4 \
+  && mkdir -p file-cache \
+  && SPARQL_ENDPOINT="http://localhost:8081/blazegraph/namespace/kb/sparql" npm run build \
+  && npm prune --production
 
 EXPOSE $PORT $BLAZEGRAPH_PORT
 CMD [ "pm2-runtime", "start", "ecosystem.config.cjs" ]
