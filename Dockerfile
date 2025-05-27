@@ -21,17 +21,20 @@ ADD ./blazegraph/startup.sh /blazegraph/startup.sh
 ADD ./blazegraph/setup-blazegraph-db.sh /blazegraph/setup-blazegraph-db.sh
 
 # use --env on the docker run command line to override
-ENV BLAZEGRAPH_MEMORY 12G
-ENV BLAZEGRAPH_TIMEOUT 360000
-ENV BLAZEGRAPH_READONLY false
-ENV BLAZEGRAPH_PORT 8081
-ENV NODE_ENV production
-ENV PORT 8080
+ENV BLAZEGRAPH_MEMORY=12G
+ENV BLAZEGRAPH_TIMEOUT=360000
+ENV BLAZEGRAPH_READONLY=false
+ENV BLAZEGRAPH_PORT=8081
+ENV NODE_ENV=production
+ENV PORT=8080
+
+# Build-time argument to set the default CDN to use for grabbing graphs when building the blazegraph db
+ARG CDN_URL=https://cdn.humanatlas.io/digital-objects/
 
 ###### Add blazegraph-runner #####
 # Code snippet from https://github.com/INCATools/ubergraph/blob/master/Dockerfile#L18C1-L23C53
 ENV BR=1.7
-ENV PATH "/tools/blazegraph-runner/bin:$PATH"
+ENV PATH="/tools/blazegraph-runner/bin:$PATH"
 RUN wget -nv https://github.com/balhoff/blazegraph-runner/releases/download/v$BR/blazegraph-runner-$BR.tgz \
 && tar -zxvf blazegraph-runner-$BR.tgz \
 && mkdir -p /tools && mv blazegraph-runner-$BR /tools/blazegraph-runner
