@@ -1,6 +1,6 @@
 # hra-api
 
-Human Reference Atlas API
+Human Reference Atlas API (HRA API)
 [Change Log](./CHANGELOG.md)
 
 ## Library
