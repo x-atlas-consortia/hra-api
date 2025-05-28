@@ -38,7 +38,7 @@ const requests = [
   runAndCache(getRuiReferenceData, 'rui-reference-data.json'),
   runAndCache(getASCTBOmapSheetConfig, 'asctb-omap-sheet-config.json'),
   runAndCache(getASCTBSheetConfig, 'asctb-sheet-config.json'),
-  runAndCache(getDigitalObjects, 'digital-objects.json', false),
+  // runAndCache(getDigitalObjects, 'digital-objects.json', false),
 ];
 for (const request of requests) {
   await request();
