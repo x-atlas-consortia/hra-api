@@ -6,14 +6,13 @@ const euiRoute = (req, res, _next) => {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>HRA Exploration User Interface</title>
-  <base href="https://cdn.humanatlas.io/ui/ccf-eui/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
-  <script src="wc.js" async></script>
+  <title>Human Reference Atlas Exploration User Interface (EUI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <base href="https://cdn.humanatlas.io/ui--staging/ccf-eui/" />
+  <link href="https://cdn.humanatlas.io/ui--staging/ccf-eui/styles.css" rel="stylesheet" />
+  <script src="https://cdn.humanatlas.io/ui--staging/ccf-eui/wc.js" type="module"></script>
 </head>
 <body>
   <ccf-eui token="${token}" login-disabled="true" logo-tooltip=""></ccf-eui>
