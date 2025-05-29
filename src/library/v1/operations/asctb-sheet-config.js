@@ -129,6 +129,7 @@ async function fetchSheet(csvUrl) {
  * @returns {Promise<Object>} - A promise that resolves to biomarker term occurrences
  */
 export async function getASCTBSheetConfig(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+  endpoint = 'https://lod.humanatlas.io/sparql'; // override endpoint customization for now.
   const [publishedData, draftData] = await Promise.all([
     executeFilteredQuery(query, filter, endpoint),
     fetchSheet(googleSheetCsvUrl(DRAFTS_SHEET_ID)),
