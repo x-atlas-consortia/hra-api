@@ -4,7 +4,7 @@ import frame from '../frames/ftu-illustrations.jsonld';
 import query from '../queries/ftu-illustrations.rq';
 
 function reformatResponse(jsonld) {
-  const results = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['mapping', 'illustration_files']));
+  const results = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['mapping', 'illustration_files']), new Set(['label']));
   return {
     '@context': jsonld['@context'],
     '@graph': results,
