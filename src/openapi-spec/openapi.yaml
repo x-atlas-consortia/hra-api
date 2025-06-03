@@ -94,6 +94,8 @@ paths:
     $ref: v1/paths/asctb-sheet-config.yaml
   /v1/asctb-omap-sheet-config:
     $ref: v1/paths/asctb-omap-sheet-config.yaml
+  /v1/ftu-illustrations:
+    $ref: v1/paths/ftu-illustrations.yaml
   /v1/anatomical-systems-tree-model:
     $ref: v1/paths/anatomical-systems-tree-model.yaml
   /v1/extraction-site:

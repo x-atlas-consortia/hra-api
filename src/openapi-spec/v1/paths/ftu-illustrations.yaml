@@ -1,0 +1,9 @@
+get:
+  summary: Get 2D FTU Illustration data
+  operationId: ftu-illustrations
+  tags: [v1]
+  responses:
+    '200':
+      $ref: ../components/responses/FtuIllustrations.yaml
+    '404':
+      $ref: ../components/responses/ErrorMessage.yaml

@@ -11,6 +11,7 @@ import {
   getDatasetTechnologyNames,
   getDbStatus,
   getDsGraph,
+  getFtuIllustrations,
   getGtexRuiLocations,
   getHubmapRuiLocations,
   getOntologyTermOccurences,
@@ -92,6 +93,12 @@ const routes = Router()
     longCache,
     fileCache('asctb-sheet-config.json'),
     forwardFilteredRequest(getASCTBSheetConfig)
+  )
+  .get(
+    '/ftu-illustrations',
+    longCache,
+    fileCache('ftu-illustrations.json'),
+    forwardFilteredRequest(getFtuIllustrations)
   )
   .get('/extraction-site', shortCache, getExtractionSiteHandler())
   .post('/collisions', shortCache, getCollisionsHandler())

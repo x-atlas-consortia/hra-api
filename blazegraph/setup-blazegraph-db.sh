@@ -5,6 +5,7 @@ CDN_URL=${CDN_URL:-"https://cdn.humanatlas.io/digital-objects/"}
 
 DEFAULT_GRAPHS=$(cat <<END
 https://lod.humanatlas.io
+https://purl.humanatlas.io/collection/hra
 https://purl.humanatlas.io/collection/hra-api
 https://purl.humanatlas.io/graph/hra-ccf-patches
 https://purl.humanatlas.io/graph/hra-pop

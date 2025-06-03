@@ -10,6 +10,7 @@ import {
   getDatasetTechnologyNames,
   getDbStatus,
   getDsGraph,
+  getFtuIllustrations,
   getGtexRuiLocations,
   getHubmapRuiLocations,
   getOntologyTermOccurences,
@@ -55,6 +56,7 @@ function routes(app) {
     .get('/api/v1/rui-reference-data', forwardFilteredRequest(getRuiReferenceData))
     .get('/api/v1/asctb-omap-sheet-config', forwardFilteredRequest(getASCTBOmapSheetConfig))
     .get('/api/v1/asctb-sheet-config', forwardFilteredRequest(getASCTBSheetConfig))
+    .get('/api/v1/ftu-illustrations', forwardFilteredRequest(getFtuIllustrations))
     .get('/api/v1/extraction-site', getExtractionSiteHandler())
     .post('/api/v1/collisions', getCollisionsHandler())
     .post('/api/v1/corridor', getCorridorHandler())
