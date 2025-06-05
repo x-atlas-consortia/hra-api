@@ -9,6 +9,7 @@ import './fetch-polyfill.js';
 import browserRoute from './routes/browser.js';
 import dsGraphRoutes from './routes/ds-graph.js';
 import euiRoute from './routes/eui.js';
+import ftuExplorerRoute from './routes/ftu-explorer.js';
 import grlcRoutes from './routes/grlc.js';
 import hraKgRoutes from './routes/hra-kg.js';
 import hraPopRoutes from './routes/hra-pop.js';
@@ -60,6 +61,7 @@ app.set('json spaces', 2);
 app.use('/', longCache, browserRoute);
 app.use('/', longCache, euiRoute);
 app.use('/', longCache, ruiRoute);
+app.use('/', longCache, ftuExplorerRoute);
 app.use('/', grlcRoutes);
 
 const processingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
