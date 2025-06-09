@@ -14,11 +14,13 @@ const ruiRoute = (_req, res, _next) => {
   <script src="https://cdn.humanatlas.io/ui--staging/ccf-rui/wc.js" type="module"></script>
 </head>
 <body>
-  <ccf-rui collisions-endpoint=""></ccf-rui>
+  <ccf-rui></ccf-rui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const rui = document.querySelector('ccf-rui');
       const thisPage = location.pathname.replace(/\\/[^\\/]+$/, '/');
+      const collisionsEndpoint = new URL(thisPage + '../v1/collisions', location.origin);
+      rui.collisionsEndpoint = collisionsEndpoint.toString();
       const referenceData = new URL(thisPage + '../v1/rui-reference-data', location.origin);
       rui.referenceData = referenceData.toString();
     });
