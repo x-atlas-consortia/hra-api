@@ -22,7 +22,10 @@ const ftuExplorerRoute = (_req, res, _next) => {
   <script src="https://cdn.humanatlas.io/ui--staging/ftu-ui/wc.js" type="module"></script>
 </head>
 <body>
-  <hra-ftu-ui></hra-ftu-ui>
+  <hra-ftu-ui
+    datasets="https://cdn.humanatlas.io/ui/ftu-ui/assets/TEMP/ftu-datasets.jsonld"
+    summaries="https://cdn.humanatlas.io/ui/ftu-ui/assets/TEMP/ftu-cell-summaries.jsonld"
+  ></hra-ftu-ui>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const ftu = document.querySelector('hra-ftu-ui');
