@@ -2,6 +2,13 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.13.0 - 2025-06-12
+
+- Added '/v1/ftu-illustrations' route for the FTU explorer (also hosted at /ftu-explorer/)
+- Docker container can now build an internal blazegraph against a given HRA KG deployment
+- Use staging versions of the EUI and RUI for latest improvements
+- Added initial hra-kg route
+
 ## 0.12.2 - 2025-02-27
 
 - The '/cell-summary-report' route in hra-pop now accepts an optional tool in requests
