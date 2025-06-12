@@ -1,0 +1,7 @@
+description: Successful operation. 2D FTU Illustration Data.
+content:
+  application/json:
+    schema:
+      type: array
+      items:
+        type: object

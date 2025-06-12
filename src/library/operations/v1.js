@@ -14,6 +14,7 @@ export * from '../v1/operations/corridor.js';
 export * from '../v1/operations/db-status.js';
 export * from '../v1/operations/ds-graph.js';
 export * from '../v1/operations/extraction-site.js';
+export * from '../v1/operations/ftu-illustrations.js';
 export * from '../v1/operations/get-spatial-placement.js';
 export * from '../v1/operations/gtex-rui-locations.js';
 export * from '../v1/operations/hubmap-rui-locations.js';

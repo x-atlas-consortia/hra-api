@@ -454,6 +454,17 @@ paths:
           $ref: '#/components/responses/AsctbReferenceData'
         '404':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/ftu-illustrations:
+    get:
+      summary: Get 2D FTU Illustration data
+      operationId: ftu-illustrations
+      tags:
+        - v1
+      responses:
+        '200':
+          $ref: '#/components/responses/FtuIllustrations'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /v1/anatomical-systems-tree-model:
     get:
       summary: Get anatomical systems partonomy tree nodes
@@ -1950,6 +1961,14 @@ components:
               type: object
     AsctbReferenceData:
       description: Successful operation. ASCT+B Reference Data.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+    FtuIllustrations:
+      description: Successful operation. 2D FTU Illustration Data.
       content:
         application/json:
           schema:

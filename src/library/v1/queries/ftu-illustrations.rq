@@ -1,0 +1,66 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX uberon: <http://purl.obolibrary.org/obo/UBERON_>
+PREFIX LOD: <https://lod.humanatlas.io>
+PREFIX HRA: <https://purl.humanatlas.io/collection/hra>
+PREFIX UBERON: <https://purl.humanatlas.io/vocab/uberon>
+PREFIX CL: <https://purl.humanatlas.io/vocab/cl>
+
+CONSTRUCT {
+  ?ftuIllustration a ccf:FtuIllustration ;
+    ccf:representation_of ?ftuId ;
+    rdfs:label ?ftuLabel ;
+    ccf:organ_id ?organId ;
+    ccf:organ_label ?organLabel ;
+    ccf:image_file ?ftuIllustrationFile ;
+    ccf:illustration_node ?ftuIllustrationNode ;
+  .
+
+  ?ftuIllustrationFile a ccf:FtuIllustrationFile ;
+    ccf:file_format ?imageFileFormat ;
+    ccf:file_url ?imageUrl ;
+  .
+
+  ?ftuIllustrationNode a ccf:FtuIllustrationNode ;
+    ccf:svg_id ?nodeName ;
+    ccf:svg_group_id ?nodeGroup ;
+    rdfs:label ?cellLabel ;
+    ccf:representation_of ?cellId ;
+  .
+}
+FROM HRA:
+FROM UBERON:
+FROM CL:
+WHERE {
+  ?ftuIllustrationPrimary a ccf:FtuIllustration ;
+    a ?ftuId ;
+    # ccf:representation_of ?ftuId ;
+    ccf:ccf_located_in ?organId ;
+    ccf:image_file ?ftuIllustrationFile ;
+    ccf:illustration_node ?ftuIllustrationNode ;
+  .
+  BIND(IRI(STRBEFORE(STR(?ftuIllustrationPrimary), '#primary')) as ?ftuIllustration)
+
+  ?ftuId rdfs:label ?ftuLabel .
+  ?organId rdfs:label ?organLabel .
+
+  ?ftuIllustrationFile a ccf:FtuIllustrationFile ;
+    ccf:file_format ?imageFileFormat ;
+    ccf:file_url ?imageUrl ;
+  .
+
+  ?ftuIllustrationNode a ccf:FtuIllustrationNode ;
+    a ?cellId ;
+    # ccf:representation_of ?cellId ;
+    ccf:node_name ?nodeName ;
+  .
+
+  OPTIONAL {
+    ?ftuIllustrationNode ccf:node_group ?nodeGroup .
+  }
+
+  ?cellId rdfs:label ?cellLabel .
+}

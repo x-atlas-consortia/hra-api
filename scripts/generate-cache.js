@@ -8,6 +8,7 @@ import {
   getASCTBSheetConfig,
   getBiomarkerTreeModel,
   getCellTypeTreeModel,
+  getFtuIllustrations,
   getOntologyTreeModel,
   getReferenceOrgans,
   getRuiReferenceData,
@@ -38,6 +39,7 @@ const requests = [
   runAndCache(getRuiReferenceData, 'rui-reference-data.json'),
   runAndCache(getASCTBOmapSheetConfig, 'asctb-omap-sheet-config.json'),
   runAndCache(getASCTBSheetConfig, 'asctb-sheet-config.json'),
+  runAndCache(getFtuIllustrations, 'ftu-illustrations.json'),
   // runAndCache(getDigitalObjects, 'digital-objects.json', false),
 ];
 for (const request of requests) {
