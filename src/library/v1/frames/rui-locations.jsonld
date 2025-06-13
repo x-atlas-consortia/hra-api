@@ -5,6 +5,7 @@
     "@type": "ccf:Sample",
     "rui_location": {
       "@type": "ccf:SpatialEntity",
+      "@embed": "@always",
       "placement": {
         "@type": "ccf:SpatialPlacement"
       }
@@ -12,11 +13,13 @@
     "sections": {
       "@type": "ccf:Sample",
       "datasets": {
-        "@type": "ccf:Dataset"
+        "@type": "ccf:Dataset",
+        "@embed": "@always"
       }
     },
     "datasets": {
-      "@type": "ccf:Dataset"
+      "@type": "ccf:Dataset",
+      "@embed": "@always"
     }
   }
 }

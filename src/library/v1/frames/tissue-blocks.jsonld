@@ -7,10 +7,12 @@
     "@type": "ccf:Sample",
     "sample_type": {},
     "datasets": {
-      "@type": "ccf:Dataset"
+      "@type": "ccf:Dataset",
+      "@embed": "@always"
     }
   },
   "datasets": {
-    "@type": "ccf:Dataset"
+    "@type": "ccf:Dataset",
+    "@embed": "@always"
   }
 }
