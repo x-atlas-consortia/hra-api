@@ -1,0 +1,91 @@
+title: Digital Object Information
+type: object
+required:
+  - '@id'
+  - '@type'
+  - title
+  - doType
+  - doName
+  - doVersion
+  - lastUpdated
+  - versions
+  - purl
+  - datasets
+  - lod
+properties:
+  '@id':
+    type: string
+    format: uri
+    description: Unique identifier of the digital object dataset
+    example: https://lod.humanatlas.io/2d-ftu/kidney-nephron
+  '@type':
+    type: string
+    enum: ['dcat:Catalog']
+    example: dcat:Catalog
+  title:
+    type: string
+    example: 2D Nephron Functional Tissue Unit (FTU) for Kidney
+  doType:
+    type: string
+    description: Digital object type (e.g., “2d-ftu”)
+    example: 2d-ftu
+  doName:
+    type: string
+    description: Name of the digital object
+    example: kidney-nephron
+  doVersion:
+    type: string
+    description: Current version of the digital object
+    example: v1.2
+  lastUpdated:
+    type: string
+    format: date
+    description: Date the object was last updated
+    example: 2023-12-15
+  versions:
+    type: array
+    items:
+      type: string
+    description: All available versions of the digital object
+    example: ['v1.2', 'v1.1', 'v1.0']
+  purl:
+    type: string
+    format: uri
+    description: Persistent URL for the digital object
+    example: https://purl.humanatlas.io/2d-ftu/kidney-nephron
+  datasets:
+    type: array
+    items:
+      type: string
+      format: uri
+    description: Dataset URLs for each version
+    example:
+      - https://lod.humanatlas.io/2d-ftu/kidney-nephron/v1.2
+      - https://lod.humanatlas.io/2d-ftu/kidney-nephron/v1.1
+      - https://lod.humanatlas.io/2d-ftu/kidney-nephron/v1.0
+  lod:
+    type: string
+    format: uri
+    description: Unique identifier of the digital object dataset (same as @id)
+    example: https://lod.humanatlas.io/2d-ftu/kidney-nephron/v1.2
+  cell_count:
+    type: integer
+    description: Number of cells in the DO (if applicable)
+    example: 16
+  biomarker_count:
+    type: integer
+    description: Number of biomarkers in the DO (if applicable)
+    example: 0
+  organs:
+    type: array
+    items:
+      type: string
+    description: Organs in the DO (if applicable)
+    example: ['kidney']
+  organIds:
+    type: array
+    items:
+      type: string
+      format: uri
+    description: Ontology IDs for associated organs (if applicable)
+    example: ['http://purl.obolibrary.org/obo/UBERON_0002113']

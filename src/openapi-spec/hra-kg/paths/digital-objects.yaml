@@ -1,0 +1,12 @@
+get:
+  summary: >-
+    List all digital objects in the HRA KG
+  operationId: digital-objects
+  tags: [hra-kg]
+  responses:
+    '200':
+      $ref: ../components/responses/DigitalObjectsResponse.yaml
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

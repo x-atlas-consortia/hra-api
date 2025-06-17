@@ -1,0 +1,10 @@
+title: Digital Objects JSON-LD response
+type: object
+properties:
+  '@context':
+    type: object
+    additionalProperties: true
+  '@graph':
+    type: array
+    items:
+      $ref: ./DigitalObjectInfo.yaml

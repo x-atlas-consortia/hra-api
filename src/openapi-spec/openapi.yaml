@@ -120,6 +120,9 @@ paths:
   /hra-pop/supported-tools:
     $ref: hra-pop/paths/supported-tools.yaml
 
+  /kg/digital-objects:
+    $ref: hra-kg/paths/digital-objects.yaml
+
   /ds-graph/hubmap:
     $ref: ds-graph/paths/hubmap.yaml
   /ds-graph/sennet:
