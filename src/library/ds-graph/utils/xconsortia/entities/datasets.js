@@ -74,22 +74,22 @@ function formatDataset(dataset, token = undefined) {
   const types = dataset.dataset_type ?? '';
   const typesSearch = types.toLowerCase();
   let technology;
-  let thumbnail = 'assets/icons/ico-unknown.svg';
+  let thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-unknown.svg';
   if (typesSearch.indexOf('10x') !== -1) {
     technology = '10x';
-    thumbnail = 'assets/icons/ico-bulk-10x.svg';
+    thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-bulk-10x.svg';
   } else if (typesSearch.indexOf('af') !== -1 || typesSearch.indexOf('auto-fluorescence') !== -1) {
     technology = 'AF';
-    thumbnail = 'assets/icons/ico-spatial-af.svg';
+    thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-spatial-af.svg';
   } else if (typesSearch.indexOf('codex') !== -1) {
     technology = 'CODEX';
-    thumbnail = 'assets/icons/ico-spatial-codex.svg';
+    thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-spatial-codex.svg';
   } else if (typesSearch.indexOf('imc') !== -1 || typesSearch.indexOf('imaging mass cytometry') !== -1) {
     technology = 'IMC';
-    thumbnail = 'assets/icons/ico-spatial-imc.svg';
+    thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-spatial-imc.svg';
   } else if (typesSearch.indexOf('lc') !== -1 && typesSearch.indexOf('af') === -1) {
     technology = 'LC';
-    thumbnail = 'assets/icons/ico-bulk-lc.svg';
+    thumbnail = 'https://cdn.humanatlas.io/ui/ccf-eui/assets/icons/ico-bulk-lc.svg';
   } else if (typesSearch.indexOf('maldi') !== -1) {
     technology = 'MALDI';
   } else if (typesSearch.indexOf('pas') !== -1) {
@@ -121,7 +121,7 @@ function formatDatasetThumbnail(dataset, token = undefined) {
     // TMC-Florida
     const thumb = UFL_THUMBS[dataset.hubmap_id];
     if (thumb) {
-      return `assets/thumbnails/TMC-Florida/${thumb}`;
+      return `https://hubmapconsortium.github.io/ccf-ui/assets/thumbnails/TMC-Florida/${thumb}`;
     }
   }
   return undefined;
