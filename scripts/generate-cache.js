@@ -40,7 +40,7 @@ const requests = [
   runAndCache(getASCTBOmapSheetConfig, 'asctb-omap-sheet-config.json'),
   runAndCache(getASCTBSheetConfig, 'asctb-sheet-config.json'),
   runAndCache(getFtuIllustrations, 'ftu-illustrations.json'),
-  // runAndCache(getDigitalObjects, 'digital-objects.json', false),
+  runAndCache(getDigitalObjects, 'digital-objects.json', false),
 ];
 for (const request of requests) {
   await request();
