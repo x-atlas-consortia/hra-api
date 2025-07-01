@@ -1,12 +1,12 @@
 import { select } from '../../shared/utils/sparql';
-import query from '../queries/do-search.rq';
+import query from '../queries/asctb-term-occurences.rq';
 import { filterSparqlQuery } from '../utils/filter-sparql-query';
 
 function reformatResponse(records) {
-  return records.map((row) => row.purl);
+  return records.reduce((acc, row) => ((acc[row['iri']] = row['count']), acc), {});
 }
 
-export async function doSearch(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+export async function getAsctbTermOccurences(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   // Temporarily use a set sparql endpoint
   endpoint = 'https://lod.humanatlas.io/sparql';
 

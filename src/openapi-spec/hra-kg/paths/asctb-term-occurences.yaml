@@ -1,0 +1,13 @@
+get:
+  summary: Get number of ASCT+B term occurrences for a search
+  operationId: asctb-term-occurences
+  tags: [hra-kg]
+  parameters:
+    - $ref: ../../v1/components/parameters/OntologyTerms.yaml
+    - $ref: ../../v1/components/parameters/CellTypeTerms.yaml
+    - $ref: ../../v1/components/parameters/BiomarkerTerms.yaml
+  responses:
+    '200':
+      $ref: ../../v1/components/responses/TermOccurences.yaml
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

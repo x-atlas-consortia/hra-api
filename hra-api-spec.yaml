@@ -692,6 +692,21 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
         '500':
           $ref: '#/components/responses/ErrorMessage'
+  /kg/asctb-term-occurences:
+    get:
+      summary: Get number of ASCT+B term occurrences for a search
+      operationId: asctb-term-occurences
+      tags:
+        - hra-kg
+      parameters:
+        - $ref: '#/components/parameters/OntologyTerms'
+        - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
+      responses:
+        '200':
+          $ref: '#/components/responses/TermOccurences'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /ds-graph/hubmap:
     get:
       summary: Get HuBMAP Dataset Graph

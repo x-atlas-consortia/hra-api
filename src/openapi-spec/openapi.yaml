@@ -124,6 +124,8 @@ paths:
     $ref: hra-kg/paths/digital-objects.yaml
   /kg/do-search:
     $ref: hra-kg/paths/do-search.yaml
+  /kg/asctb-term-occurences:
+    $ref: hra-kg/paths/asctb-term-occurences.yaml
 
   /ds-graph/hubmap:
     $ref: ds-graph/paths/hubmap.yaml
