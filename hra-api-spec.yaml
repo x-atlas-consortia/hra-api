@@ -104,6 +104,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -182,6 +183,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -207,6 +209,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -232,6 +235,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -327,6 +331,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/OrganIri'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
@@ -353,6 +358,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -392,6 +398,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -511,6 +518,7 @@ paths:
         - $ref: '#/components/parameters/Cache'
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
         - $ref: '#/components/parameters/Consortiums'
         - $ref: '#/components/parameters/Providers'
         - $ref: '#/components/parameters/Sex'
@@ -663,6 +671,23 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DigitalObjectsResponse'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
+        '500':
+          $ref: '#/components/responses/ErrorMessage'
+  /kg/do-search:
+    get:
+      summary: Search for Digital Object PURLs
+      operationId: do-search
+      tags:
+        - hra-kg
+      parameters:
+        - $ref: '#/components/parameters/OntologyTerms'
+        - $ref: '#/components/parameters/CellTypeTerms'
+        - $ref: '#/components/parameters/BiomarkerTerms'
+      responses:
+        '200':
+          $ref: '#/components/responses/Strings'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -2216,6 +2241,16 @@ components:
           type: string
     CellTypeTerms:
       name: cell-type-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
+          type: string
+    BiomarkerTerms:
+      name: biomarker-terms
       description: Filter result by ontology terms.
       in: query
       required: false

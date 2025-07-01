@@ -122,6 +122,8 @@ paths:
 
   /kg/digital-objects:
     $ref: hra-kg/paths/digital-objects.yaml
+  /kg/do-search:
+    $ref: hra-kg/paths/do-search.yaml
 
   /ds-graph/hubmap:
     $ref: ds-graph/paths/hubmap.yaml

@@ -1,0 +1,15 @@
+get:
+  summary: Search for Digital Object PURLs
+  operationId: do-search
+  tags: [hra-kg]
+  parameters:
+    - $ref: ../../v1/components/parameters/OntologyTerms.yaml
+    - $ref: ../../v1/components/parameters/CellTypeTerms.yaml
+    - $ref: ../../v1/components/parameters/BiomarkerTerms.yaml
+  responses:
+    '200':
+      $ref: ../../v1/components/responses/Strings.yaml
+    '404':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml
+    '500':
+      $ref: ../../v1/components/responses/ErrorMessage.yaml

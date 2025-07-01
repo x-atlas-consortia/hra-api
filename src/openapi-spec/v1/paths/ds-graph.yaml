@@ -11,6 +11,7 @@ get:
     - $ref: ../components/parameters/Cache.yaml
     - $ref: ../components/parameters/OntologyTerms.yaml
     - $ref: ../components/parameters/CellTypeTerms.yaml
+    - $ref: ../components/parameters/BiomarkerTerms.yaml
     - $ref: ../components/parameters/Consortiums.yaml
     - $ref: ../components/parameters/Providers.yaml
     - $ref: ../components/parameters/Sex.yaml
