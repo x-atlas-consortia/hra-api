@@ -10,6 +10,7 @@ export * from '../v1/operations/biomarker-tree-model.js';
 export * from '../v1/operations/cell-type-term-occurences.js';
 export * from '../v1/operations/cell-type-tree-model.js';
 export * from '../v1/operations/collisions.js';
+export * from '../v1/operations/consortium-names.js';
 export * from '../v1/operations/corridor.js';
 export * from '../v1/operations/db-status.js';
 export * from '../v1/operations/ds-graph.js';

@@ -8,6 +8,7 @@ import {
   getBiomarkerTreeModel,
   getCellTypeTermOccurences,
   getCellTypeTreeModel,
+  getConsortiumNames,
   getDatasetTechnologyNames,
   getDbStatus,
   getDsGraph,
@@ -33,6 +34,7 @@ import { getSpatialPlacementHandler } from './utils/get-spatial-placement.js';
 import { getReferenceOrganSceneHandler } from './utils/reference-organ-scene.js';
 
 const routes = Router()
+  .get('/consortium-names', shortCache, forwardFilteredRequest(getConsortiumNames))
   .get('/technology-names', shortCache, forwardFilteredRequest(getDatasetTechnologyNames))
   .get('/provider-names', shortCache, forwardFilteredRequest(getTissueProviderNames))
   .get('/tissue-provider-names', shortCache, forwardFilteredRequest(getTissueProviderNames))

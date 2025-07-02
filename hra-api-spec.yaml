@@ -384,6 +384,20 @@ paths:
           $ref: '#/components/responses/Strings'
         '404':
           $ref: '#/components/responses/ErrorMessage'
+  /v1/consortium-names:
+    get:
+      summary: Get consortium names (for filtering)
+      operationId: consortium-names
+      tags:
+        - v1
+      parameters:
+        - $ref: '#/components/parameters/Cache'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          $ref: '#/components/responses/Strings'
+        '404':
+          $ref: '#/components/responses/ErrorMessage'
   /v1/tissue-blocks:
     get:
       summary: Get Tissue Block Results

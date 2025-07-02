@@ -1,0 +1,27 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccf: <http://purl.org/ccf/>
+PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
+PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+
+SELECT DISTINCT ?consortium
+FROM DSGraphs:
+FROM NAMED DSGraphsExtra:
+WHERE {
+  # V1 Routes don't respect filters, so disabling them for now
+
+  # ?block ccf:comes_from ?donor ;
+  #   ccf:has_registration_location ?rui_location .
+  # OPTIONAL {
+  #   ?block ccf:generates_dataset ?dataset .
+  # }
+  # OPTIONAL {
+  #   ?block ccf:subdivided_into_sections ?section .
+  #   OPTIONAL {
+  #     ?section ccf:generates_dataset ?sectionDataset .
+  #   }
+  # }
+
+  ?donor ccf:consortium_name ?consortium .
+  #{{FILTER}}
+}
+ORDER BY ?consortium

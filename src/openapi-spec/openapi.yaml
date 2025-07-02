@@ -84,6 +84,8 @@ paths:
     $ref: v1/paths/scene.yaml
   /v1/technology-names:
     $ref: v1/paths/technology-names.yaml
+  /v1/consortium-names:
+    $ref: v1/paths/consortium-names.yaml
   /v1/tissue-blocks:
     $ref: v1/paths/tissue-blocks.yaml
   /v1/gtex/rui_locations.jsonld:
