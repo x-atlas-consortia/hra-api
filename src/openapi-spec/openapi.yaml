@@ -33,6 +33,8 @@ tags:
     description: HRA-API v1 Routes
   - name: ds-graph
     description: Dataset Graph Routes
+  - name: hra-kg
+    description: HRA KG Routes
   - name: hra-pop
     description: HRApop Routes
 
@@ -48,68 +50,77 @@ x-preprocessor:
       Delete one or more properties at the specified paths.
       Will also delete the property from the `required` list if applicable.
 paths:
-  /v1/session-token:
-    $ref: v1/paths/session-token.yaml
-  /v1/db-status:
-    $ref: v1/paths/db-status.yaml
-  /v1/sparql:
-    $ref: v1/paths/sparql.yaml
   /v1/aggregate-results:
-    $ref: v1/paths/aggregate-results.yaml
-  /v1/get-spatial-placement:
-    $ref: v1/paths/get-spatial-placement.yaml
-  /v1/hubmap/rui_locations.jsonld:
-    $ref: v1/paths/hubmap_rui_locations.jsonld.yaml
-  /v1/sennet/rui_locations.jsonld:
-    $ref: v1/paths/sennet_rui_locations.jsonld.yaml
-  /v1/ontology-term-occurences:
-    $ref: v1/paths/ontology-term-occurences.yaml
-  /v1/cell-type-term-occurences:
-    $ref: v1/paths/cell-type-term-occurences.yaml
-  /v1/biomarker-term-occurences:
-    $ref: v1/paths/biomarker-term-occurences.yaml
-  /v1/ontology-tree-model:
-    $ref: v1/paths/ontology-tree-model.yaml
-  /v1/cell-type-tree-model:
-    $ref: v1/paths/cell-type-tree-model.yaml
-  /v1/biomarker-tree-model:
-    $ref: v1/paths/biomarker-tree-model.yaml
-  /v1/provider-names:
-    $ref: v1/paths/provider-names.yaml
-  /v1/reference-organs:
-    $ref: v1/paths/reference-organs.yaml
-  /v1/reference-organ-scene:
-    $ref: v1/paths/reference-organ-scene.yaml
-  /v1/scene:
-    $ref: v1/paths/scene.yaml
-  /v1/technology-names:
-    $ref: v1/paths/technology-names.yaml
-  /v1/consortium-names:
-    $ref: v1/paths/consortium-names.yaml
-  /v1/tissue-blocks:
-    $ref: v1/paths/tissue-blocks.yaml
-  /v1/gtex/rui_locations.jsonld:
-    $ref: v1/paths/gtex_rui_locations.jsonld.yaml
-  /v1/rui-reference-data:
-    $ref: v1/paths/rui-reference-data.yaml
-  /v1/asctb-sheet-config:
-    $ref: v1/paths/asctb-sheet-config.yaml
+      $ref: v1/paths/aggregate-results.yaml
+  /v1/anatomical-systems-tree-model:
+      $ref: v1/paths/anatomical-systems-tree-model.yaml
   /v1/asctb-omap-sheet-config:
     $ref: v1/paths/asctb-omap-sheet-config.yaml
-  /v1/ftu-illustrations:
-    $ref: v1/paths/ftu-illustrations.yaml
-  /v1/anatomical-systems-tree-model:
-    $ref: v1/paths/anatomical-systems-tree-model.yaml
-  /v1/extraction-site:
-    $ref: v1/paths/extraction-site.yaml
-  /v1/ds-graph:
-    $ref: v1/paths/ds-graph.yaml
+  /v1/asctb-sheet-config:
+    $ref: v1/paths/asctb-sheet-config.yaml
+  /v1/biomarker-term-occurences:
+    $ref: v1/paths/biomarker-term-occurences.yaml
+  /v1/biomarker-tree-model:
+    $ref: v1/paths/biomarker-tree-model.yaml
+  /v1/cell-type-term-occurences:
+    $ref: v1/paths/cell-type-term-occurences.yaml
+  /v1/cell-type-tree-model:
+    $ref: v1/paths/cell-type-tree-model.yaml
   /v1/collisions:
     $ref: v1/paths/collisions.yaml
+  /v1/consortium-names:
+    $ref: v1/paths/consortium-names.yaml
   /v1/corridor:
     $ref: v1/paths/corridor.yaml
+  /v1/db-status:
+    $ref: v1/paths/db-status.yaml
+  /v1/ds-graph:
+    $ref: v1/paths/ds-graph.yaml
+  /v1/extraction-site:
+    $ref: v1/paths/extraction-site.yaml
+  /v1/ftu-illustrations:
+    $ref: v1/paths/ftu-illustrations.yaml
+  /v1/get-spatial-placement:
+    $ref: v1/paths/get-spatial-placement.yaml
+  /v1/gtex/rui_locations.jsonld:
+    $ref: v1/paths/gtex_rui_locations.jsonld.yaml
+  /v1/hubmap/rui_locations.jsonld:
+    $ref: v1/paths/hubmap_rui_locations.jsonld.yaml
   /v1/mesh-3d-cell-population:
     $ref: v1/paths/mesh-3d-cell-population.yaml
+  /v1/ontology-term-occurences:
+    $ref: v1/paths/ontology-term-occurences.yaml
+  /v1/ontology-tree-model:
+    $ref: v1/paths/ontology-tree-model.yaml
+  /v1/provider-names:
+    $ref: v1/paths/provider-names.yaml
+  /v1/reference-organ-scene:
+    $ref: v1/paths/reference-organ-scene.yaml
+  /v1/reference-organs:
+    $ref: v1/paths/reference-organs.yaml
+  /v1/rui-reference-data:
+    $ref: v1/paths/rui-reference-data.yaml
+  /v1/scene:
+    $ref: v1/paths/scene.yaml
+  /v1/sennet/rui_locations.jsonld:
+    $ref: v1/paths/sennet_rui_locations.jsonld.yaml
+  /v1/session-token:
+    $ref: v1/paths/session-token.yaml
+  /v1/sparql:
+    $ref: v1/paths/sparql.yaml
+  /v1/technology-names:
+    $ref: v1/paths/technology-names.yaml
+  /v1/tissue-blocks:
+    $ref: v1/paths/tissue-blocks.yaml
+
+  /ds-graph/atlas-d2k:
+    $ref: ds-graph/paths/atlas-d2k.yaml
+  /ds-graph/gtex:
+    $ref: ds-graph/paths/gtex.yaml
+  /ds-graph/hubmap:
+    $ref: ds-graph/paths/hubmap.yaml
+  /ds-graph/sennet:
+    $ref: ds-graph/paths/sennet.yaml
 
   /hra-pop/cell-summary-report:
     $ref: hra-pop/paths/cell-summary-report.yaml
@@ -122,18 +133,9 @@ paths:
   /hra-pop/supported-tools:
     $ref: hra-pop/paths/supported-tools.yaml
 
+  /kg/asctb-term-occurences:
+    $ref: hra-kg/paths/asctb-term-occurences.yaml
   /kg/digital-objects:
     $ref: hra-kg/paths/digital-objects.yaml
   /kg/do-search:
     $ref: hra-kg/paths/do-search.yaml
-  /kg/asctb-term-occurences:
-    $ref: hra-kg/paths/asctb-term-occurences.yaml
-
-  /ds-graph/hubmap:
-    $ref: ds-graph/paths/hubmap.yaml
-  /ds-graph/sennet:
-    $ref: ds-graph/paths/sennet.yaml
-  /ds-graph/gtex:
-    $ref: ds-graph/paths/gtex.yaml
-  /ds-graph/atlas-d2k:
-    $ref: ds-graph/paths/atlas-d2k.yaml
