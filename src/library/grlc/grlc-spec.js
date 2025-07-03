@@ -18,8 +18,26 @@ export async function getGrlcSpec(name) {
     title: `HRA-API SPARQL queries`,
   };
 
+  spec.servers = [
+    {
+      description: 'HRA-API Production',
+      url: 'https://apps.humanatlas.io/api/grlc',
+    },
+    {
+      description: 'HRA-API Staging',
+      url: 'https://apps.humanatlas.io/api--staging/api/grlc',
+    },
+    {
+      description: 'Local Server',
+      url: '/grlc',
+    },
+  ];
+
   if (!name?.endsWith('index')) {
     spec.info.title += ` (${name})`;
+    for (const server of spec.servers) {
+      server.url += `/${name}`;
+    }
   }
 
   // Some minor modifications to make sure clients can be compiled via @openapitools/openapi-generator-cli

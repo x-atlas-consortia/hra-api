@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getGrlcSpec } from '../../library/grlc/grlc-spec.js';
 import { longCache } from '../cache-middleware.js';
+import grlcProxy from './grlc-proxy.js';
 
 function grlcHtml(name) {
   return `<!doctype html>
@@ -28,24 +29,25 @@ function grlcHtml(name) {
 }
 
 const grlcRoute = (req, res, _next) => {
-  res.send(grlcHtml(req.params.name));
+  return res.send(grlcHtml(req.params.name));
 };
 
 function staticGrlcRoute(name) {
   return (_req, res, _next) => {
-    res.send(grlcHtml(name));
+    return res.send(grlcHtml(name));
   };
 }
 
 const grlcSpecRoute = async (req, res, _next) => {
   const spec = await getGrlcSpec(req.params.name);
-  res.json(spec);
+  return res.json(spec);
 };
 
 const routes = Router()
   .get('/grlc/', staticGrlcRoute('index'))
   .get('/grlc', staticGrlcRoute('grlc/index'))
   .get('/grlc/:name.html', grlcRoute)
-  .get('/grlc/:name-spec.json', longCache, grlcSpecRoute);
+  .get('/grlc/:name-spec.json', longCache, grlcSpecRoute)
+  .use(longCache, grlcProxy);
 
 export default routes;
