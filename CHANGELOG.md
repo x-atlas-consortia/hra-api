@@ -2,6 +2,12 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.14.0 - 2025-07-03
+- Added '/kg/do-search' and '/kg/asct-term-occurences' route for the KG explorer
+- Added '/v1/consortium-names' for the EUI
+- Rearranged routes to be in alphabetical order in the OpenAPI Spec
+- Bug fixes
+
 ## 0.13.0 - 2025-06-12
 
 - Added '/v1/ftu-illustrations' route for the FTU explorer (also hosted at /ftu-explorer/)
