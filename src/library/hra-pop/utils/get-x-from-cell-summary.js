@@ -13,7 +13,7 @@ function getCellSummariesQuery(cellWeights, organIri, tool) {
     query = query.replaceAll('#{{ORGAN_IRIs}}', organValues);
   }
   if (tool) {
-    const toolValues = `VALUES (?tool) { ("${tool}") }`;
+    const toolValues = `VALUES (?tool) { ("${tool}"^^xsd:string) }`;
     query = query.replaceAll('#{{TOOLS}}', toolValues);
   }
   return query;
