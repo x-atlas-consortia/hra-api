@@ -2,6 +2,9 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.15.0 - 2025-07-30
+- Added feature to '/kg/do-search' to filter DOs by HRA version
+
 ## 0.14.0 - 2025-07-03
 - Added '/kg/do-search' and '/kg/asct-term-occurences' route for the KG explorer
 - Added '/v1/consortium-names' for the EUI
