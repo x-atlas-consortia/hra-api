@@ -185,6 +185,10 @@ function processParameter(result, key, value) {
       setIfDefined(result, 'technologies', parseArray(value));
       break;
 
+    case 'hra-versions':
+      setIfDefined(result, 'hraVersions', parseArray(value));
+      break;
+
     case 'ontologyterms':
     case 'ontology-terms':
       setIfDefined(result, 'ontologyTerms', parseAndFilterArray(value, SKIPPABLE_AS));

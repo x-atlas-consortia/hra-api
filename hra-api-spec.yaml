@@ -784,6 +784,7 @@ paths:
         - $ref: '#/components/parameters/OntologyTerms'
         - $ref: '#/components/parameters/CellTypeTerms'
         - $ref: '#/components/parameters/BiomarkerTerms'
+        - $ref: '#/components/parameters/HraVersions'
       responses:
         '200':
           $ref: '#/components/responses/Strings'
@@ -2014,6 +2015,26 @@ components:
           - text/tab-separated-values
           - text/turtle
           - tree
+    HraVersions:
+      name: hra-versions
+      description: Filter result by hra versions.
+      in: query
+      required: false
+      schema:
+        title: HRA Versions
+        type: array
+        items:
+          type: string
+      example:
+        - v2.3
+        - v2.2
+        - v2.1
+        - v2.0
+        - v1.4
+        - v1.3
+        - v1.2
+        - v1.1
+        - v1.0
   responses:
     AggregateResults:
       description: Successful operation
