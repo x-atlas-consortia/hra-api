@@ -8,6 +8,7 @@ required:
   - doName
   - doVersion
   - lastUpdated
+  - hraVersions
   - versions
   - purl
   - datasets
@@ -42,6 +43,12 @@ properties:
     format: date
     description: Date the object was last updated
     example: 2023-12-15
+  hraVersions:
+    type: array
+    items:
+      type: string
+    description: All versions of the HRA this digital object was published in
+    example: ['v2.3', 'v2.1', 'v2.0']
   versions:
     type: array
     items:

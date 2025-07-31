@@ -20,6 +20,7 @@ CONSTRUCT {
     schema:additionalType ?doType ;
     schema:name ?doName ;
     ccf:latestVersion ?doVersion ;
+    ccf:hraVersion ?hraVersion ;
     schema:version ?version ;
     schema:dateCreated ?lastUpdated ;
     dcat:dataset ?lodPurl ;
@@ -63,6 +64,17 @@ WHERE {
             schema:dateCreated ?lastUpdated ;
           ] .
       }
+    }
+  }
+
+  OPTIONAL {
+    GRAPH LOD: {
+      [] a dcat:Dataset ;
+          schema:additionalType ?hraType ;
+          schema:name ?hraName ;
+          schema:version ?hraVersion ;
+          prov:hadMember ?graphPurlVersioned .
+      FILTER(?hraType = 'collection' && ?hraName = 'hra')
     }
   }
 

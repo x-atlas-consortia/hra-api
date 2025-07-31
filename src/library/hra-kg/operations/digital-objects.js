@@ -5,8 +5,9 @@ import frame from '../frames/digital-objects.jsonld';
 import query from '../queries/digital-objects.rq';
 
 function reformatResponse(jsonld) {
-  const results = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['versions', 'organs', 'organIds']));
+  const results = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['hraVersions', 'versions', 'organs', 'organIds']));
   for (const result of results) {
+    result.hraVersions = sortVersions(result.hraVersions || []);
     result.versions = sortVersions(result.versions);
     results.cell_count = ensureNumber(results.cell_count) || 0;
     results.biomarker_count = ensureNumber(results.biomarker_count) || 0;

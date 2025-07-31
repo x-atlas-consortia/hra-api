@@ -18,6 +18,9 @@
     "doName": "schema:name",
     "doVersion": "ccf:latestVersion",
     "lastUpdated": "schema:dateCreated",
+    "hraVersions": {
+      "@id": "ccf:hraVersion"
+    },
     "versions": {
       "@id": "schema:version"
     },
