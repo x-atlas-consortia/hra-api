@@ -30,8 +30,6 @@ CONSTRUCT {
     ccf:biomarker_count ?unique_biomarkers .
 }
 WHERE {
-  hint:Query hint:optimizer "Runtime" .
-
   GRAPH LOD: {
     ?lod a dcat:Catalog ;
       dcat:dataset ?lodPurl .
@@ -99,16 +97,8 @@ WHERE {
         GROUP BY ?organ_id
         ORDER BY ?organ
       }
-
-      GRAPH ?graphPurl {
-        ?graphPurl rdfs:seeAlso ?lodPurl .
-
-        {
-          ?organ_id ?pred1 [] .
-        } UNION {
-          [] ?pred2 ?organ_id .
-          FILTER(isIRI(?organ_id))
-        }
+      GRAPH HRA: {
+        ?organ_id dct:isReferencedBy ?graphPurl .
       }
     }
   }
@@ -116,19 +106,9 @@ WHERE {
   OPTIONAL {
     SELECT ?graphPurl (COUNT(DISTINCT ?cell_id) as ?unique_cells) {
       GRAPH HRA: {
-        ?cell_id ccf:ccf_asctb_type ?type .
+        ?cell_id ccf:ccf_asctb_type ?type ;
+          dct:isReferencedBy ?graphPurl .
         FILTER(?type = 'CT')
-      }
-
-      GRAPH ?graphPurl {
-        ?graphPurl rdfs:seeAlso ?lodPurl .
-
-        {
-          ?cell_id ?pred1 [] .
-        } UNION {
-          [] ?pred2 ?cell_id .
-          FILTER(isIRI(?cell_id))
-        }
       }
     }
     GROUP BY ?graphPurl
@@ -137,19 +117,9 @@ WHERE {
   OPTIONAL {
     SELECT ?graphPurl (COUNT(DISTINCT ?biomarker) as ?unique_biomarkers) {
       GRAPH HRA: {
-        ?biomarker ccf:ccf_asctb_type ?type .
+        ?biomarker ccf:ccf_asctb_type ?type ;
+          dct:isReferencedBy ?graphPurl .
         FILTER(?type = 'BM')
-      }
-
-      GRAPH ?graphPurl {
-        ?graphPurl rdfs:seeAlso ?lodPurl .
-
-        {
-          ?biomarker ?pred1 [] .
-        } UNION {
-          [] ?pred2 ?biomarker .
-          FILTER(isIRI(?biomarker))
-        }
       }
     }
     GROUP BY ?graphPurl

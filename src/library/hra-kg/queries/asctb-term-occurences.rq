@@ -14,21 +14,13 @@ PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 
 SELECT ?iri (COUNT(DISTINCT ?purl) as ?count)
 WHERE {
-  hint:Query hint:optimizer "Runtime" .
-
   GRAPH ?purl {
     ?purl rdfs:seeAlso ?lod .
     #{{FILTER}}
   }
   GRAPH HRA: {
-    ?iri ccf:ccf_asctb_type [] .
+    ?iri ccf:ccf_asctb_type [] ;
+      dct:isReferencedBy ?purl .
   }
-  GRAPH ?purl {
-    ?purl rdfs:seeAlso ?lod .
-    { ?iri ?pred1 [] . }
-    UNION
-    { [] ?pred2 ?iri . }
-  }
-  hint:Prior hint:runLast true .
 }
 GROUP BY ?iri

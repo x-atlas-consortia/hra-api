@@ -1,11 +1,9 @@
 function termFilter(terms) {
   const quotedTerms = terms.map((s) => `(<${s}>)`).join(' ');
   return `
-    FILTER EXISTS {
+    GRAPH HRA: {
       VALUES (?term) { ${quotedTerms} }
-      { ?term ?p1 [] . }
-      UNION
-      { [] ?p2 ?term . }
+      ?term dct:isReferencedBy ?purl .
     }`;
 }
 
