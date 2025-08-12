@@ -8,7 +8,7 @@ function reformatResponse(records) {
 
 export async function getAsctbTermOccurences(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
   // Temporarily use a set sparql endpoint
-  endpoint = 'https://lod.humanatlas.io/sparql';
+  endpoint = 'https://sparql.humanatlas.io/blazegraph/namespace/kb/sparql';
 
   const filteredQuery = await filterSparqlQuery(query, filter, endpoint);
   const results = reformatResponse(await select(filteredQuery, endpoint));
