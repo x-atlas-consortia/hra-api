@@ -1,10 +1,15 @@
 function termFilter(terms) {
   const quotedTerms = terms.map((s) => `(<${s}>)`).join(' ');
   return `
-    GRAPH HRA: {
+  {
+    SELECT DISTINCT ?purl 
+    WHERE {
       VALUES (?term) { ${quotedTerms} }
-      ?term dct:isReferencedBy ?purl .
-    }`;
+      GRAPH HRA: {
+        ?term dct:isReferencedBy ?purl .
+      }
+    }
+  }`;
 }
 
 function hraVersionFilter(versions) {

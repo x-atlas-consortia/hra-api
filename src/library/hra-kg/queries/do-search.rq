@@ -12,11 +12,18 @@ PREFIX LOD: <https://lod.humanatlas.io>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 
-SELECT ?purl
+SELECT DISTINCT ?purl
 WHERE {
-  GRAPH ?purl {
-    ?purl rdfs:seeAlso ?lod .    
-    #{{FILTER}}
-  } 
+  GRAPH LOD: {
+    ?lod a dcat:Catalog ;
+      dcat:dataset ?lodPurl .
+  
+    ?lodPurl a dcat:Dataset ;
+      schema:version ?version ;
+      rdfs:seeAlso ?graphPurlVersioned .
+
+    BIND(IRI(STRBEFORE(STR(?graphPurlVersioned), CONCAT('/', ?version))) as ?purl)
+  }
+  #{{FILTER}}
 }
 ORDER BY ?purl

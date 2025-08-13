@@ -14,13 +14,10 @@ PREFIX body: <http://purl.obolibrary.org/obo/UBERON_0013702>
 
 SELECT ?iri (COUNT(DISTINCT ?purl) as ?count)
 WHERE {
-  GRAPH ?purl {
-    ?purl rdfs:seeAlso ?lod .
-    #{{FILTER}}
-  }
   GRAPH HRA: {
     ?iri ccf:ccf_asctb_type [] ;
       dct:isReferencedBy ?purl .
+    #{{FILTER}}
   }
 }
 GROUP BY ?iri

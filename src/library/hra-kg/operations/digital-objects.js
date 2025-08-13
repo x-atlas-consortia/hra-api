@@ -20,7 +20,7 @@ function reformatResponse(jsonld) {
 
 export async function getDigitalObjects(endpoint = 'https://lod.humanatlas.io/sparql') {
   // Temporarily use a set sparql endpoint
-  endpoint = 'https://sparql.humanatlas.io/blazegraph/namespace/kb/sparql'
+  endpoint = 'https://lod.humanatlas.io/sparql'
 
   return reformatResponse(await construct(query, endpoint, frame));
 }
