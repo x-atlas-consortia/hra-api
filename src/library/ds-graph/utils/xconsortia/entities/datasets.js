@@ -131,6 +131,18 @@ function reformatResponse(response, token = undefined) {
   return response.map((data) => formatDataset(data, token));
 }
 
-export async function getDatasets(endpoint, token = undefined) {
-  return reformatResponse(await doApiSearch(endpoint, token, QUERY, FIELDS));
+function getQuery(primaryOnly = false) {
+  if (!primaryOnly) {
+    return QUERY;
+  } else {
+    const query = JSON.parse(JSON.stringify(QUERY));
+    query.bool.must.push({
+      term: { 'creation_action.keyword': 'Create Dataset Activity' },
+    });
+    return query;
+  }
+}
+
+export async function getDatasets(endpoint, token = undefined, primaryOnly = false) {
+  return reformatResponse(await doApiSearch(endpoint, token, getQuery(primaryOnly), FIELDS));
 }

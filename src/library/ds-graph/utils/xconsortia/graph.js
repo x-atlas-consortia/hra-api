@@ -2,11 +2,11 @@ import { getBlocks, updateBlockDescription } from './entities/blocks.js';
 import { getDatasets } from './entities/datasets.js';
 import { getSections } from './entities/sections.js';
 
-export async function getDatasetGraph(endpoint, token) {
+export async function getDatasetGraph(endpoint, token, primaryOnly = false) {
   const [blocks, sections, datasets] = await Promise.all([
     getBlocks(endpoint, token),
     getSections(endpoint, token),
-    getDatasets(endpoint, token),
+    getDatasets(endpoint, token, primaryOnly),
   ]);
 
   const donors = {};

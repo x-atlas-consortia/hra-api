@@ -12,7 +12,8 @@ function forwardFilteredRequest(method) {
     try {
       const { query } = req;
       const token = query.token ?? undefined;
-      const result = await method(token);
+      const primaryOnly = query.primary === 'true';
+      const result = await method(token, primaryOnly);
       res.json(result);
     } catch (error) {
       // Handle errors here

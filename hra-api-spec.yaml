@@ -651,6 +651,7 @@ paths:
         - ds-graph
       parameters:
         - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Primary'
       responses:
         '200':
           description: Successful operation
@@ -668,6 +669,7 @@ paths:
         - ds-graph
       parameters:
         - $ref: '#/components/parameters/Token'
+        - $ref: '#/components/parameters/Primary'
       responses:
         '200':
           description: Successful operation
@@ -2025,6 +2027,17 @@ components:
           - text/tab-separated-values
           - text/turtle
           - tree
+    Primary:
+      name: primary
+      description: Limit results to primary datasets only
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+        x-preprocessor-delete: enum
     HraVersions:
       name: hra-versions
       description: Filter result by hra versions.

@@ -4,6 +4,7 @@ get:
   tags: [ds-graph]
   parameters:
     - $ref: ../../v1/components/parameters/Token.yaml
+    - $ref: ../../v1/components/parameters/Primary.yaml
   responses:
     '200':
       description: Successful operation
