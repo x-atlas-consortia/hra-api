@@ -1,13 +1,15 @@
 generatorName: typescript-angular
-templateDir: openapi-clients/templates/angular-client
+gitUserId: x-atlas-consortia
+gitRepoId: hra-api
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-angular.md
 additionalProperties:
-  npmName: "@hra-api/ng-client"
-  npmVersion: 0.15.0
+  npmName: '@hra-api/ng-client'
+  npmVersion: 0.16.0
+  licenseName: MIT
   apiModulePrefix: Hra
   configurationPrefix: HraApi
   fileNaming: kebab-case
-  ngVersion: "19.0.0"
+  ngVersion: '20.0.0'
   stringEnums: true
   supportsES6: true
   useSingleRequestParameter: true

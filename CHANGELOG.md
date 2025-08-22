@@ -2,6 +2,11 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.16.0 - 2025-08-25
+- Update openapi generator to version 7.15.0
+- Update ng-client to Angular 20
+- Add missing metadata for multiple clients
+
 ## 0.15.0 - 2025-07-30
 - Added feature to '/kg/do-search' to filter DOs by HRA version
 
