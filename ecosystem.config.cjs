@@ -15,7 +15,7 @@ const HRA_API = {
 
 const BLAZEGRAPH = {
   name: 'blazegraph',
-  script: '/blazegraph/startup.sh',
+  script: '/blazegraph/entrypoint.sh',
   cron_restart: '0 7 * * *'
 };
 
