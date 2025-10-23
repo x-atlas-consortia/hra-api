@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.16.0
+  version: 0.16.1
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
