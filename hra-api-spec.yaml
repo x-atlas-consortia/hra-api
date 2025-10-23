@@ -1848,6 +1848,7 @@ components:
       description: Filter result by age.
       in: query
       required: false
+      style: deepObject
       schema:
         $ref: '#/components/schemas/MinMax'
     AgeRange:
@@ -1864,6 +1865,7 @@ components:
       description: Filter result by bmi.
       in: query
       required: false
+      style: deepObject
       schema:
         $ref: '#/components/schemas/MinMax'
     BmiRange:
