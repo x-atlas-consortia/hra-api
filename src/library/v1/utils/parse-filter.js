@@ -74,6 +74,14 @@ function parseRange(value, min, max) {
 }
 
 function parseMinMaxRange(value, min, max) {
+  // Handle clients that encode object parameters as json
+  if (value && typeof value === 'string') {
+    try {
+      value = JSON.parse(value);
+    } catch { 
+      return undefined;
+    }
+  }
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return undefined;
   }
