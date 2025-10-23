@@ -2,6 +2,10 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.16.1 - 2025-10-23
+- Update serialization style for the 'age' and 'bmi' query parameters
+- Update deserialization to handle json encoded strings for the 'age' and 'bmi' query parameters
+
 ## 0.16.0 - 2025-08-25
 - Update openapi generator to version 7.15.0
 - Update ng-client to Angular 20
