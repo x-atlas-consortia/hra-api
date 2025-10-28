@@ -2,6 +2,10 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.17.0 - 2025-10-28
+- Further updates to serialization and deserialization of complex query parameters 'age', 'bmi', and 'spatial'.
+  Each of these now need to be converted into json before being passed to the client libraries.
+
 ## 0.16.1 - 2025-10-23
 - Update serialization style for the 'age' and 'bmi' query parameters
 - Update deserialization to handle json encoded strings for the 'age' and 'bmi' query parameters
