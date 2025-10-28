@@ -2,6 +2,7 @@ name: age
 description: Filter result by age.
 in: query
 required: false
-style: deepObject
-schema:
-  $ref: ../schemas/MinMax.yaml
+content:
+  application/json:
+    schema:
+      type: string

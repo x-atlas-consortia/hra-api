@@ -795,47 +795,216 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorMessage'
 components:
-  schemas:
-    MinMax:
-      title: Number Range
-      description: |
-        Represents a range of numbers using a minimum and maximum.
-        Either end may be omitted to indicate an unlimited/infinite range in that direction.
-        `min` should be less than or equal to `max` but this is not strictly enforced.
-      type: object
-      properties:
-        min:
-          type: number
-        max:
-          type: number
-    SpatialSearch:
-      title: Probing Sphere
-      description: |
-        Specification for a Spatial Search via Probing Sphere
-      type: object
-      properties:
-        x:
-          title: X coordinate relative to target in millimeters
-          type: number
-        'y':
-          title: Y coordinate relative to target in millimeters
-          type: number
-        z:
-          title: Z coordinate relative to target in millimeters
-          type: number
-        radius:
-          title: Size of the probing sphere in millimeters
-          type: number
-        target:
-          title: The target spatial entity IRI
+  parameters:
+    Age:
+      name: age
+      description: Filter result by age.
+      in: query
+      required: false
+      content:
+        application/json:
+          schema:
+            type: string
+    AgeRange:
+      name: age-range
+      description: Filter result by age.
+      in: query
+      deprecated: true
+      required: false
+      schema:
+        type: string
+        example: 10,100
+    Bmi:
+      name: bmi
+      description: Filter result by bmi.
+      in: query
+      required: false
+      content:
+        application/json:
+          schema:
+            type: string
+    BmiRange:
+      name: bmi-range
+      description: Filter result by bmi.
+      in: query
+      deprecated: true
+      required: false
+      schema:
+        type: string
+        example: 0,40
+    Cache:
+      name: cache
+      description: Hint to cache (or not) the response of this request
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: true
+    OntologyTerms:
+      name: ontology-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
           type: string
-      required:
-        - x
-        - 'y'
-        - z
-        - radius
-        - target
-      additionalProperties: false
+    CellTypeTerms:
+      name: cell-type-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
+          type: string
+    BiomarkerTerms:
+      name: biomarker-terms
+      description: Filter result by ontology terms.
+      in: query
+      required: false
+      schema:
+        title: Terms
+        type: array
+        items:
+          type: string
+    Consortiums:
+      name: consortiums
+      description: Filter result by consortiums.
+      in: query
+      required: false
+      schema:
+        title: Consortiums
+        type: array
+        items:
+          type: string
+    Providers:
+      name: providers
+      description: Filter result by providers.
+      in: query
+      required: false
+      schema:
+        title: Providers
+        type: array
+        items:
+          type: string
+    Sex:
+      name: sex
+      description: Filter result by sex.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - both
+          - female
+          - male
+    SpatialSearches:
+      name: spatial
+      description: Filter result by spatial searches.
+      in: query
+      required: false
+      content:
+        application/json:
+          schema:
+            type: string
+    Technologies:
+      name: technologies
+      description: Filter result by technologies.
+      in: query
+      required: false
+      schema:
+        title: Technologies
+        type: array
+        items:
+          type: string
+    Token:
+      name: token
+      description: Authentication token to use for authenticated searches
+      in: query
+      required: false
+      schema:
+        type: string
+    ExtractionSiteIri:
+      name: iri
+      description: extraction site iri to search for
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uri
+    OrganIri:
+      name: organ-iri
+      description: Filter result by organ.
+      in: query
+      required: true
+      schema:
+        type: string
+    Query:
+      name: query
+      description: SPARQL query to use
+      in: query
+      required: true
+      schema:
+        type: string
+      example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
+    Format:
+      name: format
+      description: Override SPARQL response format (Note that not all formats are supported for all SPARQL query types)
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - application/json
+          - application/ld+json
+          - application/n-quads
+          - application/n-triples
+          - application/sparql-results+json
+          - application/sparql-results+xml
+          - application/trig
+          - simple
+          - stats
+          - table
+          - text/csv
+          - text/n3
+          - text/tab-separated-values
+          - text/turtle
+          - tree
+    Primary:
+      name: primary
+      description: Limit results to primary datasets only
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+        x-preprocessor-delete: enum
+    HraVersions:
+      name: hra-versions
+      description: Filter result by hra versions.
+      in: query
+      required: false
+      schema:
+        title: HRA Versions
+        type: array
+        items:
+          type: string
+      example:
+        - v2.3
+        - v2.2
+        - v2.1
+        - v2.0
+        - v1.4
+        - v1.3
+        - v1.2
+        - v1.1
+        - v1.0
+  schemas:
     AggregateCount:
       title: Aggregated Count \w Label
       type: object
@@ -1388,6 +1557,34 @@ components:
       maxItems: 2
       items:
         type: number
+    SpatialSearch:
+      title: Probing Sphere
+      description: |
+        Specification for a Spatial Search via Probing Sphere
+      type: object
+      properties:
+        x:
+          title: X coordinate relative to target in millimeters
+          type: number
+        'y':
+          title: Y coordinate relative to target in millimeters
+          type: number
+        z:
+          title: Z coordinate relative to target in millimeters
+          type: number
+        radius:
+          title: Size of the probing sphere in millimeters
+          type: number
+        target:
+          title: The target spatial entity IRI
+          type: string
+      required:
+        - x
+        - 'y'
+        - z
+        - radius
+        - target
+      additionalProperties: false
     Filter:
       title: Filter
       description: Filter object
@@ -1842,224 +2039,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DigitalObjectInfo'
-  parameters:
-    Age:
-      name: age
-      description: Filter result by age.
-      in: query
-      required: false
-      style: deepObject
-      schema:
-        $ref: '#/components/schemas/MinMax'
-    AgeRange:
-      name: age-range
-      description: Filter result by age.
-      in: query
-      deprecated: true
-      required: false
-      schema:
-        type: string
-        example: 10,100
-    Bmi:
-      name: bmi
-      description: Filter result by bmi.
-      in: query
-      required: false
-      style: deepObject
-      schema:
-        $ref: '#/components/schemas/MinMax'
-    BmiRange:
-      name: bmi-range
-      description: Filter result by bmi.
-      in: query
-      deprecated: true
-      required: false
-      schema:
-        type: string
-        example: 0,40
-    Cache:
-      name: cache
-      description: Hint to cache (or not) the response of this request
-      in: query
-      required: false
-      schema:
-        type: boolean
-        default: true
-    OntologyTerms:
-      name: ontology-terms
-      description: Filter result by ontology terms.
-      in: query
-      required: false
-      schema:
-        title: Terms
-        type: array
-        items:
-          type: string
-    CellTypeTerms:
-      name: cell-type-terms
-      description: Filter result by ontology terms.
-      in: query
-      required: false
-      schema:
-        title: Terms
-        type: array
-        items:
-          type: string
-    BiomarkerTerms:
-      name: biomarker-terms
-      description: Filter result by ontology terms.
-      in: query
-      required: false
-      schema:
-        title: Terms
-        type: array
-        items:
-          type: string
-    Consortiums:
-      name: consortiums
-      description: Filter result by consortiums.
-      in: query
-      required: false
-      schema:
-        title: Consortiums
-        type: array
-        items:
-          type: string
-    Providers:
-      name: providers
-      description: Filter result by providers.
-      in: query
-      required: false
-      schema:
-        title: Providers
-        type: array
-        items:
-          type: string
-    Sex:
-      name: sex
-      description: Filter result by sex.
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-          - both
-          - female
-          - male
-    SpatialSearches:
-      name: spatial
-      description: Filter result by spatial searches.
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/SpatialSearch'
-        example:
-          - x: 10
-            'y': 10
-            z: 10
-            radius: 100
-            target: http://purl.org/ccf/latest/ccf.owl#VHMale
-          - x: 11
-            'y': 11
-            z: 11
-            radius: 101
-            target: http://purl.org/ccf/latest/ccf.owl#VHFemale
-    Technologies:
-      name: technologies
-      description: Filter result by technologies.
-      in: query
-      required: false
-      schema:
-        title: Technologies
-        type: array
-        items:
-          type: string
-    Token:
-      name: token
-      description: Authentication token to use for authenticated searches
-      in: query
-      required: false
-      schema:
-        type: string
-    ExtractionSiteIri:
-      name: iri
-      description: extraction site iri to search for
-      in: query
-      required: true
-      schema:
-        type: string
-        format: uri
-    OrganIri:
-      name: organ-iri
-      description: Filter result by organ.
-      in: query
-      required: true
-      schema:
-        type: string
-    Query:
-      name: query
-      description: SPARQL query to use
-      in: query
-      required: true
-      schema:
-        type: string
-      example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
-    Format:
-      name: format
-      description: Override SPARQL response format (Note that not all formats are supported for all SPARQL query types)
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-          - application/json
-          - application/ld+json
-          - application/n-quads
-          - application/n-triples
-          - application/sparql-results+json
-          - application/sparql-results+xml
-          - application/trig
-          - simple
-          - stats
-          - table
-          - text/csv
-          - text/n3
-          - text/tab-separated-values
-          - text/turtle
-          - tree
-    Primary:
-      name: primary
-      description: Limit results to primary datasets only
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-          - 'true'
-          - 'false'
-        x-preprocessor-delete: enum
-    HraVersions:
-      name: hra-versions
-      description: Filter result by hra versions.
-      in: query
-      required: false
-      schema:
-        title: HRA Versions
-        type: array
-        items:
-          type: string
-      example:
-        - v2.3
-        - v2.2
-        - v2.1
-        - v2.0
-        - v1.4
-        - v1.3
-        - v1.2
-        - v1.1
-        - v1.0
   responses:
     AggregateResults:
       description: Successful operation

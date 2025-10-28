@@ -23,7 +23,6 @@ servers:
     url: https://apps.humanatlas.io/api--staging
   - description: CCF-API (deprecated) Production
     url: https://apps.humanatlas.io/hra-api
-  
   - description: Local Server
     url: /
 security: []
@@ -38,17 +37,6 @@ tags:
   - name: hra-pop
     description: HRApop Routes
 
-x-preprocessor:
-  description: |
-    For some openapi-generator-cli generators our custom preprocessor
-    has to be employed to "fix" this specification to circumvent
-    inconsistencies/bugs in the generated code.
-    The preprocessor uses `x-preprocessor-` properties to determine
-    which operation to apply and where to apply it.
-  operations:
-    delete: |
-      Delete one or more properties at the specified paths.
-      Will also delete the property from the `required` list if applicable.
 paths:
   /v1/aggregate-results:
       $ref: v1/paths/aggregate-results.yaml
@@ -139,3 +127,15 @@ paths:
     $ref: hra-kg/paths/digital-objects.yaml
   /kg/do-search:
     $ref: hra-kg/paths/do-search.yaml
+
+x-preprocessor:
+  description: |
+    For some openapi-generator-cli generators our custom preprocessor
+    has to be employed to "fix" this specification to circumvent
+    inconsistencies/bugs in the generated code.
+    The preprocessor uses `x-preprocessor-` properties to determine
+    which operation to apply and where to apply it.
+  operations:
+    delete: |
+      Delete one or more properties at the specified paths.
+      Will also delete the property from the `required` list if applicable.

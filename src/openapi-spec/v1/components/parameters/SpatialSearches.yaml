@@ -2,18 +2,7 @@ name: spatial
 description: Filter result by spatial searches.
 in: query
 required: false
-schema:
-  type: array
-  items:
-    $ref: ../schemas/SpatialSearch.yaml
-  example:
-    - x: 10
-      'y': 10
-      z: 10
-      radius: 100
-      target: http://purl.org/ccf/latest/ccf.owl#VHMale
-    - x: 11
-      'y': 11
-      z: 11
-      radius: 101
-      target: http://purl.org/ccf/latest/ccf.owl#VHFemale
+content:
+  application/json:
+    schema:
+      type: string
