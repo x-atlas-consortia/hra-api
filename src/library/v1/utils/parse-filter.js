@@ -69,10 +69,11 @@ function tryParseJson(value) {
 }
 
 function parseArray(value, separator = ',') {
+  const original = value;
   value = tryParseJson(value);
   switch (typeof value) {
     case 'string':
-      return value.split(separator);
+      return value === original ? value.split(separator) : [value];
 
     case 'boolean':
     case 'number':
