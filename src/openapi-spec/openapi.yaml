@@ -128,6 +128,11 @@ paths:
   /kg/do-search:
     $ref: hra-kg/paths/do-search.yaml
 
+components:
+  schemas:
+    MinMax:
+      $ref: v1/components/schemas/MinMax.yaml
+
 x-preprocessor:
   description: |
     For some openapi-generator-cli generators our custom preprocessor
