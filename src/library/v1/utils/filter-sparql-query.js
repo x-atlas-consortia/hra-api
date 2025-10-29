@@ -74,6 +74,8 @@ async function getFilterQuery(filter, endpoint) {
     filters.sectionDataset.push(`
       ?sectionDataset ccf:technology ?sectionTechnology .
       FILTER(?sectionTechnology IN (${technologiesString}))`);
+    filters.donor.push(`
+      FILTER(BOUND(?technology) || BOUND(?sectionTechnology))`);
   }
   if (consortiums?.length > 0) {
     const terms = consortiums.map((s) => `"${s}"`).join(', ');
@@ -105,8 +107,6 @@ async function getFilterQuery(filter, endpoint) {
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
       .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'))
-      .replace('OPTIONAL { #DATASETS', filters.dataset.length === 0 ? 'OPTIONAL {' : '{')
-      .replace('OPTIONAL { #SECTIONS', filters.sectionDataset.length === 0 ? 'OPTIONAL {' : '{')
       .replace('#hint:SubQuery', 'hint:SubQuery');
     return `{
       ${entityQuery}
