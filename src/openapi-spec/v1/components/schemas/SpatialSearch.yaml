@@ -6,7 +6,7 @@ properties:
   x:
     title: X coordinate relative to target in millimeters
     type: number
-  'y':
+  y:
     title: Y coordinate relative to target in millimeters
     type: number
   z:

@@ -4,7 +4,7 @@ type: object
 required:
   - x_scaling
   - y_scaling
-  - z_rotation
+  - z_scaling
   - scaling_units
 properties:
   x_scaling:

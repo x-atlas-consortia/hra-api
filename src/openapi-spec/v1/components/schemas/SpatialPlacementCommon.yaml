@@ -18,6 +18,9 @@ properties:
     type: string
     enum:
       - SpatialPlacement
+  target:
+    type: string
+    format: uri
   placement_date:
     title: Date placement was made
     type: string

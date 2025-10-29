@@ -16,17 +16,19 @@ const SKIPPABLE_CT = new Set(['http://purl.obolibrary.org/obo/CL_0000000']);
 const SKIPPABLE_BM = new Set(['http://purl.org/ccf/biomarkers', 'http://purl.org/ccf/Biomarker']);
 
 // ----------------------
-// Parsers
+// Utilities
 // ----------------------
 
-function clamp(value, min, max) {
-  if (value < min) {
-    return min;
-  } else if (value > max) {
-    return max;
-  }
+function equals(a, b) {
+  return a === b;
+}
 
-  return value;
+function equalsIcase(a, b) {
+  return a.toLowerCase() === b.toLowerCase();
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function setIfDefined(obj, prop, value) {
@@ -35,108 +37,132 @@ function setIfDefined(obj, prop, value) {
   }
 }
 
+function castArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
+function castNumericProps(obj, props) {
+  const result = { ...obj };
+  for (const prop of props) {
+    if (prop in result) {
+      result[prop] = +result[prop];
+    }
+  }
+
+  return result;
+}
+
 // ----------------------
 // Parsers
 // ----------------------
 
-function parseSex(value) {
-  const values = ['Both', 'Female', 'Male'];
-
-  value = typeof value === 'string' ? value.toLowerCase() : value;
-  return values.find((v) => v.toLowerCase() === value);
-}
-
-function parseRange(value, min, max) {
-  if (typeof value === 'string') {
-    value = value.includes(',') ? value.split(',') : [value, value];
-  }
-
-  if (Array.isArray(value)) {
-    let low = Number(value[0] || 'NaN');
-    let high = Number(value[1] || 'NaN');
-
-    if (isNaN(low) && isNaN(high)) {
-      return undefined;
+function tryParseJson(value) {
+  try {
+    if (typeof value === 'string') {
+      return JSON.parse(value);
     }
-
-    low = isNaN(low) ? min : low;
-    high = isNaN(high) ? max : high;
-    if (low > high) {
-      [low, high] = [high, low];
-    }
-
-    low = clamp(low, min, max);
-    high = clamp(high, min, max);
-    return [low, high];
-  }
-
-  return undefined;
-}
-
-function parseMinMaxRange(value, min, max) {
-  // Handle clients that encode object parameters as json
-  if (value && typeof value === 'string') {
-    try {
-      value = JSON.parse(value);
-    } catch { 
-      return undefined;
-    }
-  }
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return undefined;
-  }
-
-  return parseRange([value?.['min'], value?.['max']], min, max);
-}
-
-function parseArray(value) {
-  if (typeof value === 'string') {
-    return value.includes(',') ? value.split(',') : [value];
-  }
-
-  return Array.isArray(value) ? value : undefined;
-}
-
-function parseAndFilterArray(value, valuesToSkip = new Set()) {
-  const array = parseArray(value);
-  if (array) {
-    return array.filter((n) => !valuesToSkip.has(n));
+  } catch {
+    /* Ignore */
   }
 
   return value;
 }
 
-function parseSpatial(value) {
-  // Spatial may be specified as a JSON string
-  if (typeof value === 'string') {
-    try {
-      return JSON.parse(value);
-    } catch {
-      return undefined;
-    }
-  }
-  if (typeof value === 'object') {
-    const numericSpatialAttributes = new Set(['x', 'y', 'z', 'radius']);
-    let searches = undefined;
-    for (const [key, valueOrValues] of Object.entries(value)) {
-      const values = Array.isArray(valueOrValues) ? valueOrValues : [valueOrValues];
-      if (Array.isArray(values)) {
-        if (!searches) {
-          searches = values.map((_) => ({}));
-        }
-        values.forEach((val, index) => {
-          if (searches && searches.length > index) {
-            if (numericSpatialAttributes.has(key)) {
-              val = +val;
-            }
-            searches[index][key] = val;
-          }
-        });
+function parseArray(value, separator) {
+  const original = value;
+  value = tryParseJson(value);
+  switch (typeof value) {
+    case 'string':
+      if (separator && value === original) {
+        return value.split(separator).filter((v) => !!v);
       }
-    }
-    return searches;
+      return [value];
+
+    case 'boolean':
+    case 'number':
+      return [value];
+
+    case 'object':
+      return Array.isArray(value) ? value : undefined;
+
+    default:
+      return undefined;
   }
-  return undefined;
+}
+
+function parseArrayWithFilter(value, values, separator) {
+  value = parseArray(value, separator);
+  return value?.filter((v) => !values.has(v));
+}
+
+function parseStringEnum(value, values, icase = true) {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const compare = icase ? equalsIcase : equals;
+  return values.find((v) => compare(v, value));
+}
+
+function parseRange(value, min, max) {
+  value = parseArray(value, ',');
+  if (value === undefined || value.length === 0) {
+    return undefined;
+  } else if (value.length === 1) {
+    value = value.concat(value)
+  }
+
+  value = value.slice(0, 2);
+  value = value.map((v) => clamp(Number(v || 'NaN'), min, max));
+  if (value.every(isNaN)) {
+    return undefined;
+  }
+
+  const defaults = [min, max];
+  value = value.map((v, i) => (isNaN(v) ? defaults[i] : v));
+  if (value[0] > value[1]) {
+    value.reverse();
+  }
+
+  return value;
+}
+
+function parseMinMax(value, min, max) {
+  value = tryParseJson(value);
+  if (typeof value !== 'object' || Array.isArray(value)) {
+    return undefined;
+  }
+
+  return parseRange([value?.min, value?.max], min, max);
+}
+
+function parseSpatial(value) {
+  value = tryParseJson(value);
+  if (typeof value !== 'object') {
+    return undefined;
+  }
+
+  let items = [];
+  if (Array.isArray(value)) {
+    items = value;
+  } else {
+    for (const key in value) {
+      const values = castArray(value[key]);
+      const diff = values.length - items.length;
+      if (diff > 0) {
+        items.push(...Array(diff).fill(0).map(() => ({})));
+      }
+
+      values.forEach((v, i) => (items[i][key] = v));
+    }
+  }
+
+  if (items.length === 0) {
+    return undefined;
+  }
+
+  const numericProps = ['x', 'y', 'z', 'radius'];
+  return items.map((v) => castNumericProps(v, numericProps));
 }
 
 function parseSessionToken(value) {
@@ -155,7 +181,7 @@ function parseSessionToken(value) {
 function processParameter(result, key, value) {
   switch (key.toLowerCase()) {
     case 'sex':
-      setIfDefined(result, 'sex', parseSex(value));
+      setIfDefined(result, 'sex', parseStringEnum(value, ['Both', 'Female', 'Male']));
       break;
 
     case 'agerange':
@@ -164,7 +190,7 @@ function processParameter(result, key, value) {
       break;
 
     case 'age':
-      setIfDefined(result, 'ageRange', parseMinMaxRange(value, 1, 110));
+      setIfDefined(result, 'ageRange', parseMinMax(value, 1, 110));
       break;
 
     case 'bmirange':
@@ -173,7 +199,7 @@ function processParameter(result, key, value) {
       break;
 
     case 'bmi':
-      setIfDefined(result, 'bmiRange', parseMinMaxRange(value, 13, 83));
+      setIfDefined(result, 'bmiRange', parseMinMax(value, 13, 83));
       break;
 
     case 'spatial':
@@ -199,17 +225,17 @@ function processParameter(result, key, value) {
 
     case 'ontologyterms':
     case 'ontology-terms':
-      setIfDefined(result, 'ontologyTerms', parseAndFilterArray(value, SKIPPABLE_AS));
+      setIfDefined(result, 'ontologyTerms', parseArrayWithFilter(value, SKIPPABLE_AS));
       break;
 
     case 'celltypeterms':
     case 'cell-type-terms':
-      setIfDefined(result, 'cellTypeTerms', parseAndFilterArray(value, SKIPPABLE_CT));
+      setIfDefined(result, 'cellTypeTerms', parseArrayWithFilter(value, SKIPPABLE_CT));
       break;
 
     case 'biomarkerterms':
     case 'biomarker-terms':
-      setIfDefined(result, 'biomarkerTerms', parseAndFilterArray(value, SKIPPABLE_BM));
+      setIfDefined(result, 'biomarkerTerms', parseArrayWithFilter(value, SKIPPABLE_BM));
       break;
 
     case 'token':
