@@ -68,12 +68,15 @@ function tryParseJson(value) {
   return value;
 }
 
-function parseArray(value, separator = ',') {
+function parseArray(value, separator) {
   const original = value;
   value = tryParseJson(value);
   switch (typeof value) {
     case 'string':
-      return value === original ? value.split(separator) : [value];
+      if (separator && value === original) {
+        return value.split(separator).filter((v) => !!v);
+      }
+      return [value];
 
     case 'boolean':
     case 'number':
@@ -87,7 +90,7 @@ function parseArray(value, separator = ',') {
   }
 }
 
-function parseArrayWithFilter(value, values, separator = ',') {
+function parseArrayWithFilter(value, values, separator) {
   value = parseArray(value, separator);
   return value?.filter((v) => !values.has(v));
 }
@@ -102,7 +105,7 @@ function parseStringEnum(value, values, icase = true) {
 }
 
 function parseRange(value, min, max) {
-  value = parseArray(value);
+  value = parseArray(value, ',');
   if (value === undefined || value.length === 0) {
     return undefined;
   } else if (value.length === 1) {
