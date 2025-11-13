@@ -2,6 +2,7 @@
 set -ev
 
 CDN_URL=${CDN_URL:-"https://cdn.humanatlas.io/digital-objects/"}
+export JAVA_OPTS="-Xms2g -Xmx12g"
 
 DEFAULT_GRAPHS=$(cat <<END
 https://lod.humanatlas.io
