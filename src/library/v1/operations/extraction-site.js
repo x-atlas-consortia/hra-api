@@ -1,8 +1,8 @@
-import { getCollisions } from './collisions.js';
 import { construct } from '../../shared/utils/sparql.js';
 import frame from '../frames/extraction-site.jsonld';
 import query from '../queries/extraction-site.rq';
 import { normalizeJsonLd } from '../utils/jsonld-compat.js';
+import { getCollisions } from './collisions.js';
 
 async function reformatResponse(jsonld) {
   const results = normalizeJsonLd(jsonld, new Set(['ccf_annotations']));
@@ -33,6 +33,9 @@ async function reformatResponse(jsonld) {
  * @returns {Promise<Object>} - A promise that resolves to RUI location data
  */
 export async function getExtractionSite(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const filteredQuery = query.replace('#{{FILTER}}', `VALUES (?rui_location) { (<${filter.iri}>) }`);
+  const filteredQuery = query
+    .replace('#{{FILTER}}', `VALUES (?rui_location) { (<${filter.iri}>) }`)
+    // Limit the search space to the millitome collection when encountering millitome IRIs
+    .replace('#{{FROM}}', filter.iri?.startsWith('https://purl.humanatlas.io/millitome/') ? 'FROM HRAMillitomes:' : '');
   return reformatResponse(await construct(filteredQuery, endpoint, frame));
 }

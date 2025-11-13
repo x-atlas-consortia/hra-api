@@ -6,6 +6,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX ccf1: <http://purl.org/ccf/latest/ccf.owl#>
 PREFIX DSGraphs: <https://purl.humanatlas.io/collection/ds-graphs>
 PREFIX DSGraphsExtra: <https://purl.humanatlas.io/graph/ds-graphs-enrichments>
+PREFIX HRAMillitomes: <https://purl.humanatlas.io/collection/hra-millitomes>
 
 CONSTRUCT {
   ?rui_location rdf:type ccf:SpatialEntity ;
@@ -40,6 +41,7 @@ CONSTRUCT {
                     ccf:placement_for ?rui_location ;
   .
 }
+#{{FROM}}
 WHERE {
   ?rui_location rdf:type ccf:SpatialEntity ;
                 dcterms:creator ?creator ;
