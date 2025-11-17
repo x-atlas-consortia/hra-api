@@ -17,6 +17,7 @@ const sparql = async (req, res, _next) => {
         queryBody = parseString(req.body?.query);
       }
       break;
+    case 'HEAD':
     case 'GET':
       queryBody = parseString(req.query.query);
       break;
