@@ -25,6 +25,8 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties:
+              true
     '404':
       $ref: ../components/responses/ErrorMessage.yaml
   

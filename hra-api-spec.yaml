@@ -191,6 +191,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '400':
           $ref: '#/components/responses/ErrorMessage'
         '404':
@@ -275,6 +276,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /v1/extraction-site:
@@ -292,6 +294,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /v1/ftu-illustrations:
@@ -338,6 +341,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/hubmap/rui_locations.jsonld:
@@ -357,6 +361,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/mesh-3d-cell-population:
@@ -532,6 +537,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/session-token:
@@ -634,6 +640,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/gtex:
@@ -651,6 +658,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/hubmap:
@@ -669,6 +677,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/sennet:
@@ -687,6 +696,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
@@ -926,6 +936,7 @@ components:
         nodes:
           title: All Nodes
           description: A mapping of identifiers to each node object.
+          type: object
           additionalProperties:
             $ref: '#/components/schemas/OntologyTreeNode'
     SpatialEntityCommon:
@@ -1223,6 +1234,7 @@ components:
       properties:
         status:
           title: Current status of the database
+          type: string
           enum:
             - Loading
             - Ready
@@ -1666,9 +1678,11 @@ components:
         rui_locations:
           title: RUI Locations
           type: object
+          additionalProperties: true
         error:
           title: Error Message
           type: object
+          additionalProperties: true
     CellSummaryRow:
       title: Cell Summary Row
       type: object
@@ -2067,6 +2081,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     TermOccurences:
       description: Successful operation
       content:
@@ -2097,6 +2112,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     SpatialPlacement:
       description: Successful operation
       content:
@@ -2127,6 +2143,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     SessionToken:
       description: Successful operation
       content:
@@ -2139,6 +2156,7 @@ components:
         application/json:
           schema:
             type: object
+            additionalProperties: true
         text/csv:
           schema:
             type: string

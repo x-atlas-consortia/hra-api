@@ -11,6 +11,10 @@ properties:
   rui_locations:
     title: RUI Locations
     type: object
+    additionalProperties:
+      true
   error:
     title: Error Message
     type: object
+    additionalProperties:
+      true

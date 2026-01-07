@@ -13,5 +13,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties:
+              true
     '404':
       description: Not found due to option being disabled

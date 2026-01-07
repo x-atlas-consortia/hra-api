@@ -5,6 +5,7 @@ required:
 properties:
   status:
     title: Current status of the database
+    type: string
     enum:
       - Loading
       - Ready
