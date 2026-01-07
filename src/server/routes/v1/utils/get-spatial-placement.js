@@ -11,7 +11,7 @@ import { sparqlEndpoint } from '../../../environment.js';
  */
 export function getSpatialPlacementHandler() {
   return async (req, res, _next) => {
-    const { target_iri, rui_location } = req.body;
+    const { target_iri, rui_location } = req.body ?? {};
     const targetIri = target_iri || undefined;
 
     if (!targetIri) {

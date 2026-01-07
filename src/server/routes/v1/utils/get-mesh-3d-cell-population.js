@@ -9,7 +9,7 @@ import { getMesh3dCellPopulation } from '../../../../library/v1/operations/mesh-
  */
 export function getMesh3dCellPopulationHandler() {
   return async (req, res, _next) => {
-    const { file, num_nodes, node_distribution } = req.body;
+    const { file, num_nodes, node_distribution } = req.body ?? {};
 
     if (!file) {
       res.status(404).send('Must provide a file in the request body');
