@@ -1,8 +1,11 @@
 title: Error Message
-type: object
-required:
-  - error
-properties:
-  error:
+oneOf:
+  - type: string
     title: Human readable description of the error
-    type: string
+  - type: object
+    required:
+      - error
+    properties:
+      error:
+        title: Human readable description of the error
+        type: string

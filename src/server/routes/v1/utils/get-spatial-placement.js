@@ -15,11 +15,11 @@ export function getSpatialPlacementHandler() {
     const targetIri = target_iri || undefined;
 
     if (!targetIri) {
-      res.status(404).send('Must provide a target_iri in the request body');
+      res.status(400).send('Must provide a target_iri in the request body');
       return;
     }
     if (!rui_location) {
-      res.status(404).send('Must provide a rui_location in the request body');
+      res.status(400).send('Must provide a rui_location in the request body');
       return;
     }
     const result = await getSpatialPlacement(rui_location, targetIri, sparqlEndpoint());

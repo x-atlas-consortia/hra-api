@@ -24,7 +24,7 @@ const routes = Router()
   .post('/rui-location-cell-summary', noCache, async function (req, res) {
     const ruiLocation = req.body;
     if (ruiLocation?.['@type'] !== 'SpatialEntity') {
-      res.status(400).send('Must provide a rui location in the request body');
+      res.status(400).send('Must provide a rui_location in the request body');
       return;
     }
 

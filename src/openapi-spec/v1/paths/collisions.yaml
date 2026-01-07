@@ -12,6 +12,8 @@ post:
         application/json:
           schema:
             type: object
+    '400':
+      $ref: ../components/responses/ErrorMessage.yaml
     '404':
       $ref: ../components/responses/ErrorMessage.yaml
     '500':

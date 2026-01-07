@@ -15,7 +15,7 @@ export function getReferenceOrganSceneHandler() {
       const result = await getReferenceOrganScene(organIri, filter, sparqlEndpoint());
       res.json(result);
     } else {
-      res.status(404).send('Must provide an organ-iri query parameter');
+      res.status(400).send('Must provide an organ-iri query parameter');
     }
   };
 }
