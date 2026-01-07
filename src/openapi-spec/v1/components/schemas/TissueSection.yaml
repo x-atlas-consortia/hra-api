@@ -13,7 +13,6 @@ properties:
     enum:
       - Tissue Section
       - Non-Standard
-    x-preprocessor-delete: enum
   sectionNumber:
     title: Section Index
     description: Index of the section in the parent block.

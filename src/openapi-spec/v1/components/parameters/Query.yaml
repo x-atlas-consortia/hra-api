@@ -4,4 +4,4 @@ in: query
 required: true
 schema:
   type: string
-example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
+  example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10

@@ -32,7 +32,6 @@ properties:
     enum:
       - Female
       - Male
-    x-preprocessor-delete: enum
   side:
     title: Side
     description: >-
@@ -42,7 +41,6 @@ properties:
     enum:
       - Left
       - Right
-    x-preprocessor-delete: enum
   slice_count:
     title: Slice Count
     type: integer
@@ -55,10 +53,7 @@ properties:
       - type: array
         items:
           $ref: ./SpatialPlacement.yaml
-    x-preprocessor-delete: oneOf
   object:
     $ref: ./SpatialObjectReference.yaml
   color:
     $ref: ./Rgba.yaml
-x-preprocessor-delete:
-  - properties/@type

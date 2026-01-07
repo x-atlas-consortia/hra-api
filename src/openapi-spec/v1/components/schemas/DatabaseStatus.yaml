@@ -9,7 +9,6 @@ properties:
       - Loading
       - Ready
       - Error
-    x-preprocessor-delete: enum
   checkback:
     title: How long to wait (in milliseconds) before checking status again
     type: integer

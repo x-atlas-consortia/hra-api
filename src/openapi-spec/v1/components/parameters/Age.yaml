@@ -5,4 +5,4 @@ required: false
 schema:
   type: string
   pattern: '^\{[\w\-\s:,.+"]*\}$'
-example: '{"min": 10, "max": 50}'
+  example: '{"min": 10, "max": 50}'

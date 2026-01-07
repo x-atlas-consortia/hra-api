@@ -12,7 +12,6 @@ properties:
     oneOf:
       - $ref: ./SpatialEntity.yaml
       - $ref: ./SpatialObjectReference.yaml
-    x-preprocessor-delete: oneOf
   target:
     oneOf:
       - title: Target Sptial Entity IRI
@@ -20,4 +19,3 @@ properties:
         format: uri
         example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
       - $ref: ./SpatialEntity.yaml
-    x-preprocessor-delete: oneOf

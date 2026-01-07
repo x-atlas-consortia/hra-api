@@ -11,7 +11,4 @@ properties:
     title: Aggregated Count
     oneOf:
       - type: number
-        nullable: false
       - type: string
-        nullable: false
-    x-preprocessor-delete: oneOf

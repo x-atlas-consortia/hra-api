@@ -25,5 +25,3 @@ properties:
     title: Date placement was made
     type: string
     format: date
-x-preprocessor-delete:
-  - properties/@type

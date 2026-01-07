@@ -30,4 +30,3 @@ properties:
     enum:
       - Female
       - Male
-    x-preprocessor-delete: enum

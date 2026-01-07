@@ -23,4 +23,3 @@ properties:
     default: ratio
     enum:
       - ratio
-    x-preprocessor-delete: enum
