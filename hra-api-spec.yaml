@@ -843,7 +843,7 @@ components:
           title: Aggregate Name/Field
           type: string
         count:
-          title: Aggregated Count
+          title: AggregatedCountValue
           oneOf:
             - type: number
             - type: string
@@ -854,7 +854,7 @@ components:
           title: Error message
           description: Human readable description of the error
         - type: object
-          title: Error object
+          title: ErrorMessageObject
           required:
             - error
           properties:
@@ -1165,11 +1165,10 @@ components:
           title: Slice Thickness
           type: number
         placement:
+          title: SpatialEntityPlacement
           oneOf:
             - $ref: '#/components/schemas/SpatialPlacement'
-            - type: array
-              items:
-                $ref: '#/components/schemas/SpatialPlacement'
+            - $ref: '#/components/schemas/SpatialPlacements'
         object:
           $ref: '#/components/schemas/SpatialObjectReference'
         color:
@@ -1206,16 +1205,23 @@ components:
         - $ref: '#/components/schemas/SpatialPlacementCommon'
       properties:
         source:
+          title: SpacialPlacementSource
           oneOf:
             - $ref: '#/components/schemas/SpatialEntity'
             - $ref: '#/components/schemas/SpatialObjectReference'
         target:
+          title: SpacialPlacementTarget
           oneOf:
             - title: Target Sptial Entity IRI
               type: string
               format: uri
               example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
             - $ref: '#/components/schemas/SpatialEntity'
+    SpatialPlacements:
+      title: Spatial Placements
+      type: array
+      items:
+        $ref: '#/components/schemas/SpatialPlacement'
     Rgba:
       title: RGBA Color Tuple
       type: array
