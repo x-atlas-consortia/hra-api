@@ -10,9 +10,8 @@ properties:
       $ref: ./SourceSimilarityRow.yaml
   rui_locations:
     title: RUI Locations
-    type: object
-    additionalProperties:
-      true
+    type: array
+    items: {}
   error:
     title: Error Message
     type: object
