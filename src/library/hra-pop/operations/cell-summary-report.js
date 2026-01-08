@@ -18,8 +18,8 @@ export async function getSimilarCellSourcesReport(csvString, organIri, tool, end
     if (Object.keys(cellWeights).length > 0) {
       const { sources, rui_locations, error } = await getSimilarCellSources(cellWeights, organIri, tool, endpoint);
       return { sources, rui_locations, error };
-    } else {
-      return { sources: [], rui_locations: [] };
     }
   }
+
+  return { sources: [], rui_locations: [] };
 }
