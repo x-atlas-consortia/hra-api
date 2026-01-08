@@ -9,10 +9,12 @@ allOf:
   - $ref: ./SpatialPlacementCommon.yaml
 properties:
   source:
+    title: SpacialPlacementSource
     oneOf:
       - $ref: ./SpatialEntity.yaml
       - $ref: ./SpatialObjectReference.yaml
   target:
+    title: SpacialPlacementTarget
     oneOf:
       - title: Target Sptial Entity IRI
         type: string

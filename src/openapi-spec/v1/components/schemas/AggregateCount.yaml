@@ -8,7 +8,7 @@ properties:
     title: Aggregate Name/Field
     type: string
   count:
-    title: Aggregated Count
+    title: AggregatedCountValue
     oneOf:
       - type: number
       - type: string

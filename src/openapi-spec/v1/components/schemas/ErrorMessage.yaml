@@ -4,7 +4,7 @@ oneOf:
     title: Error message
     description: Human readable description of the error
   - type: object
-    title: Error object
+    title: ErrorMessageObject
     required:
       - error
     properties:

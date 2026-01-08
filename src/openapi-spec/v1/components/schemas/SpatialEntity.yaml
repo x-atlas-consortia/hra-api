@@ -48,11 +48,10 @@ properties:
     title: Slice Thickness
     type: number
   placement:
+    title: SpatialEntityPlacement
     oneOf:
       - $ref: ./SpatialPlacement.yaml
-      - type: array
-        items:
-          $ref: ./SpatialPlacement.yaml
+      - $ref: ./SpatialPlacements.yaml
   object:
     $ref: ./SpatialObjectReference.yaml
   color:
