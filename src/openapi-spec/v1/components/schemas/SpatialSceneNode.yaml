@@ -26,6 +26,10 @@ properties:
       - text
       - cone
       - cylinder
+  text:
+    title: Text
+    description: Text to draw for the `text` geometry
+    type: string
   _lighting:
     title: Lighting
     type: string
