@@ -13,7 +13,6 @@ properties:
     enum:
       - Tissue Block
       - Non-Standard
-    x-preprocessor-delete: enum
   spatialEntityId:
     title: Associated Spatial Entity
     description: The associated spatial entity (rui_location) for the block.

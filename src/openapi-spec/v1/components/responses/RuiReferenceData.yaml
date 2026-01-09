@@ -5,3 +5,5 @@ content:
       type: array
       items:
         type: object
+        additionalProperties:
+          true

@@ -1,5 +1,5 @@
 title: Spatial Scene Node
-description: ''
+description: Specification for a node that can be displayed in the scene.
 type: object
 allOf:
   - $ref: ./JsonLdObject.yaml
@@ -26,7 +26,10 @@ properties:
       - text
       - cone
       - cylinder
-    x-preprocessor-delete: enum
+  text:
+    title: Text
+    description: Text to draw for the `text` geometry
+    type: string
   _lighting:
     title: Lighting
     type: string

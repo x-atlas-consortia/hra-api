@@ -13,5 +13,6 @@ properties:
   nodes:
     title: All Nodes
     description: A mapping of identifiers to each node object.
+    type: object
     additionalProperties:
       $ref: ./OntologyTreeNode.yaml

@@ -3,8 +3,5 @@ description: Limit results to primary datasets only
 in: query
 required: false
 schema:
-  type: string
-  enum:
-    - 'true'
-    - 'false'
-  x-preprocessor-delete: enum
+  type: boolean
+  default: false

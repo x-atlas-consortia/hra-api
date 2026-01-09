@@ -12,7 +12,7 @@ export function getCorridorHandler() {
     const rui_location = req.body;
 
     if (rui_location?.['@type'] !== 'SpatialEntity') {
-      res.status(404).send('Must provide a rui_location in the request body');
+      res.status(400).send('Must provide a rui_location in the request body');
       return;
     }
     const result = await getCorridor(rui_location);

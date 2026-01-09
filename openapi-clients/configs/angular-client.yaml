@@ -4,12 +4,14 @@ gitRepoId: hra-api
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-angular.md
 additionalProperties:
   npmName: '@hra-api/ng-client'
-  npmVersion: 0.17.0
+  npmVersion: 0.18.0
   licenseName: MIT
   apiModulePrefix: Hra
   configurationPrefix: HraApi
   fileNaming: kebab-case
-  ngVersion: '20.0.0'
+  ngPackagrVersion: '21.0.0'
+  ngVersion: '21.0.0'
+  tsVersion: '5.9'
   stringEnums: true
   supportsES6: true
   useSingleRequestParameter: true

@@ -23,5 +23,3 @@ properties:
   file_subpath:
     title: File Subpath
     type: string
-x-preprocessor-delete:
-  - properties/@type

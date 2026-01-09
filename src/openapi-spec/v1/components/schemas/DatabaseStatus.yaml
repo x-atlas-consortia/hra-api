@@ -5,11 +5,11 @@ required:
 properties:
   status:
     title: Current status of the database
+    type: string
     enum:
       - Loading
       - Ready
       - Error
-    x-preprocessor-delete: enum
   checkback:
     title: How long to wait (in milliseconds) before checking status again
     type: integer

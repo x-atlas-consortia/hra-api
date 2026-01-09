@@ -14,6 +14,8 @@ post:
           schema:
             type: string
             format: binary
+    '400':
+      $ref: ../components/responses/ErrorMessage.yaml
     '404':
       $ref: ../components/responses/ErrorMessage.yaml
     '500':

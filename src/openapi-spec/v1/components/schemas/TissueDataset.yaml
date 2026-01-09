@@ -18,5 +18,3 @@ properties:
     title: Representative Thumbnail URL
     type: string
     format: uri
-x-preprocessor-delete:
-  - properties/@type

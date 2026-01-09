@@ -23,14 +23,22 @@ const routes = Router()
   })
   .post('/rui-location-cell-summary', noCache, async function (req, res) {
     const ruiLocation = req.body;
+    if (ruiLocation?.['@type'] !== 'SpatialEntity') {
+      res.status(400).send('Must provide a rui_location in the request body');
+      return;
+    }
+
     const summary = await getCellSummary(ruiLocation);
     res.json(summary);
   })
   .post('/cell-summary-report', noCache, async function (req, res) {
-    const cellSummarySheet = req.body.csvString;
-    const organ = req.body.organ;
-    const tool = req.body.tool;
-    const report = await getSimilarCellSourcesReport(cellSummarySheet, organ, tool);
+    const { csvString, organ, tool } = req.body ?? {};
+    if (typeof csvString !== 'string') {
+      res.status(400).send('Must provide a csvString in the request body');
+      return;
+    }
+
+    const report = await getSimilarCellSourcesReport(csvString, organ, tool);
     res.json(report);
   });
 

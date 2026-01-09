@@ -23,4 +23,3 @@ properties:
     default: millimeter
     enum:
       - millimeter
-    x-preprocessor-delete: enum

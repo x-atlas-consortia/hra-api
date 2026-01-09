@@ -1,0 +1,4 @@
+title: Spatial Placements
+type: array
+items:
+  $ref: ./SpatialPlacement.yaml
