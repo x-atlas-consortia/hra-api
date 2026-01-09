@@ -1,6 +1,7 @@
 generatorName: javascript
 gitUserId: x-atlas-consortia
 gitRepoId: hra-api
+templateDir: openapi-clients/templates/javascript-client
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/javascript.md
 additionalProperties:
   projectName: '@hra-api/js-client'
