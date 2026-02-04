@@ -96,6 +96,7 @@ function parseArrayWithFilter(value, values, separator) {
 }
 
 function parseStringEnum(value, values, icase = true) {
+  value = tryParseJson(value);
   if (typeof value !== 'string') {
     return undefined;
   }
@@ -166,6 +167,7 @@ function parseSpatial(value) {
 }
 
 function parseSessionToken(value) {
+  value = tryParseJson(value);
   // Check if the token looks like an md5 hash
   if (typeof value === 'string' && /^[a-f0-9]{32}$/.test(value)) {
     return value;
