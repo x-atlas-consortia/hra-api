@@ -1,8 +1,6 @@
 name: age
-description: Filter result by age. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+description: Filter result by age.
 in: query
 required: false
 schema:
-  type: string
-  pattern: '^\{[\w\-\s:,.+"]*\}$'
-  example: '{"min": 10, "max": 50}'
+  $ref: ../schemas/MinMax.yaml
