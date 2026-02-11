@@ -25,7 +25,7 @@ function runAndCache(operation, file, emptyFirstArg = true) {
       data = await operation(sparqlEndpoint());
     }
     const results = JSON.stringify(data, null, 2);
-    return writeFile(filePath, results);
+    return writeFile(filePath, results, 'utf8');
   };
 }
 
