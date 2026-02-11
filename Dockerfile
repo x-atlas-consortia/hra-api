@@ -1,4 +1,4 @@
-FROM ibmjava:8-jre
+FROM eclipse-temurin:8-jre-jammy
 
 # Install Node 22
 RUN apt-get update && apt-get install curl gpg -y && mkdir -p /etc/apt/keyrings; \
