@@ -9,7 +9,7 @@ additionalProperties:
   apiModulePrefix: Hra
   configurationPrefix: HraApi
   fileNaming: kebab-case
-  ngVersion: '20.0.0'
+  ngVersion: '21.0.0'
   queryParamObjectFormat: json
   stringEnums: true
   supportsES6: true

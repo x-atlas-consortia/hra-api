@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.18.0
+  version: 0.19.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -190,8 +190,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
         '400':
           $ref: '#/components/responses/ErrorMessage'
         '404':
@@ -832,6 +834,34 @@ components:
           type: number
         max:
           type: number
+    SpatialSearch:
+      title: Probing Sphere
+      description: |
+        Specification for a Spatial Search via Probing Sphere
+      type: object
+      properties:
+        x:
+          title: X coordinate relative to target in millimeters
+          type: number
+        'y':
+          title: Y coordinate relative to target in millimeters
+          type: number
+        z:
+          title: Z coordinate relative to target in millimeters
+          type: number
+        radius:
+          title: Size of the probing sphere in millimeters
+          type: number
+        target:
+          title: The target spatial entity IRI
+          type: string
+      required:
+        - x
+        - 'y'
+        - z
+        - radius
+        - target
+      additionalProperties: false
     AggregateCount:
       title: Aggregated Count \w Label
       type: object
@@ -844,9 +874,7 @@ components:
           type: string
         count:
           title: AggregatedCountValue
-          oneOf:
-            - type: number
-            - type: string
+          type: number
     ErrorMessage:
       title: Error Message
       oneOf:
@@ -1379,34 +1407,6 @@ components:
       maxItems: 2
       items:
         type: number
-    SpatialSearch:
-      title: Probing Sphere
-      description: |
-        Specification for a Spatial Search via Probing Sphere
-      type: object
-      properties:
-        x:
-          title: X coordinate relative to target in millimeters
-          type: number
-        'y':
-          title: Y coordinate relative to target in millimeters
-          type: number
-        z:
-          title: Z coordinate relative to target in millimeters
-          type: number
-        radius:
-          title: Size of the probing sphere in millimeters
-          type: number
-        target:
-          title: The target spatial entity IRI
-          type: string
-      required:
-        - x
-        - 'y'
-        - z
-        - radius
-        - target
-      additionalProperties: false
     Filter:
       title: Filter
       description: Filter object
@@ -1859,13 +1859,11 @@ components:
   parameters:
     Age:
       name: age
-      description: Filter result by age. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+      description: Filter result by age.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\{[\w\-\s:,.+"]*\}$
-        example: '{"min": 10, "max": 50}'
+        $ref: '#/components/schemas/MinMax'
     AgeRange:
       name: age-range
       description: Filter result by age.
@@ -1877,13 +1875,11 @@ components:
         example: 10,100
     Bmi:
       name: bmi
-      description: Filter result by bmi. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+      description: Filter result by bmi.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\{[\w\-\s:,.+"]*\}$
-        example: '{"min": 10, "max": 20}'
+        $ref: '#/components/schemas/MinMax'
     BmiRange:
       name: bmi-range
       description: Filter result by bmi.
@@ -1964,13 +1960,14 @@ components:
           - male
     SpatialSearches:
       name: spatial
-      description: Filter result by spatial searches. Should be a JSON encoded array of spatial search objects.
+      description: Filter result by spatial searches.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\[(\{[\w\s\/\-:,.+"#]*\},?\s*)*\]$
-        example: '[{"x": 1, "y": 2, "z": 3, "radius": 10, "target": "https://purl.humanatlas.io/ref-organ/kidney-female-left/v1.3#primary"}]'
+        title: SpatialSearches
+        type: array
+        items:
+          $ref: '#/components/schemas/SpatialSearch'
     Technologies:
       name: technologies
       description: Filter result by technologies.
