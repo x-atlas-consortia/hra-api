@@ -134,3 +134,9 @@ dist
 
 # VS Code Settings
 .vscode
+
+# Virtual environments
+env/
+.env/
+venv/
+.venv/
