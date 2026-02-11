@@ -9,6 +9,4 @@ properties:
     type: string
   count:
     title: AggregatedCountValue
-    oneOf:
-      - type: number
-      - type: string
+    type: number

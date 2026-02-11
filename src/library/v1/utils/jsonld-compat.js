@@ -11,8 +11,16 @@ export function expandIri(iri) {
 
 const DEFAULT_STRING_FIELDS = ['creator', 'creator_first_name', 'creator_last_name'];
 
-export function normalizeJsonLd(jsonld, arrayFields = new Set(), stringFields = new Set(DEFAULT_STRING_FIELDS)) {
+export function normalizeJsonLd(
+  jsonld,
+  arrayFields = new Set(),
+  stringFields = new Set(DEFAULT_STRING_FIELDS),
+  singleValueFields = new Set(),
+) {
   return JSON.parse(JSON.stringify(jsonld), (key, value) => {
+    if (singleValueFields.has(key)) {
+      value = ensureSingleValue(value);
+    }
     if (arrayFields.has(key)) {
       value = ensureArray(value);
     }
@@ -45,6 +53,14 @@ export function normalizeJsonLd(jsonld, arrayFields = new Set(), stringFields = 
       return expandIri(value);
     }
   });
+}
+
+export function ensureSingleValue(value) {
+  if (Array.isArray(value)) {
+    return value[0];
+  } else {
+    return value;
+  }
 }
 
 export function ensureString(value, arrayElementSeparator = '; ') {
@@ -85,5 +101,12 @@ export function ensureGraphArray(results) {
     return [results];
   } else {
     return [];
+  }
+}
+
+export function renameField(obj, oldKey, newKey) {
+  if (oldKey in obj) {
+    obj[newKey] = obj[oldKey];
+    delete obj[oldKey];
   }
 }

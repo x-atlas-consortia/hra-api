@@ -4,7 +4,7 @@ import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
 import { ensureGraphArray, normalizeJsonLd } from '../utils/jsonld-compat.js';
 
 function reformatResponse(jsonld) {
-  return normalizeJsonLd(ensureGraphArray(jsonld)).map(({label, count}) => ({label, count}))
+  return normalizeJsonLd(ensureGraphArray(jsonld)).map(({ label, count }) => ({ label, count: +count }));
 }
 
 /**

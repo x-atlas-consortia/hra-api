@@ -1,58 +1,74 @@
 import frame from '../frames/tissue-blocks.jsonld';
 import query from '../queries/tissue-blocks.rq';
 import { executeFilteredConstructQuery } from '../utils/execute-sparql.js';
-import { ensureArray, ensureGraphArray, normalizeJsonLd } from '../utils/jsonld-compat.js';
+import { ensureGraphArray, normalizeJsonLd, renameField } from '../utils/jsonld-compat.js';
+
+const ARRAY_FIELDS = new Set(['datasets', 'sections']);
+const SINGLE_VALUE_FIELDS = new Set([
+  // Common fields for all tissue data objects (e.g., blocks, datasets, and sections)
+  'label',
+  'description',
+  'link',
+  // Tissue block-specific fields
+  'donor',
+  'rui_location',
+  'section_size',
+  // Donor-specific fields
+  'provider_name',
+  // Dataset-specific fields
+  'technology',
+  'thumbnail',
+]);
+const TISSUE_BLOCK_FIELDS = [
+  '@id',
+  '@type',
+  'link',
+  'label',
+  'description',
+  'section_count',
+  'section_size',
+  'section_units',
+  'datasets',
+];
+
+function normalizeDonor(donor) {
+  renameField(donor, 'provider_name', 'providerName');
+  return donor;
+}
+
+function normalizeSections(sections) {
+  sections = sections.filter((section) => typeof section === 'object');
+  sections.forEach((section) => {
+    section.sampleType = 'Tissue Section';
+    delete section.sample_type;
+    renameField(section, 'section_number', 'sectionNumber');
+  });
+  return sections;
+}
+
+function normalizeSpatialEntityId(spatialEntityId) {
+  if (typeof spatialEntityId === 'object') {
+    return spatialEntityId['@id'];
+  }
+  return spatialEntityId;
+}
+
+function normalizeBlock(block) {
+  const normalizedBlock = {};
+  TISSUE_BLOCK_FIELDS.forEach((field) => (normalizedBlock[field] = block[field]));
+  normalizedBlock['sampleType'] = 'Tissue Block';
+  normalizedBlock['donor'] = normalizeDonor(block['donor']);
+  normalizedBlock['sections'] = normalizeSections(block['sections']);
+  normalizedBlock['spatialEntityId'] = normalizeSpatialEntityId(block['rui_location']);
+  renameField(normalizedBlock, 'section_count', 'sectionCount');
+  renameField(normalizedBlock, 'section_size', 'sectionSize');
+  renameField(normalizedBlock, 'section_units', 'sectionUnits');
+  return normalizedBlock;
+}
 
 function reformatResponse(jsonld) {
-  const resultArray = normalizeJsonLd(ensureGraphArray(jsonld), new Set(['datasets', 'sections']))
-    .map((block) => {
-      const {
-        donor,
-        datasets,
-        sections,
-        link,
-        label,
-        description,
-        section_count: sectionCount,
-        section_size: sectionSize,
-        section_units: sectionUnits,
-        rui_location: spatialEntityId,
-      } = block;
-      if (donor) {
-        donor.providerName = donor.provider_name;
-        delete donor.provider_name;
-        donor.label = ensureArray(donor.label).join('; ');
-      } else {
-        return undefined;
-      }
-      sections.forEach((section) => {
-        if (typeof section !== 'string') {
-          section.sampleType = 'Tissue Section';
-          delete section.sample_type;
-          section.sectionNumber = section.section_number;
-          delete section.section_number;
-        }
-      });
-
-      return {
-        '@id': block['@id'],
-        '@type': block['@type'],
-        sampleType: 'Tissue Block',
-        sample_type: undefined,
-        link,
-        label,
-        description: ensureArray(description).join('; '),
-        sectionCount,
-        sectionSize,
-        sectionUnits,
-        donor,
-        datasets,
-        sections,
-        spatialEntityId,
-      };
-    })
-    .filter((s) => !!s);
-  return resultArray;
+  const data = normalizeJsonLd(ensureGraphArray(jsonld), ARRAY_FIELDS, undefined, SINGLE_VALUE_FIELDS);
+  return data.filter((block) => block['donor']).map(normalizeBlock);
 }
 
 /**
