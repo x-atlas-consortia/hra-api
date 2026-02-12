@@ -2,6 +2,14 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## 0.18.0 - 2026-01-09
+- Update npm dependencies
+- Update OpenApiTools to version 7.18.0
+- Remove custom spec preprocessing as the generators can now correctly handle all features in the spec (allOf, oneOf, enum, etc.)
+- Add missing schema properties
+- Fix minor server bugs
+- Return 400 status code on invalid request body or query parameters instead of a 404
+
 ## 0.17.0 - 2025-10-28
 - Further updates to serialization and deserialization of complex query parameters 'age', 'bmi', and 'spatial'.
   Each of these now need to be converted into json before being passed to the client libraries.

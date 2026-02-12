@@ -14,5 +14,3 @@ properties:
   providerName:
     title: Provider of Donor
     type: string
-x-preprocessor-delete:
-  - properties/@type

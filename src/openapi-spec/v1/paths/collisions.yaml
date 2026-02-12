@@ -11,7 +11,13 @@ post:
       content:
         application/json:
           schema:
-            type: object
+            type: array
+            items:
+              type: object
+              additionalProperties:
+                true
+    '400':
+      $ref: ../components/responses/ErrorMessage.yaml
     '404':
       $ref: ../components/responses/ErrorMessage.yaml
     '500':

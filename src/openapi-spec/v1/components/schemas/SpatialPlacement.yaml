@@ -9,15 +9,15 @@ allOf:
   - $ref: ./SpatialPlacementCommon.yaml
 properties:
   source:
+    title: SpacialPlacementSource
     oneOf:
       - $ref: ./SpatialEntity.yaml
       - $ref: ./SpatialObjectReference.yaml
-    x-preprocessor-delete: oneOf
   target:
+    title: SpacialPlacementTarget
     oneOf:
       - title: Target Sptial Entity IRI
         type: string
         format: uri
         example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
       - $ref: ./SpatialEntity.yaml
-    x-preprocessor-delete: oneOf

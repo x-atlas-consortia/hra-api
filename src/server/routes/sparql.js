@@ -25,7 +25,6 @@ const sparql = async (req, res, _next) => {
 
   if (!queryBody) {
     res.status(405).send('Unsupported operation.');
-    res.end();
     return;
   }
 

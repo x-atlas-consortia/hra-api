@@ -20,8 +20,7 @@ async function startDatasetWork(token, request, endpoint) {
 
 export function getSessionTokenHandler() {
   return async (req, res, _next) => {
-    const { dataSources, filter } = req.body;
-
+    const { dataSources, filter } = req.body ?? {};
     if (!isWritable() || (!dataSources && !filter)) {
       res.json({ token: '' }); // Use the default dataset graph
       return;

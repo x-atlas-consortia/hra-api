@@ -1,9 +1,10 @@
 generatorName: python
 gitUserId: x-atlas-consortia
 gitRepoId: hra-api
+templateDir: openapi-clients/templates/python-client
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/python.md
 additionalProperties:
   projectName: hra-api-client
-  packageVersion: 0.17.0
+  packageVersion: 0.19.0
   packageName: hra_api_client
   packageUrl: https://pypi.org/project/hra-api-client/

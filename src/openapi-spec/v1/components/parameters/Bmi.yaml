@@ -1,8 +1,6 @@
 name: bmi
-description: Filter result by bmi. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+description: Filter result by bmi.
 in: query
 required: false
 schema:
-  type: string
-  pattern: '^\{[\w\-\s:,.+"]*\}$'
-example: '{"min": 10, "max": 20}'
+  $ref: ../schemas/MinMax.yaml

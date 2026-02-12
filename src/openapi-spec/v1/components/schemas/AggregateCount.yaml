@@ -8,10 +8,5 @@ properties:
     title: Aggregate Name/Field
     type: string
   count:
-    title: Aggregated Count
-    oneOf:
-      - type: number
-        nullable: false
-      - type: string
-        nullable: false
-    x-preprocessor-delete: oneOf
+    title: AggregatedCountValue
+    type: number

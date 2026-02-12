@@ -1,8 +1,9 @@
 name: spatial
-description: Filter result by spatial searches. Should be a JSON encoded array of spatial search objects.
+description: Filter result by spatial searches.
 in: query
 required: false
 schema:
-  type: string
-  pattern: '^\[(\{[\w\s\/\-:,.+"#]*\},?\s*)*\]$'
-example: '[{"x": 1, "y": 2, "z": 3, "radius": 10, "target": "https://purl.humanatlas.io/ref-organ/kidney-female-left/v1.3#primary"}]'
+  title: SpatialSearches
+  type: array
+  items:
+    $ref: ../schemas/SpatialSearch.yaml

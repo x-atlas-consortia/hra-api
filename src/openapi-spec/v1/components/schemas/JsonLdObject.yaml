@@ -16,6 +16,3 @@ properties:
     description: Contains the name of object class/interface
     type: string
     example: Sample
-x-preprocessor-delete:
-  - properties/@id
-  - properties/@type

@@ -1,11 +1,14 @@
 generatorName: typescript-fetch
 gitUserId: x-atlas-consortia
 gitRepoId: hra-api
+generateAliasAsModel: true
+templateDir: openapi-clients/templates/typescript-client
 # https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-fetch.md
 additionalProperties:
   npmName: '@hra-api/ts-client'
-  npmVersion: 0.17.0
+  npmVersion: 0.19.0
   licenseName: MIT
+  stringEnums: true
   supportsES6: true
   useSingleRequestParameter: true
   importFileExtension: .js

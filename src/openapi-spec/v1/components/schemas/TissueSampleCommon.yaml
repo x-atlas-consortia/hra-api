@@ -18,5 +18,3 @@ properties:
     type: array
     items:
       $ref: ./TissueDataset.yaml
-x-preprocessor-delete:
-  - properties/@type

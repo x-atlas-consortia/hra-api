@@ -4,7 +4,7 @@ info:
   description: |
     This API provides programmatic access to data registered to the Human Reference Atlas (HRA).
     See the [HuBMAP HRA Portal](https://humanatlas.io/) for details.
-  version: 0.17.0
+  version: 0.19.0
   contact:
     name: HuBMAP Help Desk
     email: help@hubmapconsortium.org
@@ -190,7 +190,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -225,6 +230,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -271,6 +278,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /v1/extraction-site:
@@ -288,6 +296,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /v1/ftu-illustrations:
@@ -312,6 +321,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SpatialPlacement'
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -332,6 +343,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/hubmap/rui_locations.jsonld:
@@ -351,6 +363,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/mesh-3d-cell-population:
@@ -369,6 +382,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -452,6 +467,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SpatialSceneNodes'
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /v1/reference-organs:
@@ -522,6 +539,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           description: Not found due to option being disabled
   /v1/session-token:
@@ -624,6 +642,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/gtex:
@@ -641,6 +660,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/hubmap:
@@ -659,6 +679,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /ds-graph/sennet:
@@ -677,6 +698,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
         '404':
           $ref: '#/components/responses/ErrorMessage'
   /hra-pop/cell-summary-report:
@@ -690,6 +712,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/CellSummaryReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -705,6 +729,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/RuiLocationCellSummaryResponse'
+        '400':
+          $ref: '#/components/responses/ErrorMessage'
         '404':
           $ref: '#/components/responses/ErrorMessage'
         '500':
@@ -808,6 +834,34 @@ components:
           type: number
         max:
           type: number
+    SpatialSearch:
+      title: Probing Sphere
+      description: |
+        Specification for a Spatial Search via Probing Sphere
+      type: object
+      properties:
+        x:
+          title: X coordinate relative to target in millimeters
+          type: number
+        'y':
+          title: Y coordinate relative to target in millimeters
+          type: number
+        z:
+          title: Z coordinate relative to target in millimeters
+          type: number
+        radius:
+          title: Size of the probing sphere in millimeters
+          type: number
+        target:
+          title: The target spatial entity IRI
+          type: string
+      required:
+        - x
+        - 'y'
+        - z
+        - radius
+        - target
+      additionalProperties: false
     AggregateCount:
       title: Aggregated Count \w Label
       type: object
@@ -819,22 +873,22 @@ components:
           title: Aggregate Name/Field
           type: string
         count:
-          title: Aggregated Count
-          oneOf:
-            - type: number
-              nullable: false
-            - type: string
-              nullable: false
-          x-preprocessor-delete: oneOf
+          title: AggregatedCountValue
+          type: number
     ErrorMessage:
       title: Error Message
-      type: object
-      required:
-        - error
-      properties:
-        error:
-          title: Human readable description of the error
-          type: string
+      oneOf:
+        - type: string
+          title: Error message
+          description: Human readable description of the error
+        - type: object
+          title: ErrorMessageObject
+          required:
+            - error
+          properties:
+            error:
+              type: string
+              description: Human readable description of the error
     JsonLdObject:
       title: JSON-LD Object
       description: Base object for all json-ld objects.
@@ -854,9 +908,6 @@ components:
           description: Contains the name of object class/interface
           type: string
           example: Sample
-      x-preprocessor-delete:
-        - properties/@id
-        - properties/@type
     OntologyTreeNode:
       title: Ontology Node
       description: A node in the ontology tree.
@@ -897,8 +948,6 @@ components:
           items:
             type: string
             format: uri
-      x-preprocessor-delete:
-        - properties/@type
     OntologyTree:
       title: Ontology Tree
       description: An ontology tree.
@@ -915,6 +964,7 @@ components:
         nodes:
           title: All Nodes
           description: A mapping of identifiers to each node object.
+          type: object
           additionalProperties:
             $ref: '#/components/schemas/OntologyTreeNode'
     SpatialEntityCommon:
@@ -950,7 +1000,6 @@ components:
           enum:
             - Female
             - Male
-          x-preprocessor-delete: enum
     SpatialEntityCreator:
       title: Spatial Entity Creator
       description: Describes by whom and when an entity object was created.
@@ -1022,7 +1071,6 @@ components:
           default: millimeter
           enum:
             - millimeter
-          x-preprocessor-delete: enum
     SpatialPlacementRotation:
       title: Spatial Placement Rotation
       description: The properties to define the Rotation aspect of Spatial Placements.
@@ -1049,7 +1097,6 @@ components:
           default: degree
           enum:
             - degree
-          x-preprocessor-delete: enum
     SpatialPlacementScaling:
       title: Spatial Placement Scaling
       description: The properties to define the Scaling aspect of Spatial Placements.
@@ -1076,7 +1123,6 @@ components:
           default: ratio
           enum:
             - ratio
-          x-preprocessor-delete: enum
     SpatialPlacementCommon:
       title: Spatial Placement common fields
       description: A Spatial Placement defines how to place a Spatial Entity or Spatial Object Reference relative to another Spatial Entity. It says how to scale, rotate, and translate (in that order) a Spatial Entity or Spatial Object Reference so that it is placed relative to another Spatial Entity.
@@ -1101,8 +1147,6 @@ components:
           title: Date placement was made
           type: string
           format: date
-      x-preprocessor-delete:
-        - properties/@type
     SpatialEntity:
       title: Spatial Entity
       description: A Spatial Entity defines a bounded cartesian space and the units it is measured in. It typically represents a real world thing, e.g., a human body, a human kidney, a tissue section, or an individual cell.
@@ -1135,7 +1179,6 @@ components:
           enum:
             - Female
             - Male
-          x-preprocessor-delete: enum
         side:
           title: Side
           description: Used for organs that come in pairs to distinguish between them, i.e. kidneys, etc.
@@ -1143,7 +1186,6 @@ components:
           enum:
             - Left
             - Right
-          x-preprocessor-delete: enum
         slice_count:
           title: Slice Count
           type: integer
@@ -1151,18 +1193,14 @@ components:
           title: Slice Thickness
           type: number
         placement:
+          title: SpatialEntityPlacement
           oneOf:
             - $ref: '#/components/schemas/SpatialPlacement'
-            - type: array
-              items:
-                $ref: '#/components/schemas/SpatialPlacement'
-          x-preprocessor-delete: oneOf
+            - $ref: '#/components/schemas/SpatialPlacements'
         object:
           $ref: '#/components/schemas/SpatialObjectReference'
         color:
           $ref: '#/components/schemas/Rgba'
-      x-preprocessor-delete:
-        - properties/@type
     SpatialObjectReference:
       title: Spatial Object Reference
       description: A Spatial Object Reference provides a reference to an external representation of a Spatial Entity.
@@ -1187,8 +1225,6 @@ components:
         file_subpath:
           title: File Subpath
           type: string
-      x-preprocessor-delete:
-        - properties/@type
     SpatialPlacement:
       title: Spatial Placement
       description: A Spatial Placement defines how to place a Spatial Entity or Spatial Object Reference relative to another Spatial Entity. It says how to scale, rotate, and translate (in that order) a Spatial Entity or Spatial Object Reference so that it is placed relative to another Spatial Entity.
@@ -1197,18 +1233,23 @@ components:
         - $ref: '#/components/schemas/SpatialPlacementCommon'
       properties:
         source:
+          title: SpacialPlacementSource
           oneOf:
             - $ref: '#/components/schemas/SpatialEntity'
             - $ref: '#/components/schemas/SpatialObjectReference'
-          x-preprocessor-delete: oneOf
         target:
+          title: SpacialPlacementTarget
           oneOf:
             - title: Target Sptial Entity IRI
               type: string
               format: uri
               example: http://purl.org/ccf/latest/ccf.owl#VHMLeftKidney
             - $ref: '#/components/schemas/SpatialEntity'
-          x-preprocessor-delete: oneOf
+    SpatialPlacements:
+      title: Spatial Placements
+      type: array
+      items:
+        $ref: '#/components/schemas/SpatialPlacement'
     Rgba:
       title: RGBA Color Tuple
       type: array
@@ -1227,11 +1268,11 @@ components:
       properties:
         status:
           title: Current status of the database
+          type: string
           enum:
             - Loading
             - Ready
             - Error
-          x-preprocessor-delete: enum
         checkback:
           title: How long to wait (in milliseconds) before checking status again
           type: integer
@@ -1292,7 +1333,7 @@ components:
             type: number
     SpatialSceneNode:
       title: Spatial Scene Node
-      description: ''
+      description: Specification for a node that can be displayed in the scene.
       type: object
       allOf:
         - $ref: '#/components/schemas/JsonLdObject'
@@ -1319,7 +1360,10 @@ components:
             - text
             - cone
             - cylinder
-          x-preprocessor-delete: enum
+        text:
+          title: Text
+          description: Text to draw for the `text` geometry
+          type: string
         _lighting:
           title: Lighting
           type: string
@@ -1363,34 +1407,6 @@ components:
       maxItems: 2
       items:
         type: number
-    SpatialSearch:
-      title: Probing Sphere
-      description: |
-        Specification for a Spatial Search via Probing Sphere
-      type: object
-      properties:
-        x:
-          title: X coordinate relative to target in millimeters
-          type: number
-        'y':
-          title: Y coordinate relative to target in millimeters
-          type: number
-        z:
-          title: Z coordinate relative to target in millimeters
-          type: number
-        radius:
-          title: Size of the probing sphere in millimeters
-          type: number
-        target:
-          title: The target spatial entity IRI
-          type: string
-      required:
-        - x
-        - 'y'
-        - z
-        - radius
-        - target
-      additionalProperties: false
     Filter:
       title: Filter
       description: Filter object
@@ -1446,7 +1462,8 @@ components:
       properties:
         dataSources:
           type: array
-          items: {}
+          items:
+            type: string
         filter:
           $ref: '#/components/schemas/Filter'
     SessionToken:
@@ -1503,8 +1520,6 @@ components:
           title: Representative Thumbnail URL
           type: string
           format: uri
-      x-preprocessor-delete:
-        - properties/@type
     TissueSampleCommon:
       title: Common Tissue Sample Properties
       description: Properties available in all tissue sample objects.
@@ -1526,8 +1541,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TissueDataset'
-      x-preprocessor-delete:
-        - properties/@type
     TissueDonor:
       title: Tissue Donor
       description: Contains generic information about a tissue donor.
@@ -1545,8 +1558,6 @@ components:
         providerName:
           title: Provider of Donor
           type: string
-      x-preprocessor-delete:
-        - properties/@type
     TissueSection:
       title: Tissue Section
       description: A single section sample.
@@ -1563,7 +1574,6 @@ components:
           enum:
             - Tissue Section
             - Non-Standard
-          x-preprocessor-delete: enum
         sectionNumber:
           title: Section Index
           description: Index of the section in the parent block.
@@ -1585,7 +1595,6 @@ components:
           enum:
             - Tissue Block
             - Non-Standard
-          x-preprocessor-delete: enum
         spatialEntityId:
           title: Associated Spatial Entity
           description: The associated spatial entity (rui_location) for the block.
@@ -1678,10 +1687,12 @@ components:
             $ref: '#/components/schemas/SourceSimilarityRow'
         rui_locations:
           title: RUI Locations
-          type: object
+          type: array
+          items: {}
         error:
           title: Error Message
           type: object
+          additionalProperties: true
     CellSummaryRow:
       title: Cell Summary Row
       type: object
@@ -1848,13 +1859,11 @@ components:
   parameters:
     Age:
       name: age
-      description: Filter result by age. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+      description: Filter result by age.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\{[\w\-\s:,.+"]*\}$
-      example: '{"min": 10, "max": 50}'
+        $ref: '#/components/schemas/MinMax'
     AgeRange:
       name: age-range
       description: Filter result by age.
@@ -1866,13 +1875,11 @@ components:
         example: 10,100
     Bmi:
       name: bmi
-      description: Filter result by bmi. Should be a JSON encoded object with 'min' and/or 'max' numeric properties.
+      description: Filter result by bmi.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\{[\w\-\s:,.+"]*\}$
-      example: '{"min": 10, "max": 20}'
+        $ref: '#/components/schemas/MinMax'
     BmiRange:
       name: bmi-range
       description: Filter result by bmi.
@@ -1953,13 +1960,14 @@ components:
           - male
     SpatialSearches:
       name: spatial
-      description: Filter result by spatial searches. Should be a JSON encoded array of spatial search objects.
+      description: Filter result by spatial searches.
       in: query
       required: false
       schema:
-        type: string
-        pattern: ^\[(\{[\w\s\/\-:,.+"#]*\},?\s*)*\]$
-      example: '[{"x": 1, "y": 2, "z": 3, "radius": 10, "target": "https://purl.humanatlas.io/ref-organ/kidney-female-left/v1.3#primary"}]'
+        title: SpatialSearches
+        type: array
+        items:
+          $ref: '#/components/schemas/SpatialSearch'
     Technologies:
       name: technologies
       description: Filter result by technologies.
@@ -1999,7 +2007,7 @@ components:
       required: true
       schema:
         type: string
-      example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
+        example: SELECT * WHERE { ?sub ?pred ?obj . } LIMIT 10
     Format:
       name: format
       description: Override SPARQL response format (Note that not all formats are supported for all SPARQL query types)
@@ -2029,11 +2037,8 @@ components:
       in: query
       required: false
       schema:
-        type: string
-        enum:
-          - 'true'
-          - 'false'
-        x-preprocessor-delete: enum
+        type: boolean
+        default: false
     HraVersions:
       name: hra-versions
       description: Filter result by hra versions.
@@ -2044,16 +2049,16 @@ components:
         type: array
         items:
           type: string
-      example:
-        - v2.3
-        - v2.2
-        - v2.1
-        - v2.0
-        - v1.4
-        - v1.3
-        - v1.2
-        - v1.1
-        - v1.0
+        example:
+          - v2.3
+          - v2.2
+          - v2.1
+          - v2.0
+          - v1.4
+          - v1.3
+          - v1.2
+          - v1.1
+          - v1.0
   responses:
     AggregateResults:
       description: Successful operation
@@ -2083,6 +2088,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     TermOccurences:
       description: Successful operation
       content:
@@ -2113,6 +2119,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     SpatialPlacement:
       description: Successful operation
       content:
@@ -2143,6 +2150,7 @@ components:
             type: array
             items:
               type: object
+              additionalProperties: true
     SessionToken:
       description: Successful operation
       content:
@@ -2155,6 +2163,7 @@ components:
         application/json:
           schema:
             type: object
+            additionalProperties: true
         text/csv:
           schema:
             type: string
