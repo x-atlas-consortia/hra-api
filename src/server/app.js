@@ -20,7 +20,20 @@ import v1Routes from './routes/v1';
 const app = express();
 
 app.set('query parser', function (str) {
-  return qs.parse(str, { allowDots: true });
+  const query = qs.parse(str, { allowDots: true });
+
+  // Decode JSON encoded strings
+  // Primarily needed for the angular client which encodes all values as JSON
+  // Other JSON encoded values should be handled by specialized parsing in the route handlers,
+  // e.g. queryParametersToFilter() in src/library/v1/utils/parse-filter.js, etc.
+  for (const key in query) {
+    const value = query[key];
+    if (typeof value === 'string' && value.startsWith('"') && value.endsWith('"')) {
+      query[key] = value.slice(1, -1);
+    }
+  }
+
+  return query;
 });
 
 // http://expressjs.com/en/advanced/best-practice-security.html
@@ -50,7 +63,7 @@ app.use(
         'connect-src': ['*'],
       },
     },
-  })
+  }),
 );
 app.use(cors());
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
