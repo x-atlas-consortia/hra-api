@@ -29,7 +29,9 @@ app.set('query parser', function (str) {
   for (const key in query) {
     const value = query[key];
     if (typeof value === 'string' && value.startsWith('"') && value.endsWith('"')) {
-      query[key] = JSON.parse(value);
+      try {
+        query[key] = JSON.parse(value);
+      } catch {}
     }
   }
 
