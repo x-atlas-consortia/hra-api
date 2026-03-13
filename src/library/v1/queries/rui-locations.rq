@@ -121,8 +121,10 @@ WHERE {
                 ccf:y_dimension ?y_dimension ;
                 ccf:z_dimension ?z_dimension ;
                 ccf:dimension_unit ?dimension_units ;
-                ccf:collides_with ?anatomical_structure ;
   .
+  OPTIONAL {
+    ?rui_location ccf:collides_with ?anatomical_structure .
+  }
   OPTIONAL {
     ?rui_location ccf:slice_count ?slice_count ;
                   ccf:slice_thickness ?slice_thickness ;
