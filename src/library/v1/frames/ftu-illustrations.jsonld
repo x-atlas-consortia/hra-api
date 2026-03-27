@@ -2,10 +2,6 @@
   "@context": [
     "https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld",
     {
-      "UBERON": {
-        "@id": "http://purl.obolibrary.org/obo/UBERON_",
-        "@prefix": true
-      },
       "illustration_files": {
         "@id": "ccf:image_file",
         "@type": "@id"
