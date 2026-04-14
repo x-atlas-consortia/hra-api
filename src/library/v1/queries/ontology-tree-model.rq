@@ -93,7 +93,7 @@ WHERE {
   }
   
   {
-    ?child ccf:ccf_pref_label ?label1 .
+    ?child rdfs:label ?label1 .
   }
   UNION
   {
@@ -106,7 +106,7 @@ WHERE {
     }
     UNION
     {
-      ?child rdfs:label ?synonymLabel1 .
+      ?child ccf:ccf_pref_label ?synonymLabel1 .
     }
   }
 
