@@ -70,7 +70,7 @@ app.use(
 app.use(cors());
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 app.use(express.text({ type: ['text/*', 'application/sparql-query'] }));
-app.use(express.json({ limit: '20mb' }));
+app.use(express.json({ limit: '50mb' }));
 app.set('json spaces', 2);
 
 app.use('/', longCache, browserRoute);
