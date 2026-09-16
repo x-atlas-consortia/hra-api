@@ -39,15 +39,10 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: hra-api
           IMAGE_TAG: latest
           GHCR_REGISTRY: ghcr.io
           GHCR_REPOSITORY: x-atlas-consortia/hra-api
         run: |
           docker build \
-            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
-            -t $GHCR_REGISTRY/$GHCR_REPOSITORY:$IMAGE_TAG \
-            .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            -t $GHCR_REGISTRY/$GHCR_REPOSITORY:$IMAGE_TAG .
           docker push $GHCR_REGISTRY/$GHCR_REPOSITORY:$IMAGE_TAG
