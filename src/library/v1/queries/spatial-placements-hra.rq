@@ -41,4 +41,5 @@ WHERE {
     BIND(xsd:decimal(?_y_translation) as ?y_translation)
     BIND(xsd:decimal(?_z_translation) as ?z_translation)
 }
-ORDER BY ?source
+# Sort by all columns: duplicate (conflicting) values in the data are then resolved the same way on every triple store
+ORDER BY ?source ?target ?x_scaling ?y_scaling ?z_scaling ?x_rotation ?y_rotation ?z_rotation ?x_translation ?y_translation ?z_translation ?translation_units

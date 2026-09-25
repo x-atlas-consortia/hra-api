@@ -32,10 +32,18 @@ async function reformatResponse(jsonld) {
  * @param {string} endpoint - The SPARQL endpoint to connect to
  * @returns {Promise<Object>} - A promise that resolves to RUI location data
  */
+// Characters not allowed in a SPARQL IRI reference
+const INVALID_IRI_CHARS = /[\s<>"{}|^`\\]/;
+
 export async function getExtractionSite(filter, endpoint = 'https://lod.humanatlas.io/sparql') {
+  if (!filter.iri || INVALID_IRI_CHARS.test(filter.iri)) {
+    return undefined;
+  }
   const filteredQuery = query
-    .replace('#{{FILTER}}', `VALUES (?rui_location) { (<${filter.iri}>) }`)
+    // Use the IRI as a constant (rather than a VALUES binding), which is planned much faster by some
+    // triple stores (e.g., QLever)
+    .replaceAll('?rui_location', `<${filter.iri}>`)
     // Limit the search space to the millitome collection when encountering millitome IRIs
-    .replace('#{{FROM}}', filter.iri?.startsWith('https://purl.humanatlas.io/millitome/') ? 'FROM HRAMillitomes:' : '');
+    .replace('#{{FROM}}', filter.iri.startsWith('https://purl.humanatlas.io/millitome/') ? 'FROM HRAMillitomes:' : '');
   return reformatResponse(await construct(filteredQuery, endpoint, frame));
 }

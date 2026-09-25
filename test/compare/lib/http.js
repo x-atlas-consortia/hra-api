@@ -2,7 +2,16 @@
  * Sends a test case to a base URL and records status, content type, body and timing.
  * The timing covers the full request until the complete body has been read.
  */
-export async function sendCase(baseUrl, testCase, { timeoutMs = 600000 } = {}) {
+export async function sendCase(baseUrl, testCase, options = {}) {
+  const result = await sendCaseOnce(baseUrl, testCase, options);
+  // Retry once on connection errors (e.g., a keep-alive connection closed by the server right before reuse)
+  if (result.error && !/timeout|aborted/i.test(result.error) && result.ms < 5000) {
+    return sendCaseOnce(baseUrl, testCase, options);
+  }
+  return result;
+}
+
+async function sendCaseOnce(baseUrl, testCase, { timeoutMs = 600000 } = {}) {
   const url = new URL(testCase.path.replace(/^\//, ''), baseUrl.endsWith('/') ? baseUrl : baseUrl + '/');
   if (testCase.query) {
     url.search = testCase.query;

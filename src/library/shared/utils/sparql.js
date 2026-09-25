@@ -1,5 +1,5 @@
 import jsonld from 'jsonld';
-import { Parser as N3Parser } from 'n3';
+import { StreamParser as N3StreamParser } from 'n3';
 import Papa from 'papaparse';
 
 // Use a fetch-based document loader
@@ -104,20 +104,50 @@ function toJsonLdTerm(term) {
   }
 }
 
-function parseNTriples(ntriples) {
-  return new N3Parser({ format: 'application/n-triples' }).parse(ntriples).map((quad) => ({
+function toJsonLdQuad(quad) {
+  return {
     subject: toJsonLdTerm(quad.subject),
     predicate: toJsonLdTerm(quad.predicate),
     object: toJsonLdTerm(quad.object),
     graph: toJsonLdTerm(quad.graph),
-  }));
+  };
+}
+
+// Iterates over the chunks of a response body (node streams or web streams without async iteration support)
+async function* bodyChunks(body) {
+  if (body[Symbol.asyncIterator]) {
+    yield* body;
+  } else {
+    const reader = body.getReader();
+    for (let result = await reader.read(); !result.done; result = await reader.read()) {
+      yield result.value;
+    }
+  }
+}
+
+// Parses an N-Triples response incrementally (large results may exceed the maximum string length)
+async function parseNTriplesResponse(resp) {
+  const parser = new N3StreamParser({ format: 'application/n-triples' });
+  const quads = [];
+  const done = new Promise((resolve, reject) => {
+    parser.on('data', (quad) => quads.push(toJsonLdQuad(quad)));
+    parser.on('end', resolve);
+    parser.on('error', reject);
+  });
+  const decoder = new TextDecoder();
+  for await (const chunk of bodyChunks(resp.body)) {
+    parser.write(typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true }));
+  }
+  parser.end(decoder.decode());
+  await done;
+  return quads;
 }
 
 export async function construct(query, endpoint, frame = undefined) {
   // Not all triple stores (e.g., QLever) can return JSON-LD, so fetch N-Triples and convert locally.
   // Blazegraph only knows N-Triples as text/plain.
   const resp = await checkResponse(await fetchSparql(query, endpoint, 'application/n-triples, text/plain;q=0.9'));
-  const quads = parseNTriples(await resp.text());
+  const quads = await parseNTriplesResponse(resp);
   const json = await jsonld.fromRDF(quads);
   if (frame) {
     return await jsonld.frame(json, frame);

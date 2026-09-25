@@ -55,7 +55,7 @@ non-zero if there are unreviewed differences, dataset pipeline failures, or perf
 | `different` | A real difference. The report lists records and facts that are only in A or only in B |
 | `error` | A request failed |
 
-Numbers are compared to 10 significant digits, and blank node labels are ignored. Reviewed and accepted
+Numbers are compared to 9 significant digits (values below 1e-9 count as 0), and blank node labels are ignored. Reviewed and accepted
 differences are recorded in `allowlist.json`, with a reason and a type (`improvement`, `intentional-fix`,
 `nondeterministic`, `external`).
 

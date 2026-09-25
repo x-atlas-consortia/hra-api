@@ -8,12 +8,18 @@
  *                    i.e. differences are only in where a node is embedded vs. referenced by @id
  */
 
-const SIGNIFICANT_DIGITS = 10;
+// QLever outputs doubles with ~13 significant digits; derived values (e.g., transformation matrices) can
+// accumulate slightly larger relative errors, especially close to zero
+const SIGNIFICANT_DIGITS = 9;
+const ZERO_THRESHOLD = 1e-9;
 
 /** Round numbers to a fixed number of significant digits to absorb float/decimal formatting differences */
 export function normalizeNumber(n) {
   if (!Number.isFinite(n) || Number.isInteger(n)) {
     return n;
+  }
+  if (Math.abs(n) < ZERO_THRESHOLD) {
+    return 0;
   }
   return Number(n.toPrecision(SIGNIFICANT_DIGITS));
 }
