@@ -2,6 +2,19 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## Unreleased
+- Replace the embedded Blazegraph triple store with QLever (installed natively via apt, index built at image build time)
+- CONSTRUCT queries now request N-Triples and convert to JSON-LD locally (works with both QLever and Blazegraph)
+- Add `SPARQL_BACKEND` and `SPARQL_UPDATE_TOKEN` settings; updates to the embedded QLever require an access token
+  that is generated per container start
+- Session-token datasets are loaded via the SPARQL Graph Store HTTP Protocol when using QLever
+- Fix queries that relied on Blazegraph's non-standard handling of `GRAPH` patterns outside the query's dataset
+  (`FROM NAMED`) and of nested `GRAPH` patterns
+- Fix queries that re-bound already bound variables with `BIND` (invalid SPARQL)
+- Fix pruning of expired session-token datasets not removing their enrichment graphs
+- SPARQL errors are now reported instead of being parsed as results
+- Add a Blazegraph vs QLever comparison harness (`test/compare`)
+
 ## 0.18.0 - 2026-01-09
 - Update npm dependencies
 - Update OpenApiTools to version 7.18.0

@@ -9,6 +9,7 @@ CONSTRUCT {
   ?cell_type ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?cell_type (COUNT(DISTINCT(?block)) AS ?count)

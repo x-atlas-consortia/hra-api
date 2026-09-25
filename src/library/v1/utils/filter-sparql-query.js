@@ -1,4 +1,5 @@
 import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
+import { sparqlBackend } from '../../shared/utils/sparql.js';
 import baseSubQuery from '../queries/base-subquery.rq';
 
 async function getFilterQuery(filter, endpoint) {
@@ -17,6 +18,8 @@ async function getFilterQuery(filter, endpoint) {
   const filters = {
     donor: [],
     rui_location: [],
+    // Patterns on other named graphs must not be nested inside the GRAPH DSGraphs: block
+    enrichments: [],
     dataset: [],
     sectionDataset: [],
   };
@@ -38,7 +41,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with ?anatomical_structure .
         FILTER(?anatomical_structure IN (${terms}))
@@ -46,7 +49,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (cellTypeTerms?.length > 0) {
     const terms = cellTypeTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with_ct ?cell_type .
         FILTER(?cell_type IN (${terms}))
@@ -54,7 +57,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (biomarkerTerms?.length > 0) {
     const terms = biomarkerTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with_bm ?biomarker .
         FILTER(?biomarker IN (${terms}))
@@ -105,9 +108,10 @@ async function getFilterQuery(filter, endpoint) {
     const entityQuery = baseSubQuery
       .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
+      .replace('#{{GRAPH_FILTER}}', filters.enrichments.join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
       .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'))
-      .replace('#hint:SubQuery', 'hint:SubQuery');
+      .replace('#hint:SubQuery', sparqlBackend() === 'blazegraph' ? 'hint:SubQuery' : '#hint:SubQuery');
     return `{
       ${entityQuery}
     }`;

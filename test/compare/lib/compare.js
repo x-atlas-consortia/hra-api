@@ -1,0 +1,189 @@
+import {
+  canonicalOrdered,
+  canonicalUnordered,
+  flattenJsonLdFacts,
+  looksLikeJsonLd,
+  normalizeLines,
+  stableStringify,
+} from './normalize.js';
+
+export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'different', 'error'];
+
+/** Categories that count as a pass without needing review */
+export const PASSING = new Set(['identical', 'order-only', 'embedding-only']);
+
+const MAX_SAMPLES = 5;
+
+function tryParseJson(text) {
+  try {
+    return { ok: true, value: JSON.parse(text) };
+  } catch {
+    return { ok: false };
+  }
+}
+
+function sample(list) {
+  return list.slice(0, MAX_SAMPLES).map((s) => (s.length > 400 ? s.slice(0, 400) + '…' : s));
+}
+
+/** Multiset difference of two lists of strings */
+function multisetDiff(a, b) {
+  const counts = new Map();
+  for (const x of a) counts.set(x, (counts.get(x) ?? 0) + 1);
+  const onlyB = [];
+  for (const x of b) {
+    const c = counts.get(x) ?? 0;
+    if (c > 0) {
+      counts.set(x, c - 1);
+    } else {
+      onlyB.push(x);
+    }
+  }
+  const onlyA = [];
+  for (const [x, c] of counts) for (let i = 0; i < c; i++) onlyA.push(x);
+  return { onlyA, onlyB };
+}
+
+/** Finds the list of "records" in a JSON response to produce a readable diff */
+function records(value) {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === 'object') {
+    if (Array.isArray(value['@graph'])) return value['@graph'];
+    if (Array.isArray(value.nodes)) return value.nodes;
+  }
+  return [value];
+}
+
+function recordKey(record) {
+  if (record && typeof record === 'object' && !Array.isArray(record)) {
+    for (const key of ['@id', 'id', '@type']) {
+      if (record[key] !== undefined && key !== '@type') return String(record[key]);
+    }
+  }
+  return undefined;
+}
+
+/** Produces a human readable summary of how two JSON values differ */
+function describeJsonDiff(a, b) {
+  const ra = records(canonicalUnordered(a));
+  const rb = records(canonicalUnordered(b));
+  const keyed = ra.every((r) => recordKey(r) !== undefined) && rb.every((r) => recordKey(r) !== undefined);
+  if (keyed) {
+    const ma = new Map(ra.map((r) => [recordKey(r), r]));
+    const mb = new Map(rb.map((r) => [recordKey(r), r]));
+    const onlyA = [...ma.keys()].filter((k) => !mb.has(k));
+    const onlyB = [...mb.keys()].filter((k) => !ma.has(k));
+    const changed = [...ma.keys()].filter((k) => mb.has(k) && stableStringify(ma.get(k)) !== stableStringify(mb.get(k)));
+    return {
+      records: [ra.length, rb.length],
+      onlyA: onlyA.length,
+      onlyB: onlyB.length,
+      changed: changed.length,
+      samples: {
+        onlyA: sample(onlyA),
+        onlyB: sample(onlyB),
+        changed: changed.slice(0, MAX_SAMPLES).map((k) => ({
+          key: k,
+          ...propertyDiff(ma.get(k), mb.get(k)),
+        })),
+      },
+    };
+  }
+  const { onlyA, onlyB } = multisetDiff(ra.map(stableStringify), rb.map(stableStringify));
+  return {
+    records: [ra.length, rb.length],
+    onlyA: onlyA.length,
+    onlyB: onlyB.length,
+    samples: { onlyA: sample(onlyA), onlyB: sample(onlyB) },
+  };
+}
+
+/** For two records with the same key, list the properties that differ */
+function propertyDiff(a, b) {
+  const props = {};
+  if (a && b && typeof a === 'object' && typeof b === 'object') {
+    for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      const sa = stableStringify(a[key]);
+      const sb = stableStringify(b[key]);
+      if (sa !== sb) {
+        props[key] = [trim(sa), trim(sb)];
+      }
+    }
+  }
+  return { properties: props };
+}
+
+function trim(s) {
+  return s === undefined ? undefined : s.length > 300 ? s.slice(0, 300) + '…' : s;
+}
+
+/**
+ * Compares two HTTP responses: { status, contentType, body, error? }
+ * @returns {{ category: string, details?: object }}
+ */
+export function compareResponses(a, b) {
+  if (a.error || b.error) {
+    return { category: 'error', details: { a: a.error, b: b.error } };
+  }
+  if (a.status !== b.status) {
+    return {
+      category: 'different',
+      details: { reason: 'status', status: [a.status, b.status], body: [trim(a.body), trim(b.body)] },
+    };
+  }
+  if (a.body === b.body) {
+    return { category: 'identical' };
+  }
+
+  const ja = tryParseJson(a.body);
+  const jb = tryParseJson(b.body);
+  if (ja.ok && jb.ok) {
+    if (stableStringify(canonicalOrdered(ja.value)) === stableStringify(canonicalOrdered(jb.value))) {
+      return { category: 'identical' };
+    }
+    if (stableStringify(canonicalUnordered(ja.value)) === stableStringify(canonicalUnordered(jb.value))) {
+      return { category: 'order-only' };
+    }
+    if (looksLikeJsonLd(ja.value) || looksLikeJsonLd(jb.value)) {
+      const fa = flattenJsonLdFacts(ja.value);
+      const fb = flattenJsonLdFacts(jb.value);
+      if (fa.length === fb.length && fa.every((f, i) => f === fb[i])) {
+        return { category: 'embedding-only' };
+      }
+      const { onlyA, onlyB } = multisetDiff(fa, fb);
+      return {
+        category: 'different',
+        details: {
+          reason: 'json-ld',
+          facts: [fa.length, fb.length],
+          onlyA: onlyA.length,
+          onlyB: onlyB.length,
+          samples: { onlyA: sample(onlyA), onlyB: sample(onlyB) },
+          records: describeJsonDiff(ja.value, jb.value),
+        },
+      };
+    }
+    return { category: 'different', details: { reason: 'json', ...describeJsonDiff(ja.value, jb.value) } };
+  }
+
+  // Text responses (CSV, TSV, N-Triples, Turtle, HTML, ...)
+  const la = normalizeLines(a.body);
+  const lb = normalizeLines(b.body);
+  if (la.length === lb.length && la.every((l, i) => l === lb[i])) {
+    return { category: 'identical' };
+  }
+  const { onlyA, onlyB } = multisetDiff(la, lb);
+  if (onlyA.length === 0 && onlyB.length === 0) {
+    return { category: 'order-only' };
+  }
+  return {
+    category: 'different',
+    details: {
+      reason: 'text',
+      lines: [la.length, lb.length],
+      onlyA: onlyA.length,
+      onlyB: onlyB.length,
+      samples: { onlyA: sample(onlyA), onlyB: sample(onlyB) },
+    },
+  };
+}

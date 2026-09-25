@@ -140,3 +140,8 @@ env/
 .env/
 venv/
 .venv/
+# Blazegraph vs QLever comparison harness (snapshot data, state, reports, generated cases)
+test/compare/.snapshot
+test/compare/.state
+test/compare/report
+test/compare/cases

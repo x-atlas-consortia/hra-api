@@ -26,7 +26,6 @@ WHERE {
       }
     }
     ?child ccf:ccf_biomarker_type ?parent .
-    BIND (?parent_label AS ?parent)
   }
   UNION
   {

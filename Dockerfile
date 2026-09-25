@@ -1,58 +1,49 @@
-FROM eclipse-temurin:8-jre-jammy
+FROM node:22-bookworm-slim
 
-# Install Node 22
-RUN apt-get update && apt-get install curl gpg -y && mkdir -p /etc/apt/keyrings; \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list; \
-  apt-get update && apt-get install -y nodejs
+# Install QLever (native binaries + qlever CLI) from the official apt repository
+# See https://docs.qlever.dev/quickstart/
+ARG QLEVER_VERSION=0.6.0
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git gpg wget \
+  && wget -qO - https://packages.qlever.dev/pub.asc | gpg --dearmor > /usr/share/keyrings/qlever.gpg \
+  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/qlever.gpg] https://packages.qlever.dev/ $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") main" > /etc/apt/sources.list.d/qlever.list \
+  && apt-get update && apt-get install -y --no-install-recommends qlever=${QLEVER_VERSION} \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install redocly cli (for building the openapi spec) and PM2 runtime
 RUN npm install @redocly/cli pm2 -g
 
-# Blazegraph docker setup adapted from https://github.com/phenoscape/blazegraph-docker/tree/master
-RUN mkdir /blazegraph \
-  && cd /blazegraph \
-  && curl -L -O 'https://github.com/blazegraph/database/releases/download/BLAZEGRAPH_RELEASE_2_1_5/blazegraph.jar' \
-  && curl -L -O 'https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-servlets/9.2.3.v20140905/jetty-servlets-9.2.3.v20140905.jar'
-
-ADD ./blazegraph/readonly_cors.xml /blazegraph/readonly_cors.tmp.xml
-ADD ./blazegraph/entrypoint.sh /blazegraph/entrypoint.sh
-ADD ./blazegraph/startup.sh /blazegraph/startup.sh
-ADD ./blazegraph/setup-blazegraph-db.sh /blazegraph/setup-blazegraph-db.sh
+ADD ./qlever/Qleverfile /qlever/Qleverfile
+ADD ./qlever/entrypoint.sh /qlever/entrypoint.sh
+ADD ./qlever/setup-qlever-index.sh /qlever/setup-qlever-index.sh
 
 # use --env on the docker run command line to override
-ENV BLAZEGRAPH_MEMORY=12G
-ENV BLAZEGRAPH_TIMEOUT=360000
-ENV BLAZEGRAPH_READONLY=false
-ENV BLAZEGRAPH_PORT=8081
+ENV QLEVER_MEMORY=12G
+ENV QLEVER_CACHE=4G
+ENV QLEVER_TIMEOUT=360s
+ENV QLEVER_READONLY=false
+ENV QLEVER_PERSIST_UPDATES=false
+ENV QLEVER_PORT=8081
+ENV QLEVER_RUNTIME_PARAMETERS="enable-distributive-union=false"
+ENV QLEVER_DIR=/data/qlever
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# Build-time argument to set the default CDN to use for grabbing graphs when building the blazegraph db
+# Build-time argument to set the default CDN to use for grabbing graphs when building the qlever index
 ARG CDN_URL=https://cdn.humanatlas.io/digital-objects/
 
-###### Add blazegraph-runner #####
-# Code snippet from https://github.com/INCATools/ubergraph/blob/master/Dockerfile#L18C1-L23C53
-ENV BR=1.7
-ENV PATH="/tools/blazegraph-runner/bin:$PATH"
-RUN wget -nv https://github.com/balhoff/blazegraph-runner/releases/download/v$BR/blazegraph-runner-$BR.tgz \
-&& tar -zxvf blazegraph-runner-$BR.tgz \
-&& mkdir -p /tools && mv blazegraph-runner-$BR /tools/blazegraph-runner
-
-# Setup blazegraph db with default graphs pre-loaded
-WORKDIR /data
-RUN /blazegraph/setup-blazegraph-db.sh /data/blazegraph.jnl
-ADD ./blazegraph/blazegraph.properties .
+# Setup qlever index with default graphs pre-loaded
+RUN /qlever/setup-qlever-index.sh $QLEVER_DIR
 
 # Setup hra-api
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --include=dev
 COPY . .
-RUN nohup bash -c "/blazegraph/entrypoint.sh &" && sleep 4 \
+RUN nohup bash -c "QLEVER_READONLY=true /qlever/entrypoint.sh &" \
+  && timeout 120 bash -c 'until curl -sf "http://localhost:${QLEVER_PORT}/?query=ASK%7B%7D" > /dev/null; do sleep 1; done' \
   && mkdir -p file-cache \
-  && SPARQL_ENDPOINT="http://localhost:8081/blazegraph/namespace/kb/sparql" npm run build \
+  && SPARQL_ENDPOINT="http://localhost:${QLEVER_PORT}/" SPARQL_BACKEND=qlever npm run build \
   && npm prune --production
 
-EXPOSE $PORT $BLAZEGRAPH_PORT
+EXPOSE $PORT $QLEVER_PORT
 CMD [ "pm2-runtime", "start", "ecosystem.config.cjs" ]

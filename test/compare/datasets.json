@@ -1,0 +1,40 @@
+{
+  "description": "Session-token datasets created on both backends before running cases. ${SNAPSHOT} is replaced by the snapshot server URL. logTokens map session tokens found in the access logs (whose request bodies were recovered or approximated) to these datasets.",
+  "defaultDataset": "hubmap",
+  "datasets": {
+    "hubmap": {
+      "description": "HuBMAP portal EUI (log token recovered: {\"dataSources\":[\"https://apps.humanatlas.io/api/ds-graph/hubmap?token=\"]})",
+      "dataSources": ["${SNAPSHOT}sources/hubmap.jsonld"],
+      "logTokens": ["ad224e52857dde02cbb05a10bfb807c7"]
+    },
+    "gtex-hubmap": {
+      "description": "GTEx portal EUI (log token recovered: ccf-api.hubmapconsortium.org gtex + hubmap rui_locations, host no longer resolves; approximated with current gtex + hubmap ds-graphs)",
+      "dataSources": ["${SNAPSHOT}sources/gtex.jsonld", "${SNAPSHOT}sources/hubmap.jsonld"],
+      "logTokens": ["cf53336855d398883c0184b07f34dbe5"]
+    },
+    "ds-graphs": {
+      "description": "Default ds-graphs collection (log token recovered: {\"dataSources\":[\"https://purl.humanatlas.io/collection/ds-graphs\"]})",
+      "dataSources": ["${SNAPSHOT}digital-objects/collection/ds-graphs/latest/graph.ttl"],
+      "logTokens": ["4f7be4cb01b4d9c66f0966a6fdb6f696"]
+    },
+    "hubmap-sennet-gtex": {
+      "description": "HuBMAP + SenNet + GTEx (log token recovered)",
+      "dataSources": ["${SNAPSHOT}sources/hubmap.jsonld", "${SNAPSHOT}sources/sennet.jsonld", "${SNAPSHOT}sources/gtex.jsonld"],
+      "logTokens": ["251a04a6b327acda56d36a3ed6819893"]
+    },
+    "sennet": {
+      "description": "SenNet portal EUI (log token not recovered, likely includes an auth token)",
+      "dataSources": ["${SNAPSHOT}sources/sennet.jsonld"],
+      "logTokens": ["bcd11e18967d04a3fc84490efe8c3894"]
+    },
+    "inline": {
+      "description": "Inline JSON-LD data source (the GTEx snapshot embedded in the request body)",
+      "inlineDataSources": ["sources/gtex.jsonld"]
+    },
+    "broken": {
+      "description": "A data source that does not exist; the dataset should end up in the Error state on both backends",
+      "dataSources": ["${SNAPSHOT}sources/does-not-exist.jsonld"],
+      "expectStatus": "Error"
+    }
+  }
+}

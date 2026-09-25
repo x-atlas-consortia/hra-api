@@ -44,7 +44,7 @@ WHERE {
   FILTER(STRSTARTS(STR(?refOrgan), STR(?refOrganGraph)))
 
   ?refOrganAs rdf:type ccf:SpatialEntity ;
-              ccf:extraction_set ?_extractionSet ;
+              ccf:extraction_set ?extractionSet ;
               # TODO: Uncomment after next release
               # dcterms:creator [
               #   schema:name ?creator ;
@@ -61,7 +61,6 @@ WHERE {
           ccf:file_url ?file ;
           ccf:file_format ?file_format ;
           ccf:file_subpath ?file_subpath .
-  BIND(IRI(?_extractionSet) as ?extractionSet)
 
   BIND(IRI(CONCAT(STR(?refOrgan), '$$', ?extractionSetLabel)) as ?extractionSetId)
 }

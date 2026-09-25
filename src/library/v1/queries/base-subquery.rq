@@ -24,5 +24,7 @@ WHERE {
     #{{FILTER}}
   }
 
+  #{{GRAPH_FILTER}}
+
   #hint:SubQuery hint:runOnce true;
 }

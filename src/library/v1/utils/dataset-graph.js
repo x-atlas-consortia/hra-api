@@ -55,12 +55,13 @@ export async function getDatasetInfo(token, endpoint) {
 
 export async function createDatasetGraph(token, request, endpoint) {
   try {
-    // Ensure default graphs exist in the db
-    const graphs = await ensureNamedGraphs(DEFAULT_GRAPHS, endpoint);
-
-    // Add data sources to the new dataset graph
     const dsGraph = `urn:hra-api:${token}:ds-graph`;
     const dsGraphEnrichments = `urn:hra-api:${token}:ds-graph-enrichments`;
+
+    // Ensure default graphs exist in the db
+    const graphs = await ensureNamedGraphs(DEFAULT_GRAPHS, endpoint, [dsGraph]);
+
+    // Add data sources to the new dataset graph
     if (!graphs.has(dsGraph)) {
       for (const source of request.dataSources) {
         await updateDatasetInfo('Loading', `Adding dataset`, token, endpoint);
@@ -99,7 +100,10 @@ export async function pruneDatasetGraphs(endpoint) {
   const datasets = await select(prunableDatasetsQuery, endpoint);
   console.log(datasets.length, 'datasets to prune');
   if (datasets.length > 0) {
-    const graphs = datasets.reduce((acc, row) => acc.concat([row.dsInfo, row.dsGraph]), []);
+    const graphs = datasets.reduce(
+      (acc, row) => acc.concat([row.dsInfo, row.dsGraph, `${row.dsGraph}-enrichments`]),
+      []
+    );
     console.log('deleting', graphs);
     for (const graph of graphs) {
       await deleteGraphs([graph], endpoint);

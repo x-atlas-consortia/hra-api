@@ -8,6 +8,7 @@ CONSTRUCT {
   ?biomarker ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?biomarker (COUNT(DISTINCT(?block)) AS ?count)

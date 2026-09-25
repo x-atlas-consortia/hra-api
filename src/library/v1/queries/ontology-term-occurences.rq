@@ -9,6 +9,7 @@ CONSTRUCT {
   ?anatomical_structure ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?anatomical_structure (COUNT(DISTINCT(?block)) AS ?count)
