@@ -4,6 +4,12 @@ import baseSubQuery from '../queries/base-subquery.rq';
 
 const SUBQUERY_SELECT = 'SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?section ?sectionDataset';
 const OPTIONAL_SUBQUERY_VARIABLES = ['?dataset', '?section', '?sectionDataset'];
+const DATASET_PATTERNS = /#\{\{DATASETS_START\}\}[\s\S]*#\{\{DATASETS_END\}\}/;
+
+// The optional dataset/section patterns of the filter subquery are only needed to filter them
+function hasDatasetFilters(filters) {
+  return filters.dataset.length > 0 || filters.sectionDataset.length > 0;
+}
 
 /**
  * Only project the dataset/section variables of the filter subquery if the outer query uses them and
@@ -14,9 +20,9 @@ const OPTIONAL_SUBQUERY_VARIABLES = ['?dataset', '?section', '?sectionDataset'];
 function subquerySelect(outerQuery, filters) {
   const query = outerQuery.replace(/#[^\n]*/g, '');
   const restricted = {
-    '?dataset': filters.dataset.length > 0,
-    '?section': filters.sectionDataset.length > 0,
-    '?sectionDataset': filters.sectionDataset.length > 0,
+    '?dataset': hasDatasetFilters(filters),
+    '?section': hasDatasetFilters(filters),
+    '?sectionDataset': hasDatasetFilters(filters),
   };
   const used = OPTIONAL_SUBQUERY_VARIABLES.filter(
     (v) => restricted[v] && new RegExp(`\\${v}\\b`).test(query)
@@ -130,6 +136,7 @@ async function getFilterQuery(filter, endpoint, outerQuery = '') {
     const entityQuery = baseSubQuery
       .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
       .replace(SUBQUERY_SELECT, subquerySelect(outerQuery, filters))
+      .replace(DATASET_PATTERNS, (patterns) => (hasDatasetFilters(filters) ? patterns : ''))
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
       .replace('#{{GRAPH_FILTER}}', filters.enrichments.join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))

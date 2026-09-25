@@ -12,7 +12,13 @@ Changelog for the Human Reference Atlas API (HRA-API)
   (`FROM NAMED`) and of nested `GRAPH` patterns
 - Fix queries that re-bound already bound variables with `BIND` (invalid SPARQL)
 - Fix pruning of expired session-token datasets not removing their enrichment graphs
-- SPARQL errors are now reported instead of being parsed as results
+- Fix tissue-blocks dropping blocks without section counts on standards compliant triple stores (leading OPTIONAL)
+- Fix sections sometimes being dropped from tissue blocks / RUI locations (sections are now always embedded)
+- Deterministic results where the data has conflicting duplicate values (single-valued fields, tree model parents,
+  spatial placements); previously the chosen value depended on the triple store's row order
+- Filtered "Tissue Datasets" counts in aggregate results now include section datasets consistently
+- Faster filtered queries on both backends (the filter subquery only projects the variables it restricts)
+- SPARQL errors are now reported instead of being parsed as results; CONSTRUCT results are parsed incrementally
 - Add a Blazegraph vs QLever comparison harness (`test/compare`)
 
 ## 0.18.0 - 2026-01-09

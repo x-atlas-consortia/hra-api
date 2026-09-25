@@ -5,7 +5,7 @@
  *
  * Usage: node test/compare/sparql-compare.js [--a http://localhost:18081/blazegraph/namespace/kb/sparql]
  *          [--b http://localhost:28081/] [--queries test/compare/cases/sparql-queries.jsonl] [--out dir]
- *          [--runs 3] [--grep regex] [--concurrency 2]
+ *          [--runs 3] [--grep regex] [--concurrency 2] [--b-token token (clear QLever's cache before each run)]
  *
  * SELECT results are compared as multisets of CSV rows (numbers normalized); CONSTRUCT results as sets of
  * N-Triples (blank nodes normalized; QLever's xsd:int is compared as xsd:integer).
@@ -33,7 +33,15 @@ const opts = {
   runs: Number(arg('--runs', 3)),
   grep: arg('--grep') ? new RegExp(arg('--grep')) : undefined,
   concurrency: Number(arg('--concurrency', 2)),
+  // If given, QLever's cache is cleared before each run (Blazegraph has no result cache)
+  bToken: arg('--b-token'),
 };
+
+async function clearCache() {
+  if (opts.bToken) {
+    await fetch(`${opts.b}${opts.b.includes('?') ? '&' : '?'}cmd=clear-cache-complete&access-token=${opts.bToken}`);
+  }
+}
 
 function isConstruct(query) {
   return /^\s*CONSTRUCT\b/im.test(query.replace(/^\s*(PREFIX|BASE)\b.*$/gim, ''));
@@ -107,6 +115,7 @@ async function compareQuery(entry) {
   let ra, rb;
   for (let i = 0; i < opts.runs; i++) {
     ra = await run(opts.a, forBlazegraph(entry.query), acceptA);
+    await clearCache();
     rb = await run(opts.b, entry.query, acceptB);
     timings.a.push(ra.ms);
     timings.b.push(rb.ms);
