@@ -6,10 +6,12 @@ cd $QLEVER_DIR
 
 EXTRA_ARGS=()
 
-# Runtime parameters (space separated name=value pairs). The HRA API's filtered queries join large
-# optional patterns with a UNION; QLever's distributive union optimization makes planning them take
-# minutes, so it is disabled by default.
-for param in ${QLEVER_RUNTIME_PARAMETERS:-enable-distributive-union=false}; do
+# Runtime parameters (space separated name=value pairs). Defaults:
+# - enable-distributive-union=false: the HRA API's filtered queries join large optional patterns with a
+#   UNION; QLever's distributive union optimization makes planning them take minutes
+# - construct-deduplication=full: CONSTRUCT results are sets of triples (as in Blazegraph); without
+#   deduplication, the large CONSTRUCT queries return (up to 100x) repeated triples
+for param in ${QLEVER_RUNTIME_PARAMETERS:-enable-distributive-union=false construct-deduplication=full}; do
   EXTRA_ARGS+=(--set-runtime-parameter "$param")
 done
 if [[ "$QLEVER_PERSIST_UPDATES" == "true" ]]; then

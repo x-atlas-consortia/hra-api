@@ -80,7 +80,14 @@ function constructTriples(text) {
         .map((l) =>
           l
             .replace(/_:[A-Za-z0-9_\-.]+/g, '_:b')
+            // RDF 1.1: plain literals are xsd:strings (Blazegraph writes the datatype explicitly)
+            .replace(/"\^\^<http:\/\/www\.w3\.org\/2001\/XMLSchema#string>/, '"')
+            // QLever returns integers as xsd:int and doubles as xsd:decimal (with ~13 significant digits)
             .replace('^^<http://www.w3.org/2001/XMLSchema#int>', '^^<http://www.w3.org/2001/XMLSchema#integer>')
+            .replace(
+              /"([^"]+)"\^\^<http:\/\/www\.w3\.org\/2001\/XMLSchema#(?:double|decimal)>/,
+              (_m, n) => `"${normalizeNumber(Number(n))}"^^<http://www.w3.org/2001/XMLSchema#double>`
+            )
         )
     ),
   ].sort();

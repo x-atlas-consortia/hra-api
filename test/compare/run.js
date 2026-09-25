@@ -29,7 +29,7 @@
  *   --load-concurrency <n> Concurrency of the load test (default 8, 0 to skip)
  *   --out <dir>            Report directory (default test/compare/report)
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { compareResponses, PASSING } from './lib/compare.js';
@@ -82,6 +82,9 @@ const PERF_MIN_MS = 50;
 
 const BACKENDS = { a: opts.a, b: opts.b };
 const runId = new Date().toISOString().replace(/[:.]/g, '-');
+const outDir = resolve(opts.out, runId);
+// Results are also appended here as they come in, so that interrupted runs can be inspected
+const progressFile = resolve(outDir, 'progress.jsonl');
 
 function log(...args) {
   console.log(new Date().toISOString().slice(11, 19), ...args);
@@ -206,7 +209,7 @@ async function runCorrectness(cases, tokens, defaultDataset) {
     if (done % 100 === 0 || done === cases.length) {
       log(`  ${done}/${cases.length}`);
     }
-    return {
+    const result = {
       id: testCase.id,
       group: testCase.group,
       route: testCase.route,
@@ -221,6 +224,8 @@ async function runCorrectness(cases, tokens, defaultDataset) {
       bytes: [ra.bytes, rb.bytes],
       ms: [ra.ms, rb.ms],
     };
+    appendFileSync(progressFile, JSON.stringify(result) + '\n');
+    return result;
   });
 }
 
@@ -309,6 +314,7 @@ async function runPerf(cases, tokens, defaultDataset) {
     for (const [i, c] of perfCases.entries()) {
       const r = await timeCase(c, mode);
       results.push(r);
+      appendFileSync(progressFile, JSON.stringify({ perf: r }) + '\n');
       log(
         `  [${i + 1}/${perfCases.length}] ${c.id}: A p50 ${r.a.p50.toFixed(0)}ms p95 ${r.a.p95.toFixed(0)}ms | ` +
           `B p50 ${r.b.p50.toFixed(0)}ms p95 ${r.b.p95.toFixed(0)}ms | p95 ratio ${r.p95Ratio.toFixed(2)}${r.pass ? '' : ' FAIL'}`
@@ -338,15 +344,14 @@ async function runPerf(cases, tokens, defaultDataset) {
 // ---------------------------------------------------------------------------------------------------------------
 
 async function main() {
-  log('Baseline (A):', opts.a, ' Candidate (B):', opts.b);
+  mkdirSync(outDir, { recursive: true });
+  log('Baseline (A):', opts.a, ' Candidate (B):', opts.b, ' Output:', outDir);
   const datasets = await setupDatasets();
   const cases = loadCases(Object.keys(datasets.tokens));
 
   const correctness = opts.skipCorrectness ? [] : await runCorrectness(cases, datasets.tokens, datasets.defaultDataset);
   const perf = opts.perf ? await runPerf(cases, datasets.tokens, datasets.defaultDataset) : undefined;
 
-  const outDir = resolve(opts.out, runId);
-  mkdirSync(outDir, { recursive: true });
   const results = { runId, options: { ...opts, grep: opts.grep?.source }, datasets: datasets.results, correctness, perf };
   writeFileSync(resolve(outDir, 'results.json'), JSON.stringify(results, null, 1));
   const { summary, failed } = writeReport(results, outDir);

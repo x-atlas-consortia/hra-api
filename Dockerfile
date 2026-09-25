@@ -23,7 +23,7 @@ ENV QLEVER_TIMEOUT=360s
 ENV QLEVER_READONLY=false
 ENV QLEVER_PERSIST_UPDATES=false
 ENV QLEVER_PORT=8081
-ENV QLEVER_RUNTIME_PARAMETERS="enable-distributive-union=false"
+ENV QLEVER_RUNTIME_PARAMETERS="enable-distributive-union=false construct-deduplication=full"
 ENV QLEVER_DIR=/data/qlever
 ENV NODE_ENV=production
 ENV PORT=8080

@@ -113,6 +113,31 @@ function propertyDiff(a, b) {
   return { properties: props };
 }
 
+/** Lists the first paths at which two (canonicalized) JSON values differ */
+function firstDifferences(a, b, path = '$', out = [], max = 8) {
+  if (out.length >= max) return out;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) {
+      const { onlyA, onlyB } = multisetDiff(a.map(stableStringify), b.map(stableStringify));
+      out.push({ path, lengths: [a.length, b.length], onlyA: sample(onlyA).slice(0, 3), onlyB: sample(onlyB).slice(0, 3) });
+      return out;
+    }
+    a.forEach((v, i) => firstDifferences(v, b[i], `${path}[${i}]`, out, max));
+  } else if (a && b && typeof a === 'object' && typeof b === 'object' && !Array.isArray(a) && !Array.isArray(b)) {
+    for (const key of [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()) {
+      if (!(key in a) || !(key in b)) {
+        out.push({ path: `${path}.${key}`, missingIn: key in a ? 'B' : 'A', value: trim(stableStringify(a[key] ?? b[key])) });
+      } else if (stableStringify(a[key]) !== stableStringify(b[key])) {
+        firstDifferences(a[key], b[key], `${path}.${key}`, out, max);
+      }
+      if (out.length >= max) break;
+    }
+  } else if (stableStringify(a) !== stableStringify(b)) {
+    out.push({ path, a: trim(stableStringify(a)), b: trim(stableStringify(b)) });
+  }
+  return out;
+}
+
 function trim(s) {
   return s === undefined ? undefined : s.length > 300 ? s.slice(0, 300) + '…' : s;
 }
@@ -160,10 +185,18 @@ export function compareResponses(a, b) {
           onlyB: onlyB.length,
           samples: { onlyA: sample(onlyA), onlyB: sample(onlyB) },
           records: describeJsonDiff(ja.value, jb.value),
+          paths: firstDifferences(canonicalUnordered(ja.value), canonicalUnordered(jb.value)),
         },
       };
     }
-    return { category: 'different', details: { reason: 'json', ...describeJsonDiff(ja.value, jb.value) } };
+    return {
+      category: 'different',
+      details: {
+        reason: 'json',
+        ...describeJsonDiff(ja.value, jb.value),
+        paths: firstDifferences(canonicalUnordered(ja.value), canonicalUnordered(jb.value)),
+      },
+    };
   }
 
   // Text responses (CSV, TSV, N-Triples, Turtle, HTML, ...)

@@ -71,13 +71,18 @@ export async function ask(query, endpoint) {
   return !!json.boolean;
 }
 
-const XSD_INT = 'http://www.w3.org/2001/XMLSchema#int';
-const XSD_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+const XSD = 'http://www.w3.org/2001/XMLSchema#';
 
-// QLever stores all integer literals (xsd:integer, xsd:nonNegativeInteger, ...) natively and returns them as xsd:int.
-// The HRA KG uses xsd:integer, which the JSON-LD contexts/frames expect, so map them back.
+// QLever stores numbers natively and returns all integers (xsd:integer, xsd:nonNegativeInteger, ...) as xsd:int
+// and all doubles as xsd:decimal. The HRA KG only uses xsd:integer and xsd:double, which the JSON-LD
+// contexts/frames expect, so map them back.
+const QLEVER_DATATYPES = {
+  [`${XSD}int`]: `${XSD}integer`,
+  [`${XSD}decimal`]: `${XSD}double`,
+};
+
 function literalDatatype(datatype) {
-  return config.backend === 'qlever' && datatype === XSD_INT ? XSD_INTEGER : datatype;
+  return (config.backend === 'qlever' && QLEVER_DATATYPES[datatype]) || datatype;
 }
 
 // Converts an RDF/JS term to the term format used internally by jsonld.fromRDF

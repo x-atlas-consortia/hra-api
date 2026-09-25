@@ -2,7 +2,21 @@ import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
 import { sparqlBackend } from '../../shared/utils/sparql.js';
 import baseSubQuery from '../queries/base-subquery.rq';
 
-async function getFilterQuery(filter, endpoint) {
+const SUBQUERY_SELECT = 'SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?section ?sectionDataset';
+const OPTIONAL_SUBQUERY_VARIABLES = ['?dataset', '?section', '?sectionDataset'];
+
+/**
+ * Only project the dataset/section variables of the filter subquery that the outer query uses. Projecting
+ * unused (and often unbound) variables does not change the results, but joining on possibly unbound
+ * variables is very expensive in some triple stores (e.g., QLever).
+ */
+function subquerySelect(outerQuery) {
+  const query = outerQuery.replace(/#[^\n]*/g, '');
+  const used = OPTIONAL_SUBQUERY_VARIABLES.filter((v) => new RegExp(`\\${v}\\b`).test(query));
+  return ['SELECT DISTINCT ?donor ?block ?rui_location', ...used].join(' ');
+}
+
+async function getFilterQuery(filter, endpoint, outerQuery = '') {
   const {
     ontologyTerms,
     cellTypeTerms,
@@ -107,6 +121,7 @@ async function getFilterQuery(filter, endpoint) {
   if (Object.values(filters).filter((s) => s.length > 0).length > 0) {
     const entityQuery = baseSubQuery
       .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
+      .replace(SUBQUERY_SELECT, subquerySelect(outerQuery))
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
       .replace('#{{GRAPH_FILTER}}', filters.enrichments.join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
@@ -136,7 +151,7 @@ function setDatasetGraph(filter, query) {
 }
 
 export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const sparqlFilter = await getFilterQuery(filter, endpoint);
+  const sparqlFilter = await getFilterQuery(filter, endpoint, sparqlQuery);
   const filteredQuery = setDatasetGraph(filter, sparqlQuery.replace('#{{FILTER}}', sparqlFilter));
   return filteredQuery;
 }
