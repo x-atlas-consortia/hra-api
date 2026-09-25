@@ -80,6 +80,14 @@ const opts = {
 const PERF_RATIO_LIMIT = 1.2;
 const PERF_MIN_MS = 50;
 
+// Values that differ on every call by design (per route)
+const VOLATILE = {
+  // Composed placements get a random @id and today's date (see SpatialGraph.matrixToSpatialPlacement)
+  'v1/rui-reference-data': [/^placementPatches\.[^.]+\.(@id|placement_date)$/],
+  // Load times and timestamps of session-token datasets
+  'v1/db-status': [/^(loadTime|startTime|timestamp)$/],
+};
+
 const BACKENDS = { a: opts.a, b: opts.b };
 const runId = new Date().toISOString().replace(/[:.]/g, '-');
 const outDir = resolve(opts.out, runId);
@@ -201,7 +209,7 @@ async function runCorrectness(cases, tokens, defaultDataset) {
   return mapLimit(cases, opts.concurrency, async (testCase) => {
     const bound = bindCase(testCase, tokens, defaultDataset);
     const [ra, rb] = await Promise.all([sendCase(opts.a, bound), sendCase(opts.b, bound)]);
-    const { category, details } = compareResponses(ra, rb);
+    const { category, details } = compareResponses(ra, rb, { volatile: VOLATILE[testCase.route] });
     const allowed = PASSING.has(category)
       ? undefined
       : allowlist.find((e) => e.regex.test(testCase.id) && (!e.category || e.category === category));

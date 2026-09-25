@@ -4,7 +4,9 @@ import {
   flattenJsonLdFacts,
   looksLikeJsonLd,
   normalizeLines,
+  numbersClose,
   stableStringify,
+  tolerantEqual,
 } from './normalize.js';
 
 export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'different', 'error'];
@@ -13,6 +15,20 @@ export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'differe
 export const PASSING = new Set(['identical', 'order-only', 'embedding-only']);
 
 const MAX_SAMPLES = 5;
+
+/** Removes values at volatile paths (e.g., generated ids), given as regexes on dotted paths like `a.b.c` */
+function stripVolatile(value, patterns, path = '') {
+  if (!patterns?.length || !value || typeof value !== 'object') return value;
+  if (Array.isArray(value)) return value.map((v) => stripVolatile(v, patterns, path));
+  const result = {};
+  for (const [key, v] of Object.entries(value)) {
+    const childPath = path ? `${path}.${key}` : key;
+    if (!patterns.some((p) => p.test(childPath))) {
+      result[key] = stripVolatile(v, patterns, childPath);
+    }
+  }
+  return result;
+}
 
 function tryParseJson(text) {
   try {
@@ -127,12 +143,12 @@ function firstDifferences(a, b, path = '$', out = [], max = 8) {
     for (const key of [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()) {
       if (!(key in a) || !(key in b)) {
         out.push({ path: `${path}.${key}`, missingIn: key in a ? 'B' : 'A', value: trim(stableStringify(a[key] ?? b[key])) });
-      } else if (stableStringify(a[key]) !== stableStringify(b[key])) {
+      } else if (!tolerantEqual(a[key], b[key])) {
         firstDifferences(a[key], b[key], `${path}.${key}`, out, max);
       }
       if (out.length >= max) break;
     }
-  } else if (stableStringify(a) !== stableStringify(b)) {
+  } else if (!(typeof a === 'number' && typeof b === 'number' && numbersClose(a, b)) && stableStringify(a) !== stableStringify(b)) {
     out.push({ path, a: trim(stableStringify(a)), b: trim(stableStringify(b)) });
   }
   return out;
@@ -146,7 +162,7 @@ function trim(s) {
  * Compares two HTTP responses: { status, contentType, body, error? }
  * @returns {{ category: string, details?: object }}
  */
-export function compareResponses(a, b) {
+export function compareResponses(a, b, { volatile = [] } = {}) {
   if (a.error || b.error) {
     return { category: 'error', details: { a: a.error, b: b.error } };
   }
@@ -163,10 +179,12 @@ export function compareResponses(a, b) {
   const ja = tryParseJson(a.body);
   const jb = tryParseJson(b.body);
   if (ja.ok && jb.ok) {
-    if (stableStringify(canonicalOrdered(ja.value)) === stableStringify(canonicalOrdered(jb.value))) {
+    ja.value = stripVolatile(ja.value, volatile);
+    jb.value = stripVolatile(jb.value, volatile);
+    if (tolerantEqual(canonicalOrdered(ja.value), canonicalOrdered(jb.value))) {
       return { category: 'identical' };
     }
-    if (stableStringify(canonicalUnordered(ja.value)) === stableStringify(canonicalUnordered(jb.value))) {
+    if (tolerantEqual(canonicalUnordered(ja.value), canonicalUnordered(jb.value))) {
       return { category: 'order-only' };
     }
     if (looksLikeJsonLd(ja.value) || looksLikeJsonLd(jb.value)) {

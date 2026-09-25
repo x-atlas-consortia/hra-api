@@ -6,13 +6,21 @@ const SUBQUERY_SELECT = 'SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?s
 const OPTIONAL_SUBQUERY_VARIABLES = ['?dataset', '?section', '?sectionDataset'];
 
 /**
- * Only project the dataset/section variables of the filter subquery that the outer query uses. Projecting
- * unused (and often unbound) variables does not change the results, but joining on possibly unbound
- * variables is very expensive in some triple stores (e.g., QLever).
+ * Only project the dataset/section variables of the filter subquery if the outer query uses them and
+ * there are dataset/section filters (e.g., technologies) that restrict them. Otherwise they do not restrict
+ * the results, and joining on these (often unbound) variables is very expensive in some triple stores
+ * (e.g., QLever).
  */
-function subquerySelect(outerQuery) {
+function subquerySelect(outerQuery, filters) {
   const query = outerQuery.replace(/#[^\n]*/g, '');
-  const used = OPTIONAL_SUBQUERY_VARIABLES.filter((v) => new RegExp(`\\${v}\\b`).test(query));
+  const restricted = {
+    '?dataset': filters.dataset.length > 0,
+    '?section': filters.sectionDataset.length > 0,
+    '?sectionDataset': filters.sectionDataset.length > 0,
+  };
+  const used = OPTIONAL_SUBQUERY_VARIABLES.filter(
+    (v) => restricted[v] && new RegExp(`\\${v}\\b`).test(query)
+  );
   return ['SELECT DISTINCT ?donor ?block ?rui_location', ...used].join(' ');
 }
 
@@ -121,7 +129,7 @@ async function getFilterQuery(filter, endpoint, outerQuery = '') {
   if (Object.values(filters).filter((s) => s.length > 0).length > 0) {
     const entityQuery = baseSubQuery
       .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
-      .replace(SUBQUERY_SELECT, subquerySelect(outerQuery))
+      .replace(SUBQUERY_SELECT, subquerySelect(outerQuery, filters))
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
       .replace('#{{GRAPH_FILTER}}', filters.enrichments.join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))

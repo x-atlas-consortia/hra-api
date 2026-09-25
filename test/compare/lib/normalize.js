@@ -30,12 +30,43 @@ export function normalizeString(s) {
 }
 
 function normalizeScalar(value) {
-  if (typeof value === 'number') {
-    return normalizeNumber(value);
-  } else if (typeof value === 'string') {
-    return normalizeString(value);
+  return typeof value === 'string' ? normalizeString(value) : value;
+}
+
+/** Coarse rounding, only used for sort keys and fact sets (exact comparisons use numbersClose) */
+function coarseNumber(n) {
+  if (!Number.isFinite(n) || Number.isInteger(n)) return n;
+  if (Math.abs(n) < ZERO_THRESHOLD) return 0;
+  return Number(n.toPrecision(6));
+}
+
+function coarse(value) {
+  if (Array.isArray(value)) return value.map(coarse);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, coarse(v)]));
   }
-  return value;
+  return typeof value === 'number' ? coarseNumber(value) : value;
+}
+
+/** Numbers are equal within a relative tolerance of 1e-9 (or both close to zero) */
+export function numbersClose(a, b) {
+  if (a === b) return true;
+  const diff = Math.abs(a - b);
+  return diff < ZERO_THRESHOLD || diff <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
+}
+
+/** Deep equality with numeric tolerance */
+export function tolerantEqual(a, b) {
+  if (typeof a === 'number' && typeof b === 'number') return numbersClose(a, b);
+  if (Array.isArray(a) || Array.isArray(b)) {
+    return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((v, i) => tolerantEqual(v, b[i]));
+  }
+  if (a && b && typeof a === 'object' && typeof b === 'object') {
+    const ka = Object.keys(a);
+    const kb = Object.keys(b);
+    return ka.length === kb.length && ka.every((k) => k in b && tolerantEqual(a[k], b[k]));
+  }
+  return a === b;
 }
 
 /** Stable stringify with sorted object keys */
@@ -68,7 +99,7 @@ export function canonicalUnordered(value) {
   if (Array.isArray(value)) {
     return value
       .map(canonicalUnordered)
-      .map((v) => [stableStringify(v), v])
+      .map((v) => [stableStringify(coarse(v)), v])
       .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
       .map(([, v]) => v);
   } else if (value && typeof value === 'object') {
@@ -107,9 +138,9 @@ export function flattenJsonLdFacts(value) {
           visit(v, undefined);
         } else if (v && typeof v === 'object') {
           // Anonymous nested object: record its canonical content
-          facts.add(stableStringify([id, key, canonicalUnordered(v)]));
+          facts.add(stableStringify([id, key, coarse(canonicalUnordered(v))]));
         } else {
-          facts.add(stableStringify([id, key, normalizeScalar(v)]));
+          facts.add(stableStringify([id, key, coarse(normalizeScalar(v))]));
         }
       }
     }
