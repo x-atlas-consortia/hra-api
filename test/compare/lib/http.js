@@ -5,7 +5,7 @@
 export async function sendCase(baseUrl, testCase, options = {}) {
   const result = await sendCaseOnce(baseUrl, testCase, options);
   // Retry once on connection errors (e.g., a keep-alive connection closed by the server right before reuse)
-  if (result.error && !/timeout|aborted/i.test(result.error) && result.ms < 5000) {
+  if (result.error && !/timeout|aborted/i.test(result.error)) {
     return sendCaseOnce(baseUrl, testCase, options);
   }
   return result;

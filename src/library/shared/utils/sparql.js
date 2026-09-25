@@ -129,17 +129,28 @@ async function* bodyChunks(body) {
 async function parseNTriplesResponse(resp) {
   const parser = new N3StreamParser({ format: 'application/n-triples' });
   const quads = [];
-  const done = new Promise((resolve, reject) => {
+  let error;
+  const done = new Promise((resolve) => {
     parser.on('data', (quad) => quads.push(toJsonLdQuad(quad)));
     parser.on('end', resolve);
-    parser.on('error', reject);
+    parser.on('error', (err) => {
+      error = error ?? err;
+      resolve();
+    });
   });
   const decoder = new TextDecoder();
   for await (const chunk of bodyChunks(resp.body)) {
     parser.write(typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true }));
+    if (error) {
+      // E.g., the triple store reported an error (like a timeout) in the middle of the response
+      throw error;
+    }
   }
   parser.end(decoder.decode());
   await done;
+  if (error) {
+    throw error;
+  }
   return quads;
 }
 

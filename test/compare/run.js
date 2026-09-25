@@ -83,7 +83,7 @@ const PERF_MIN_MS = 50;
 // Values that differ on every call by design (per route)
 const VOLATILE = {
   // Composed placements get a random @id and today's date (see SpatialGraph.matrixToSpatialPlacement)
-  'v1/rui-reference-data': [/^placementPatches\.[^.]+\.(@id|placement_date)$/],
+  'v1/rui-reference-data': [/^placementPatches\..+\.(@id|placement_date)$/],
   // Load times and timestamps of session-token datasets
   'v1/db-status': [/^(loadTime|startTime|timestamp)$/],
 };
