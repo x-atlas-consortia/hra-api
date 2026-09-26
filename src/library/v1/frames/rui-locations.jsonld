@@ -12,7 +12,6 @@
     },
     "sections": {
       "@type": "ccf:Sample",
-      "@embed": "@always",
       "datasets": {
         "@type": "ccf:Dataset",
         "@embed": "@always"

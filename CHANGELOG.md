@@ -11,9 +11,11 @@ Changelog for the Human Reference Atlas API (HRA-API)
 - Fix queries that relied on Blazegraph's non-standard handling of `GRAPH` patterns outside the query's dataset
   (`FROM NAMED`) and of nested `GRAPH` patterns
 - Fix queries that re-bound already bound variables with `BIND` (invalid SPARQL)
+- Fix `/kg/asctb-term-occurences` filters being nested in a GRAPH pattern (no results on standards compliant stores); faster HRA version filter
 - Fix pruning of expired session-token datasets not removing their enrichment graphs
 - Fix tissue-blocks dropping blocks without section counts on standards compliant triple stores (leading OPTIONAL)
-- Fix sections sometimes being dropped from tissue blocks / RUI locations (sections are now always embedded)
+- Fix sections shared by multiple tissue blocks being dropped from the tissue blocks response
+- CONSTRUCT results are sorted before JSON-LD framing, so framed results no longer depend on the triple store's order
 - Deterministic results where the data has conflicting duplicate values (single-valued fields, tree model parents,
   spatial placements); previously the chosen value depended on the triple store's row order
 - Filtered "Tissue Datasets" counts in aggregate results now include section datasets consistently

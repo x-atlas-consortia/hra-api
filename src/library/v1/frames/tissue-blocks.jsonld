@@ -5,7 +5,6 @@
   "rui_location": {},
   "sections": {
     "@type": "ccf:Sample",
-    "@embed": "@always",
     "sample_type": {},
     "datasets": {
       "@type": "ccf:Dataset",

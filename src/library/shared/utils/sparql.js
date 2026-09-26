@@ -113,6 +113,21 @@ function toJsonLdQuad(quad) {
   };
 }
 
+function compareTerms(a, b) {
+  if (a.value !== b.value) return a.value < b.value ? -1 : 1;
+  if (a.termType !== b.termType) return a.termType < b.termType ? -1 : 1;
+  const da = a.datatype?.value ?? '';
+  const db = b.datatype?.value ?? '';
+  if (da !== db) return da < db ? -1 : 1;
+  const la = a.language ?? '';
+  const lb = b.language ?? '';
+  return la === lb ? 0 : la < lb ? -1 : 1;
+}
+
+function compareQuads(a, b) {
+  return compareTerms(a.subject, b.subject) || compareTerms(a.predicate, b.predicate) || compareTerms(a.object, b.object);
+}
+
 // Iterates over the chunks of a response body (node streams or web streams without async iteration support)
 async function* bodyChunks(body) {
   if (body[Symbol.asyncIterator]) {
@@ -159,6 +174,9 @@ export async function construct(query, endpoint, frame = undefined) {
   // Blazegraph only knows N-Triples as text/plain.
   const resp = await checkResponse(await fetchSparql(query, endpoint, 'application/n-triples, text/plain;q=0.9'));
   const quads = await parseNTriplesResponse(resp);
+  // JSON-LD framing (e.g., which occurrence of a node is embedded) depends on the order of the triples, which
+  // differs between triple stores. Sort them so that the results only depend on the data.
+  quads.sort(compareQuads);
   const json = await jsonld.fromRDF(quads);
   if (frame) {
     return await jsonld.frame(json, frame);
