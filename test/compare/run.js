@@ -27,6 +27,7 @@
  *   --perf-top <n>         Most frequent log cases per route to include in the perf tests (default 3)
  *   --perf-modes <list>    uncached,warm (default uncached,warm)
  *   --load-concurrency <n> Concurrency of the load test (default 8, 0 to skip)
+ *   --perf-abs-tolerance <ms> Also report the gate with this absolute p95 tolerance (default 100)
  *   --out <dir>            Report directory (default test/compare/report)
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
@@ -72,6 +73,7 @@ const opts = {
   perfTop: Number(arg('--perf-top', 3)),
   perfModes: arg('--perf-modes', 'uncached,warm').split(','),
   loadConcurrency: Number(arg('--load-concurrency', 8)),
+  perfAbsTolerance: Number(arg('--perf-abs-tolerance', 100)),
   out: resolve(arg('--out', resolve(HERE, 'report'))),
 };
 
@@ -309,6 +311,8 @@ async function timeCase(testCase, mode) {
     p95Ratio,
     errors,
     pass: exempt || p95Ratio <= PERF_RATIO_LIMIT,
+    // Passes when the p95 is within the ratio limit or within an absolute tolerance
+    passWithTolerance: exempt || p95Ratio <= PERF_RATIO_LIMIT || b.p95 - a.p95 <= opts.perfAbsTolerance,
     exempt,
   };
 }
@@ -346,6 +350,7 @@ async function runPerf(cases, tokens, defaultDataset) {
     summaryByMode[mode] = {
       cases: list.length,
       failures: list.filter((r) => !r.pass).length,
+      failuresWithTolerance: list.filter((r) => !r.passWithTolerance).length,
       geomeanP50Ratio: geomean(list.map((r) => r.p50Ratio)),
       geomeanP95Ratio: geomean(list.map((r) => r.p95Ratio)),
     };
@@ -355,7 +360,12 @@ async function runPerf(cases, tokens, defaultDataset) {
     log('Load test');
     load = await runLoad(perfCases);
   }
-  return { cases: results, summaryByMode, load, limits: { ratio: PERF_RATIO_LIMIT, minMs: PERF_MIN_MS } };
+  return {
+    cases: results,
+    summaryByMode,
+    load,
+    limits: { ratio: PERF_RATIO_LIMIT, minMs: PERF_MIN_MS, absTolerance: opts.perfAbsTolerance },
+  };
 }
 
 // ---------------------------------------------------------------------------------------------------------------

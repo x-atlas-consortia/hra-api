@@ -1,4 +1,4 @@
-import { construct } from '../../shared/utils/sparql.js';
+import { construct, select } from '../../shared/utils/sparql.js';
 import frame from '../frames/extraction-site.jsonld';
 import query from '../queries/extraction-site.rq';
 import { normalizeJsonLd } from '../utils/jsonld-compat.js';
@@ -39,11 +39,21 @@ export async function getExtractionSite(filter, endpoint = 'https://lod.humanatl
   if (!filter.iri || INVALID_IRI_CHARS.test(filter.iri)) {
     return undefined;
   }
-  const filteredQuery = query
-    // Use the IRI as a constant (rather than a VALUES binding), which is planned much faster by some
-    // triple stores (e.g., QLever)
-    .replaceAll('?rui_location', `<${filter.iri}>`)
-    // Limit the search space to the millitome collection when encountering millitome IRIs
-    .replace('#{{FROM}}', filter.iri.startsWith('https://purl.humanatlas.io/millitome/') ? 'FROM HRAMillitomes:' : '');
+  // Limit the search space to the millitome collection when encountering millitome IRIs
+  const from = filter.iri.startsWith('https://purl.humanatlas.io/millitome/')
+    ? 'FROM <https://purl.humanatlas.io/collection/hra-millitomes>'
+    : '';
+
+  // Use the IRIs as constants (rather than variables or a VALUES binding), which is planned and executed much
+  // faster by some triple stores (e.g., QLever). The placement is looked up first.
+  let filteredQuery = query.replaceAll('?rui_location', `<${filter.iri}>`).replace('#{{FROM}}', from);
+  const placements = await select(
+    `SELECT DISTINCT ?placement ${from} WHERE { ?placement <http://purl.org/ccf/placement_for> <${filter.iri}> . }`,
+    endpoint
+  );
+  const placement = String(placements[0]?.placement ?? '');
+  if (placements.length === 1 && /^[a-z][a-z0-9+.-]*:/i.test(placement) && !placement.startsWith('_:') && !INVALID_IRI_CHARS.test(placement)) {
+    filteredQuery = filteredQuery.replaceAll('?SpatialPlacement', `<${placement}>`);
+  }
   return reformatResponse(await construct(filteredQuery, endpoint, frame));
 }

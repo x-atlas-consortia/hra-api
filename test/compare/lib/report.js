@@ -107,9 +107,16 @@ export function writeReport(results, outDir) {
       `Gate: p95(B) ≤ ${perf.limits.ratio}× p95(A) per case (cases under ${perf.limits.minMs}ms exempt) and geometric mean of p50 ratios ≤ 1.0 (uncached mode).`,
       ''
     );
-    out('| Mode | Cases | Failures | Geomean p50 ratio | Geomean p95 ratio |', '|---|---|---|---|---|');
+    out(
+      `| Mode | Cases | Failures | Failures (within ${perf.limits.absTolerance}ms tolerated) | Geomean p50 ratio | Geomean p95 ratio |`,
+      '|---|---|---|---|---|---|'
+    );
     for (const [mode, s] of Object.entries(perf.summaryByMode)) {
-      out(`| ${mode} | ${s.cases} | ${s.failures} | ${fmtRatio(s.geomeanP50Ratio)} | ${fmtRatio(s.geomeanP95Ratio)} |`);
+      out(
+        `| ${mode} | ${s.cases} | ${s.failures} | ${s.failuresWithTolerance ?? '-'} | ${fmtRatio(s.geomeanP50Ratio)} | ${fmtRatio(
+          s.geomeanP95Ratio
+        )} |`
+      );
     }
     out('');
     if (perf.load) {
@@ -145,7 +152,10 @@ export function writeReport(results, outDir) {
     perf
       ? `Performance: ` +
         Object.entries(perf.summaryByMode)
-          .map(([m, s]) => `${m} ${s.failures}/${s.cases} failures, geomean p50 ${fmtRatio(s.geomeanP50Ratio)}`)
+          .map(
+            ([m, s]) =>
+              `${m} ${s.failures}/${s.cases} failures (${s.failuresWithTolerance} beyond ${perf.limits.absTolerance}ms), geomean p50 ${fmtRatio(s.geomeanP50Ratio)}`
+          )
           .join('; ')
       : 'Performance: not run',
     failed ? 'RESULT: FAIL' : 'RESULT: PASS',

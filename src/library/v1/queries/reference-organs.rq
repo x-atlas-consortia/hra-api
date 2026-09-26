@@ -32,27 +32,36 @@ CONSTRUCT {
 }
 FROM HRA:
 WHERE {
+  # Patterns are grouped so that query planners do not have to plan one large join
+  {
     ?refOrgan rdf:type ccf:SpatialEntity ;
-            ccf:has_reference_organ ?refOrgan ;
-            ccf:representation_of ?representation_of ;
-            # TODO: Uncomment after next release
-            # dcterms:creator [
-            #   schema:name ?creator ;
-            #   schema:givenName ?creator_first_name ;
-            #   schema:familyName ?creator_last_name ;
-            # ] ;
-            dcterms:created ?created ;
-            ccf:x_dimension ?x_dimension ;
-            ccf:y_dimension ?y_dimension ;
-            ccf:z_dimension ?z_dimension ;
-            ccf:dimension_unit ?dimension_units ;
-            skos:prefLabel ?label ;
-            ccf:organ_owner_sex ?sex ;
-            ccf:has_object_reference ?object .
-  ?object rdf:type ccf:SpatialObjectReference ;
-          ccf:file_url ?file ;
-          ccf:file_format ?file_format ;
-          ccf:file_subpath ?file_subpath .
+              ccf:has_reference_organ ?refOrgan ;
+              ccf:representation_of ?representation_of ;
+              # TODO: Uncomment after next release
+              # dcterms:creator [
+              #   schema:name ?creator ;
+              #   schema:givenName ?creator_first_name ;
+              #   schema:familyName ?creator_last_name ;
+              # ] ;
+              dcterms:created ?created .
+  }
+  {
+    ?refOrgan ccf:x_dimension ?x_dimension ;
+              ccf:y_dimension ?y_dimension ;
+              ccf:z_dimension ?z_dimension ;
+              ccf:dimension_unit ?dimension_units .
+  }
+  {
+    ?refOrgan skos:prefLabel ?label ;
+              ccf:organ_owner_sex ?sex ;
+              ccf:has_object_reference ?object .
+  }
+  {
+    ?object rdf:type ccf:SpatialObjectReference ;
+            ccf:file_url ?file ;
+            ccf:file_format ?file_format ;
+            ccf:file_subpath ?file_subpath .
+  }
   OPTIONAL { ?refOrgan ccf:organ_side ?organ_side . }
   BIND(IF(?representation_of = skin:, 10, 20) as ?rui_rank)
 }
