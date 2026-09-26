@@ -17,7 +17,8 @@ WHERE {
   GRAPH HRA: {
     ?iri ccf:ccf_asctb_type [] ;
       dct:isReferencedBy ?purl .
-    #{{FILTER}}
   }
+  # Filters use their own GRAPH patterns, which must not be nested in the GRAPH pattern above
+  #{{FILTER}}
 }
 GROUP BY ?iri

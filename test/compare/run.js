@@ -86,6 +86,8 @@ const VOLATILE = {
   'v1/rui-reference-data': [/^placementPatches\..+\.(@id|placement_date)$/],
   // Load times and timestamps of session-token datasets
   'v1/db-status': [/^(loadTime|startTime|timestamp)$/],
+  // Computed placements get a random @id and today's date
+  'v1/get-spatial-placement': [/^(@id|placement_date)$/],
 };
 
 const BACKENDS = { a: opts.a, b: opts.b };

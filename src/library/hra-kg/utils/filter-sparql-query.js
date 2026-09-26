@@ -14,8 +14,11 @@ function termFilter(terms) {
 
 function hraVersionFilter(versions) {
   const quotedVersions = versions.map((v) => `'${v}'`).join(', ');
+  // Joined as a subquery (rather than FILTER EXISTS) so that the allowed purls are computed only once
   return `
-    FILTER EXISTS {
+  {
+    SELECT DISTINCT ?purl
+    WHERE {
       GRAPH LOD: {
         [] a dcat:Dataset ;
           	schema:version ?version ;
@@ -29,6 +32,7 @@ function hraVersionFilter(versions) {
         BIND(IRI(STRBEFORE(STR(?graphPurlVersioned), CONCAT('/', ?version))) as ?purl)
       }
     }
+  }
   `;
 }
 
