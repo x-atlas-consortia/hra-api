@@ -50,7 +50,8 @@ The library works with both QLever and Blazegraph endpoints (e.g., <https://lod.
 ### Comparing backends
 
 `test/compare` contains a harness that checks the QLever-based API against the previous Blazegraph-based API
-for correctness and performance. See [test/compare/README.md](./test/compare/README.md).
+for correctness and performance. See [test/compare/README.md](./test/compare/README.md) and the migration results in
+[docs/qlever-migration.md](./docs/qlever-migration.md).
 
 ## Using HRA-API from Python Notebooks
 
