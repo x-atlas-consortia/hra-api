@@ -170,6 +170,9 @@ export function compareResponses(a, b, { volatile = [] } = {}) {
     const category = a.error && !b.error && b.status < 500 ? 'baseline-error' : 'error';
     return { category, details: { a: a.error, b: b.error, statusB: b.status } };
   }
+  if (a.status !== b.status && a.status >= 500 && b.status < 400) {
+    return { category: 'baseline-error', details: { a: `status ${a.status}: ${trim(a.body)}`, statusB: b.status } };
+  }
   if (a.status !== b.status) {
     return {
       category: 'different',
