@@ -247,9 +247,18 @@ async function clearQleverCache() {
   const url = new URL(opts.bSparql);
   url.searchParams.set('cmd', 'clear-cache-complete');
   url.searchParams.set('access-token', opts.bToken);
-  const resp = await fetch(url);
-  if (!resp.ok) {
-    throw new Error(`Could not clear the QLever cache: ${resp.status} ${await resp.text()}`);
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const resp = await fetch(url);
+      if (resp.ok) return true;
+      throw new Error(`${resp.status} ${await resp.text()}`);
+    } catch (err) {
+      if (attempt >= 5) {
+        log(`  Could not clear the QLever cache (${err.message}); timing this run with the cache`);
+        return false;
+      }
+      await new Promise((r) => setTimeout(r, 2000 * attempt));
+    }
   }
 }
 

@@ -19,7 +19,8 @@ const HRA_API = {
     SPARQL_BACKEND,
     SPARQL_UPDATE_TOKEN,
   },
-  cron_restart: '0 7 * * *',
+  // Restart after the triple store (restarting both at the same time can make pm2 start the API twice)
+  cron_restart: USE_LOCAL_DB ? '5 7 * * *' : '0 7 * * *',
 };
 
 const QLEVER = {
