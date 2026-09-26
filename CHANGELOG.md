@@ -19,6 +19,10 @@ Changelog for the Human Reference Atlas API (HRA-API)
 - Filtered "Tissue Datasets" counts in aggregate results now include section datasets consistently
 - Faster filtered queries on both backends (the filter subquery only projects the variables it restricts)
 - SPARQL errors are now reported instead of being parsed as results; CONSTRUCT results are parsed incrementally
+- Failed SPARQL queries now result in a 500 error instead of an (incorrect) empty result, and errors in async
+  route handlers no longer crash the server
+- Faster query planning: patterns of each entity are grouped in the scene, scene-organs, tissue-blocks and
+  rui-locations queries
 - Add a Blazegraph vs QLever comparison harness (`test/compare`)
 
 ## 0.18.0 - 2026-01-09

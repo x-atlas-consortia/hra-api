@@ -6,6 +6,7 @@ import qs from 'qs';
 import { longCache, noCache } from './cache-middleware.js';
 import { activeQueryLimit } from './environment.js';
 import './fetch-polyfill.js';
+import './utils/async-errors.js';
 import browserRoute from './routes/browser.js';
 import dsGraphRoutes from './routes/ds-graph.js';
 import euiRoute from './routes/eui.js';
@@ -86,16 +87,13 @@ app.use('/hra-pop', processingQueue, hraPopRoutes);
 app.use('/ds-graph', dsGraphRoutes);
 app.use('/kg', hraKgRoutes);
 
-// app.use(function (err, req, res, next) {
-//   const debugMode = req.app.get('env') === 'development';
-
-//   res.status(err.status || 500);
-
-//   if (debugMode) {
-//     res.json(err);
-//   } else {
-//     res.json({ message: 'error' });
-//   }
-// });
+// Report unexpected errors (e.g., failed SPARQL queries) instead of crashing or hanging the request
+app.use(function (err, req, res, next) {
+  console.error('Error handling', req.method, req.originalUrl, err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(err.status || 500).send('Internal Server Error');
+});
 
 export default app;

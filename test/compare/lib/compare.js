@@ -9,10 +9,13 @@ import {
   tolerantEqual,
 } from './normalize.js';
 
-export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'different', 'error'];
+export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'different', 'error', 'baseline-error'];
 
 /** Categories that count as a pass without needing review */
 export const PASSING = new Set(['identical', 'order-only', 'embedding-only']);
+
+/** Categories that are listed for review but do not fail the comparison (the baseline failed, the candidate did not) */
+export const NON_FAILING = new Set(['baseline-error']);
 
 const MAX_SAMPLES = 5;
 
@@ -164,7 +167,8 @@ function trim(s) {
  */
 export function compareResponses(a, b, { volatile = [] } = {}) {
   if (a.error || b.error) {
-    return { category: 'error', details: { a: a.error, b: b.error } };
+    const category = a.error && !b.error && b.status < 500 ? 'baseline-error' : 'error';
+    return { category, details: { a: a.error, b: b.error, statusB: b.status } };
   }
   if (a.status !== b.status) {
     return {

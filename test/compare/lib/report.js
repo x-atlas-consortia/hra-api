@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { CATEGORIES, PASSING } from './compare.js';
+import { CATEGORIES, NON_FAILING, PASSING } from './compare.js';
 
 function fmtMs(ms) {
   if (!Number.isFinite(ms)) return '-';
@@ -16,7 +16,7 @@ function escapeCell(s) {
 }
 
 function isUnreviewedFailure(r) {
-  return !PASSING.has(r.category) && !r.reviewed;
+  return !PASSING.has(r.category) && !NON_FAILING.has(r.category) && !r.reviewed;
 }
 
 /**
@@ -74,6 +74,15 @@ export function writeReport(results, outDir) {
       out('```', `${r.method} ${r.route}?${r.query ?? ''}`, JSON.stringify(r.details, null, 1)?.slice(0, 6000) ?? '', '```', '</details>', '');
     }
     if (unreviewed.length > 200) out(`… and ${unreviewed.length - 200} more (see results.json)`, '');
+
+    const baselineErrors = correctness.filter((r) => r.category === 'baseline-error');
+    if (baselineErrors.length > 0) {
+      out(`### Baseline errors (${baselineErrors.length}): the baseline failed (e.g., timed out), the candidate did not`, '');
+      for (const r of baselineErrors.slice(0, 100)) {
+        out(`- \`${r.id}\` — ${escapeCell(r.details?.a)} (candidate: status ${r.status[1]}, ${r.bytes[1]} bytes)`);
+      }
+      out('');
+    }
 
     const reviewedList = correctness.filter((r) => r.reviewed);
     if (reviewedList.length > 0) {

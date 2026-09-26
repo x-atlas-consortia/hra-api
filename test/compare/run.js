@@ -32,7 +32,7 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { compareResponses, PASSING } from './lib/compare.js';
+import { compareResponses, NON_FAILING, PASSING } from './lib/compare.js';
 import { curatedCases } from './lib/curated-cases.js';
 import { mapLimit, sendCase } from './lib/http.js';
 import { writeReport } from './lib/report.js';
@@ -210,7 +210,7 @@ async function runCorrectness(cases, tokens, defaultDataset) {
     const bound = bindCase(testCase, tokens, defaultDataset);
     const [ra, rb] = await Promise.all([sendCase(opts.a, bound), sendCase(opts.b, bound)]);
     const { category, details } = compareResponses(ra, rb, { volatile: VOLATILE[testCase.route] });
-    const allowed = PASSING.has(category)
+    const allowed = PASSING.has(category) || NON_FAILING.has(category)
       ? undefined
       : allowlist.find((e) => e.regex.test(testCase.id) && (!e.category || e.category === category));
     done++;

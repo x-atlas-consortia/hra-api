@@ -53,7 +53,8 @@ non-zero if there are unreviewed differences, dataset pipeline failures, or perf
 | `order-only` | Equal when arrays and lines are compared as multisets (e.g., QLever sorts strings with a locale-aware collation; Blazegraph uses code point order) |
 | `embedding-only` | Framed JSON-LD that is equal once flattened into (node, property, value) facts. Framing embeds a node once and references it by `@id` elsewhere, and *where* depends on triple order |
 | `different` | A real difference. The report lists records and facts that are only in A or only in B |
-| `error` | A request failed |
+| `error` | A request to the candidate failed |
+| `baseline-error` | Only the baseline failed (e.g., Blazegraph timed out); listed for review, not a failure |
 
 Numbers are compared to 9 significant digits (values below 1e-9 count as 0), and blank node labels are ignored. Reviewed and accepted
 differences are recorded in `allowlist.json`, with a reason and a type (`improvement`, `intentional-fix`,
