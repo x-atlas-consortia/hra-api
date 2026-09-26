@@ -60,6 +60,7 @@ WHERE {
             ccf:has_registration_location ?rui_location ;
             ccf:comes_from ?donor .
   }
+  #{{EARLY_FILTER}}
   {
     ?donor rdf:type ccf:Donor ;
            rdfs:label ?donorLabel ;

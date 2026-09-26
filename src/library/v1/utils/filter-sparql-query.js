@@ -142,11 +142,14 @@ async function getFilterQuery(filter, endpoint, outerQuery = '') {
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
       .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'))
       .replace('#hint:SubQuery', sparqlBackend() === 'blazegraph' ? 'hint:SubQuery' : '#hint:SubQuery');
-    return `{
+    return {
+      query: `{
       ${entityQuery}
-    }`;
+    }`,
+      datasetFilters: hasDatasetFilters(filters),
+    };
   } else {
-    return '';
+    return { query: '', datasetFilters: false };
   }
 }
 
@@ -166,7 +169,15 @@ function setDatasetGraph(filter, query) {
 }
 
 export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const sparqlFilter = await getFilterQuery(filter, endpoint, sparqlQuery);
-  const filteredQuery = setDatasetGraph(filter, sparqlQuery.replace('#{{FILTER}}', sparqlFilter));
-  return filteredQuery;
+  const { query: sparqlFilter, datasetFilters } = await getFilterQuery(filter, endpoint, sparqlQuery);
+  let query = sparqlQuery;
+  if (!datasetFilters && query.includes('#{{EARLY_FILTER}}')) {
+    // Without dataset/section filters, the filter subquery only binds variables that are always bound by the
+    // required patterns before #{{EARLY_FILTER}}, so it can be joined before the OPTIONAL patterns (same
+    // results). Some triple stores (e.g., QLever) otherwise join it only after evaluating all optionals.
+    query = query.replace('#{{EARLY_FILTER}}', sparqlFilter).replace('#{{FILTER}}', '');
+  } else {
+    query = query.replace('#{{FILTER}}', sparqlFilter);
+  }
+  return setDatasetGraph(filter, query);
 }

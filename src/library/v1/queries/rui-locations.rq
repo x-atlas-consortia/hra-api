@@ -103,6 +103,7 @@ WHERE {
             ccf:comes_from ?donor ;
     .
   }
+  #{{EARLY_FILTER}}
   {
     ?donor rdf:type ccf:Donor ;
            rdfs:label ?donorLabel ;
