@@ -58,7 +58,7 @@ serve() {
     echo "Snapshot server already running on $SNAPSHOT_PORT"
     return
   fi
-  (cd $SNAPSHOT_DIR && nohup python3 -m http.server $SNAPSHOT_PORT --bind 127.0.0.1 > $STATE_DIR/snapshot-server.log 2>&1 & echo $! > $STATE_DIR/snapshot-server.pid)
+  (cd $SNAPSHOT_DIR && setsid nohup python3 -m http.server $SNAPSHOT_PORT --bind 127.0.0.1 < /dev/null > $STATE_DIR/snapshot-server.log 2>&1 & echo $! > $STATE_DIR/snapshot-server.pid)
   for i in $(seq 20); do curl -sf -o /dev/null "${SNAPSHOT_URL}digital-objects/catalog.ttl" && break; sleep 0.5; done
   echo "Serving $SNAPSHOT_DIR on $SNAPSHOT_URL"
 }
