@@ -19,6 +19,7 @@
  *   --limit <n>            Only run the first n cases
  *   --concurrency <n>      Number of cases compared in parallel (default 4)
  *   --reuse-datasets       Reuse session-token datasets from previous runs (skips the pipeline timing)
+ *   --sequential           Send each case to A and then to B (instead of in parallel), e.g. when A and B share a triple store
  *   --skip-correctness     Only run the performance tests
  *   --perf                 Run the performance tests
  *   --perf-runs <n>        Timed runs per case and backend (default 10)
@@ -65,6 +66,7 @@ const opts = {
   limit: Number(arg('--limit', Infinity)),
   concurrency: Number(arg('--concurrency', 4)),
   reuseDatasets: flag('--reuse-datasets'),
+  sequential: flag('--sequential'),
   skipCorrectness: flag('--skip-correctness'),
   perf: flag('--perf'),
   perfRuns: Number(arg('--perf-runs', 10)),
@@ -212,7 +214,9 @@ async function runCorrectness(cases, tokens, defaultDataset) {
   let done = 0;
   return mapLimit(cases, opts.concurrency, async (testCase) => {
     const bound = bindCase(testCase, tokens, defaultDataset);
-    const [ra, rb] = await Promise.all([sendCase(opts.a, bound), sendCase(opts.b, bound)]);
+    const [ra, rb] = opts.sequential
+      ? [await sendCase(opts.a, bound), await sendCase(opts.b, bound)]
+      : await Promise.all([sendCase(opts.a, bound), sendCase(opts.b, bound)]);
     const { category, details } = compareResponses(ra, rb, { volatile: VOLATILE[testCase.route] });
     const allowed = PASSING.has(category) || NON_FAILING.has(category)
       ? undefined
