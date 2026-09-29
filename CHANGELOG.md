@@ -25,6 +25,8 @@ Changelog for the Human Reference Atlas API (HRA-API)
   route handlers no longer crash the server
 - Faster query planning: patterns of each entity are grouped in the scene, scene-organs, tissue-blocks and
   rui-locations queries
+- Plain http connections (e.g., to the embedded triple store) are no longer kept alive, which added ~40ms per query with QLever
+- Filter subqueries are joined before optional patterns when possible (faster on QLever and Blazegraph)
 - Add a Blazegraph vs QLever comparison harness (`test/compare`)
 
 ## 0.18.0 - 2026-01-09
