@@ -127,6 +127,7 @@ npm run compare -- --b http://localhost:48080/ --cases curated --reuse-datasets
 | `run.js` | Main runner (datasets, correctness, performance, report) |
 | `logs-to-cases.js` | CloudFront logs (parquet, read with the `duckdb` CLI) to cases |
 | `load.js` | Load test of a single API with per-route latencies |
+| `diff-url.js` | Compares a single request between both backends and prints the differences |
 | `sparql-proxy.js`, `sparql-compare.js` | SPARQL-level capture and replay |
 | `construct-check.js` | Checks that CONSTRUCT via N-Triples + `jsonld.fromRDF` matches Blazegraph's native JSON-LD |
 | `datasets.json` | Session-token datasets |
