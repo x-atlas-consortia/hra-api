@@ -44,22 +44,33 @@ const API_APPS = API_PORTS.map((port, i) => ({
   cron_restart: `${(USE_LOCAL_DB ? 5 : 0) + i} 7 * * *`,
 }));
 
+// TCP health checks: a busy process still accepts connections, a stopped one refuses them (also marked down on the
+// first refused request), so requests are not sent to a restarting process
+const CHECK = 'check inter 1s fall 1 rise 2 observe layer4 error-limit 1 on-error mark-down';
 const servers = (limit) =>
-  API_PORTS.map((port, i) => `  server api${i} 127.0.0.1:${port}${limit > 0 ? ` maxconn ${limit}` : ''}`).join('\n');
+  API_PORTS.map((port, i) => `  server api${i} 127.0.0.1:${port}${limit > 0 ? ` maxconn ${limit}` : ''} ${CHECK}`).join(
+    '\n'
+  );
 
 writeFileSync(
   HAPROXY_CONFIG,
   `global
   maxconn 10000
+  log stdout format raw local0
 
 defaults
   mode http
+  # Log each request, including how long it waited in the queue (Tw) and how long the API took (Tr)
+  log global
+  option httplog
   option forwardfor
+  # Drop queued requests whose client has gone away (e.g., CloudFront gives up on the origin after 60s)
+  option abortonclose
   # One request per connection to the API processes, so that maxconn limits the requests being processed
   option http-server-close
   # Connection errors (e.g., while a process restarts) are retried on another process
   retries 3
-  option redispatch
+  option redispatch 1
   timeout connect 5s
   timeout http-request 60s
   # Long running queries (e.g., rui-reference-data) and long waits in the queue are allowed, as before

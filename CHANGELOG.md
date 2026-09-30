@@ -31,6 +31,9 @@ Changelog for the Human Reference Atlas API (HRA-API)
   queues requests and passes each one to the next process with a free slot (`ACTIVE_QUERIES`, now 1 per process),
   so large responses no longer block other requests
 - `/kg` and `/ds-graph` requests are now queued like the other API requests
+- HAProxy logs each request with its queue and response times, drops queued requests whose client has disconnected,
+  and does not send requests to a restarting API process
+- Pin pm2 to 6.0.14 in the docker image (pm2 7 can start an app twice on restart, leaving it in a crash loop)
 - `ACTIVE_QUERIES` no longer limits a directly run server by default (set it to queue requests in the server);
   concurrent session-token dataset builds are limited by the new `DATASET_BUILDS` setting (per process; default 1 in the docker image, 2 otherwise)
 - `PRUNING_SCHEDULE` can be set to an empty string to disable pruning of session-token datasets

@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
   && rm -rf /var/lib/apt/lists/*
 
 # Install redocly cli (for building the openapi spec) and PM2 runtime
-RUN npm install @redocly/cli pm2 -g
+# (pm2 7 can start an app twice on restart, leaving the restarted process in a crash loop)
+RUN npm install @redocly/cli pm2@6.0.14 -g
 
 ADD ./qlever/Qleverfile /qlever/Qleverfile
 ADD ./qlever/entrypoint.sh /qlever/entrypoint.sh
