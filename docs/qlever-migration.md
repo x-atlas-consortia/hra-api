@@ -5,7 +5,8 @@ The embedded Blazegraph 2.1.5 triple store was replaced with QLever 0.6.0. QLeve
 The index is built at image build time (`qlever/setup-qlever-index.sh`) from the same CDN graphs as before.
 
 Results were checked with the comparison harness in `test/compare` (see its README). Both images were built from
-the same data snapshot and run side by side.
+the same data snapshot and run side by side. The detailed report, with methodology, per-route tables and
+items to review, is [qlever-migration-report.md](./qlever-migration-report.md).
 
 ## Summary
 
@@ -14,20 +15,20 @@ the same data snapshot and run side by side.
 | Image size | 3.96 GB | 1.14 GB |
 | Image build | ~6 min | ~2–3.5 min |
 | Index / journal build | minutes (blazegraph-runner) | ~15 s |
-| Session-token dataset (HuBMAP, ~130k triples) | ~6–7 s | ~5–7 s |
-| Geomean p50 ratio, 159 perf cases (uncached / warm) | 1.0 | **0.58 / 0.44** |
-| Load test, 477 requests at concurrency 8 | 41 min | 31 min |
+| Session-token dataset (HuBMAP portal) | 8.9 s | 4.6 s |
+| Geomean p50 ratio, 159 perf cases (uncached / warm) | 1.0 | **0.45 / 0.32** |
+| Load test, 477 requests at concurrency 8 | 45 min | 22 min |
 
 ### Correctness
 
 These results are from the final parity run: the new code on Blazegraph vs the new code on QLever, over 3,093 cases
 (curated cases, OpenAPI examples, token datasets, and 2,448 deduplicated production requests from the CloudFront logs).
 
-- 2,749 identical and 325 differing only in order. The sort order of string values differs because QLever sorts
+- 2,748 identical and 323 differing only in order. The sort order of string values differs because QLever sorts
   with a locale-aware collation and Blazegraph by code point.
 - 0 unreviewed failures and 0 QLever errors.
 - 3 baseline errors: Blazegraph failed or timed out while QLever succeeded.
-- 16 external differences: `/v1/sparql` and `/hra-pop/*` query `lod.humanatlas.io` on both backends.
+- 19 external differences: `/v1/sparql` and `/hra-pop/*` query `lod.humanatlas.io` on both backends.
 
 At the SPARQL level, 533 of 550 captured queries return identical results. The remaining 17 differ only in
 timestamps, numeric precision, and duplicate rows (Blazegraph's default graph does not deduplicate triples that
@@ -41,12 +42,13 @@ appear in several graphs).
   - unfiltered RUI locations: 7 s vs 33 s
   - tissue blocks: 1.5–2× faster
   - ASCT+B term occurrences with HRA versions: ~0.15 s vs ~2.5 s
-- **Small queries are about 20–70 ms slower.** QLever plans every query (tens of ms, even on cache hits), while
-  Blazegraph answers trivial queries in ~20 ms. Examples: `consortium-names` 25 → 75 ms, `extraction-site`
-  ~150 → ~250 ms uncached.
-- With the strict gate (p95 ≤ 1.2× per case, cases under 50 ms exempt), 38 of 159 cases fail uncached. With an
-  additional 100 ms absolute tolerance, only 3 remain: filtered aggregate results (+110 to +230 ms) and one
-  extraction site (+103 ms).
+- **Some small queries are 15–60 ms slower when uncached.** QLever plans every query, while Blazegraph answers
+  trivial queries in ~20 ms. Examples: `consortium-names` 21 → 41 ms, `reference-organs` 137 → 178 ms. An
+  earlier ~40 ms penalty per query was caused by HTTP keep-alive to QLever and is fixed.
+- With the strict gate (p95 ≤ 1.2× per case, cases under 50 ms exempt), 12 of 159 cases fail uncached and 1 fails
+  warm. With an additional 100 ms absolute tolerance, 3 remain uncached (0 warm):
+  - filtered aggregate results: +120 and +300 ms;
+  - `ftu-illustrations`: +280 ms. This route is file-cached in production.
 
 ## Changes needed for QLever
 
