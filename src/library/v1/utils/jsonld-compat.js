@@ -57,7 +57,10 @@ export function normalizeJsonLd(
 
 export function ensureSingleValue(value) {
   if (Array.isArray(value)) {
-    return value[0];
+    // The order of multiple values depends on the triple store, so pick one deterministically
+    return value.length > 1
+      ? value.reduce((min, v) => (JSON.stringify(v) < JSON.stringify(min) ? v : min))
+      : value[0];
   } else {
     return value;
   }

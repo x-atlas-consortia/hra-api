@@ -16,26 +16,22 @@ CONSTRUCT {
     ccf:dimension_unit ?dimension_units .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
-  ?block ccf:comes_from ?donor ;
-    ccf:has_registration_location ?rui_location .
-  OPTIONAL {
-    ?block ccf:generates_dataset ?dataset .
+  # Each entity's patterns are grouped so that query planners join each "star" first
+  {
+    ?block ccf:comes_from ?donor ;
+      ccf:has_registration_location ?rui_location .
   }
-  OPTIONAL {
-    ?block ccf:subdivided_into_sections ?section .
-    OPTIONAL {
-      ?section ccf:generates_dataset ?sectionDataset .
-    }
+  {
+    ?rui_location rdf:type ccf:SpatialEntity ;
+                  ccf:x_dimension ?x_dimension ;
+                  ccf:y_dimension ?y_dimension ;
+                  ccf:z_dimension ?z_dimension ;
+                  ccf:dimension_unit ?dimension_units ;
+    .
   }
-
-  ?rui_location rdf:type ccf:SpatialEntity ;
-                ccf:x_dimension ?x_dimension ;
-                ccf:y_dimension ?y_dimension ;
-                ccf:z_dimension ?z_dimension ;
-                ccf:dimension_unit ?dimension_units ;
-  .
   {
     GRAPH DSGraphsExtra: {
       ?rui_location ccf:collides_with ?anatomical_structure .

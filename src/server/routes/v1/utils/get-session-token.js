@@ -1,9 +1,9 @@
 import Queue from 'mini-queue';
 import { Worker } from 'worker_threads';
 import { createSessionToken } from '../../../../library/v1/operations/session-token.js';
-import { activeQueryLimit, isWritable, sparqlEndpoint } from '../../../environment.js';
+import { datasetBuildLimit, isWritable, sparqlEndpoint } from '../../../environment.js';
 
-const QUEUE = new Queue({ activeLimit: activeQueryLimit() });
+const QUEUE = new Queue({ activeLimit: datasetBuildLimit() });
 
 QUEUE.on('process', (job, jobDone) => {
   const worker = new Worker('./dist/create-dataset-graph.worker.js', {

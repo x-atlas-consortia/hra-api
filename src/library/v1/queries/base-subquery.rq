@@ -9,6 +9,7 @@ WHERE {
   GRAPH DSGraphs: {
     ?block ccf:comes_from ?donor ;
       ccf:has_registration_location ?rui_location .
+    #{{DATASETS_START}} (only included when filtering datasets or sections)
     OPTIONAL { #DATASETS
       ?block ccf:generates_dataset ?dataset .
       #{{DATASET_FILTER}}
@@ -20,9 +21,12 @@ WHERE {
         #{{SECTION_FILTER}}
       }
     }
+    #{{DATASETS_END}}
 
     #{{FILTER}}
   }
+
+  #{{GRAPH_FILTER}}
 
   #hint:SubQuery hint:runOnce true;
 }

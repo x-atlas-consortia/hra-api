@@ -2,6 +2,43 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
+## Unreleased
+- Replace the embedded Blazegraph triple store with QLever (installed natively via apt, index built at image build time)
+- CONSTRUCT queries now request N-Triples and convert to JSON-LD locally (works with both QLever and Blazegraph)
+- Add `SPARQL_BACKEND` and `SPARQL_UPDATE_TOKEN` settings; updates to the embedded QLever require an access token
+  that is generated per container start
+- Session-token datasets are loaded via the SPARQL Graph Store HTTP Protocol when using QLever
+- Fix queries that relied on Blazegraph's non-standard handling of `GRAPH` patterns outside the query's dataset
+  (`FROM NAMED`) and of nested `GRAPH` patterns
+- Fix queries that re-bound already bound variables with `BIND` (invalid SPARQL)
+- Fix `/kg/asctb-term-occurences` filters being nested in a GRAPH pattern (no results on standards compliant stores); faster HRA version filter
+- Fix pruning of expired session-token datasets not removing their enrichment graphs
+- Fix tissue-blocks dropping blocks without section counts on standards compliant triple stores (leading OPTIONAL)
+- Fix sections shared by multiple tissue blocks being dropped from the tissue blocks response
+- CONSTRUCT results are sorted before JSON-LD framing, so framed results no longer depend on the triple store's order
+- Deterministic results where the data has conflicting duplicate values (single-valued fields, tree model parents,
+  spatial placements); previously the chosen value depended on the triple store's row order
+- Filtered "Tissue Datasets" counts in aggregate results now include section datasets consistently
+- Faster filtered queries on both backends (the filter subquery only projects the variables it restricts)
+- SPARQL errors are now reported instead of being parsed as results; CONSTRUCT results are parsed incrementally
+- Failed SPARQL queries now result in a 500 error instead of an (incorrect) empty result, and errors in async
+  route handlers no longer crash the server
+- Faster query planning: patterns of each entity are grouped in the scene, scene-organs, tissue-blocks and
+  rui-locations queries
+- Plain http connections (e.g., to the embedded triple store) are no longer kept alive, which added ~40ms per query with QLever
+- Filter subqueries are joined before optional patterns when possible (faster on QLever and Blazegraph)
+- The docker image runs the API server as multiple processes (`API_INSTANCES`, default 4) behind HAProxy, which
+  queues requests and passes each one to the next process with a free slot (`ACTIVE_QUERIES`, now 1 per process),
+  so large responses no longer block other requests
+- `/kg` and `/ds-graph` requests are now queued like the other API requests
+- HAProxy logs each request with its queue and response times, drops queued requests whose client has disconnected,
+  and does not send requests to a restarting API process
+- Pin pm2 to 6.0.14 in the docker image (pm2 7 can start an app twice on restart, leaving it in a crash loop)
+- `ACTIVE_QUERIES` no longer limits a directly run server by default (set it to queue requests in the server);
+  concurrent session-token dataset builds are limited by the new `DATASET_BUILDS` setting (per process; default 1 in the docker image, 2 otherwise)
+- `PRUNING_SCHEDULE` can be set to an empty string to disable pruning of session-token datasets
+- Add a Blazegraph vs QLever comparison harness (`test/compare`)
+
 ## 0.18.0 - 2026-01-09
 - Update npm dependencies
 - Update OpenApiTools to version 7.18.0

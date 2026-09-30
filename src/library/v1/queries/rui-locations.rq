@@ -87,41 +87,50 @@ CONSTRUCT {
   .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
-  ?block rdf:type ccf:Sample ;
-          rdfs:label ?sampleLabel ;
-          rdfs:comment ?sampleDescription ;
-          # skos:prefLabel ?sampleLabel ;
-          # dcterms:description ?sampleDescription ;
-          ccf:url ?sampleLink ;
-          ccf:sample_type ?sampleType ;
-          ccf:has_registration_location ?rui_location ;
-          ccf:comes_from ?donor ;
-  .
-  ?donor rdf:type ccf:Donor ;
-         rdfs:label ?donorLabel ;
-         rdfs:comment ?donorDescription ;
-         #  skos:prefLabel ?donorLabel ;
-         #  dcterms:description ?donorDescription ;
-         ccf:url ?donorLink ;
-         ccf:sex ?sex ;
-         ccf:consortium_name ?consortium ;
-         ccf:tissue_provider_name ?provider ;
-         ccf:tissue_provider_uuid ?provider_uuid ;
-  .
+  # Each entity's patterns are grouped so that query planners join each "star" first
+  {
+    ?block rdf:type ccf:Sample ;
+            rdfs:label ?sampleLabel ;
+            rdfs:comment ?sampleDescription ;
+            # skos:prefLabel ?sampleLabel ;
+            # dcterms:description ?sampleDescription ;
+            ccf:url ?sampleLink ;
+            ccf:sample_type ?sampleType ;
+            ccf:has_registration_location ?rui_location ;
+            ccf:comes_from ?donor ;
+    .
+  }
+  #{{EARLY_FILTER}}
+  {
+    ?donor rdf:type ccf:Donor ;
+           rdfs:label ?donorLabel ;
+           rdfs:comment ?donorDescription ;
+           #  skos:prefLabel ?donorLabel ;
+           #  dcterms:description ?donorDescription ;
+           ccf:url ?donorLink ;
+           ccf:sex ?sex ;
+           ccf:consortium_name ?consortium ;
+           ccf:tissue_provider_name ?provider ;
+           ccf:tissue_provider_uuid ?provider_uuid ;
+    .
+  }
   OPTIONAL { ?donor ccf:age ?age . }
   OPTIONAL { ?donor ccf:bmi ?bmi . }
-  ?rui_location rdf:type ccf:SpatialEntity ;
-                dcterms:creator ?creator ;
-                ccf:creator_first_name ?creator_first_name ;
-                ccf:creator_last_name ?creator_last_name ;
-                dcterms:created ?creation_date ;
-                ccf:x_dimension ?x_dimension ;
-                ccf:y_dimension ?y_dimension ;
-                ccf:z_dimension ?z_dimension ;
-                ccf:dimension_unit ?dimension_units ;
-  .
+  {
+    ?rui_location rdf:type ccf:SpatialEntity ;
+                  dcterms:creator ?creator ;
+                  ccf:creator_first_name ?creator_first_name ;
+                  ccf:creator_last_name ?creator_last_name ;
+                  dcterms:created ?creation_date ;
+                  ccf:x_dimension ?x_dimension ;
+                  ccf:y_dimension ?y_dimension ;
+                  ccf:z_dimension ?z_dimension ;
+                  ccf:dimension_unit ?dimension_units ;
+    .
+  }
   OPTIONAL {
     ?rui_location ccf:collides_with ?anatomical_structure .
   }
@@ -129,24 +138,26 @@ WHERE {
     ?rui_location ccf:slice_count ?slice_count ;
                   ccf:slice_thickness ?slice_thickness ;
   }
-  ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
-                    dcterms:created ?placement_date ;
-                    ccf:x_scaling ?x_scaling ;
-                    ccf:y_scaling ?y_scaling ;
-                    ccf:z_scaling ?z_scaling ;
-                    ccf:scaling_unit ?scaling_units ;
-                    ccf:x_rotation ?x_rotation ;
-                    ccf:y_rotation ?y_rotation ;
-                    ccf:z_rotation ?z_rotation ;
-                    ccf:rotation_order ?rotation_order ;
-                    ccf:rotation_unit ?rotation_units ;
-                    ccf:x_translation ?x_translation ;
-                    ccf:y_translation ?y_translation ;
-                    ccf:z_translation ?z_translation ;
-                    ccf:translation_unit ?translation_units ;
-                    ccf:placement_relative_to ?target ;
-                    ccf:placement_for ?rui_location ;
-  .
+  {
+    ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
+                      dcterms:created ?placement_date ;
+                      ccf:x_scaling ?x_scaling ;
+                      ccf:y_scaling ?y_scaling ;
+                      ccf:z_scaling ?z_scaling ;
+                      ccf:scaling_unit ?scaling_units ;
+                      ccf:x_rotation ?x_rotation ;
+                      ccf:y_rotation ?y_rotation ;
+                      ccf:z_rotation ?z_rotation ;
+                      ccf:rotation_order ?rotation_order ;
+                      ccf:rotation_unit ?rotation_units ;
+                      ccf:x_translation ?x_translation ;
+                      ccf:y_translation ?y_translation ;
+                      ccf:z_translation ?z_translation ;
+                      ccf:translation_unit ?translation_units ;
+                      ccf:placement_relative_to ?target ;
+                      ccf:placement_for ?rui_location ;
+    .
+  }
   OPTIONAL {
     ?block ccf:section_count ?sectionCount ;
             ccf:section_size ?sectionSize ;

@@ -9,8 +9,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}/`);
 });
 
-schedule(pruningSchedule(), () => {
-  if (isWritable()) {
-    pruneDatasetGraphs(sparqlEndpoint());
-  }
-});
+if (pruningSchedule()) {
+  schedule(pruningSchedule(), () => {
+    if (isWritable()) {
+      pruneDatasetGraphs(sparqlEndpoint());
+    }
+  });
+}

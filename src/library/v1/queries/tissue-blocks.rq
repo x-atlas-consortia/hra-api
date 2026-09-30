@@ -45,8 +45,31 @@ CONSTRUCT {
                   ccf:thumbnail ?sectionThumbnail .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
+  # Each entity's patterns are grouped so that query planners join each "star" first
+  {
+    ?block rdf:type ccf:Sample ;
+            rdfs:label ?sampleLabel ;
+            rdfs:comment ?sampleDescription ;
+            # skos:prefLabel ?sampleLabel ;
+            # dcterms:description ?sampleDescription ;
+            ccf:url ?sampleLink ;
+            ccf:sample_type ?sampleType ;
+            ccf:has_registration_location ?rui_location ;
+            ccf:comes_from ?donor .
+  }
+  #{{EARLY_FILTER}}
+  {
+    ?donor rdf:type ccf:Donor ;
+           rdfs:label ?donorLabel ;
+           rdfs:comment ?donorDescription ;
+           #  skos:prefLabel ?donorLabel ;
+           #  dcterms:description ?donorDescription ;
+           ccf:url ?donorLink ;
+           ccf:tissue_provider_name ?provider .
+  }
 
   OPTIONAL {
     ?block ccf:section_count ?sectionCount ;
@@ -89,23 +112,6 @@ WHERE {
              ccf:technology ?technology ;
              ccf:thumbnail ?thumbnail .
   }
-
-  ?block rdf:type ccf:Sample ;
-          rdfs:label ?sampleLabel ;
-          rdfs:comment ?sampleDescription ;
-          # skos:prefLabel ?sampleLabel ;
-          # dcterms:description ?sampleDescription ;
-          ccf:url ?sampleLink ;
-          ccf:sample_type ?sampleType ;
-          ccf:has_registration_location ?rui_location ;
-          ccf:comes_from ?donor .
-  ?donor rdf:type ccf:Donor ;
-         rdfs:label ?donorLabel ;
-         rdfs:comment ?donorDescription ;
-         #  skos:prefLabel ?donorLabel ;
-         #  dcterms:description ?donorDescription ;
-         ccf:url ?donorLink ;
-         ccf:tissue_provider_name ?provider .
 
   #{{FILTER}}
 }

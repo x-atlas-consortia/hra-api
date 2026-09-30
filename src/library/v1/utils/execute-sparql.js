@@ -20,6 +20,8 @@ export async function executeFilteredQuery(query, filter, endpoint = 'https://lo
     if (filteredSparqlQuery) {
       console.log('\nBad SPARQL Query: \n', filteredSparqlQuery + '\n\n');
     }
+    // Report the error instead of returning an (incorrect) empty result
+    throw error;
   }
 }
 
@@ -49,5 +51,7 @@ export async function executeFilteredConstructQuery(
     if (filteredSparqlQuery) {
       console.log('\nBad SPARQL Query: \n', filteredSparqlQuery + '\n\n');
     }
+    // Report the error instead of returning an (incorrect) empty result
+    throw error;
   }
 }

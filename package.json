@@ -23,7 +23,11 @@
     "build:cache": "node ./scripts/generate-cache.js",
     "build:clients": "node ./scripts/build-clients.js",
     "start:server": "nodemon ./dist/server.js -w dist",
-    "lint:openapi-spec": "npx @redocly/cli lint ./src/openapi-spec/openapi.yaml --format stylish"
+    "lint:openapi-spec": "npx @redocly/cli lint ./src/openapi-spec/openapi.yaml --format stylish",
+    "compare": "node ./test/compare/run.js",
+    "compare:sparql": "node ./test/compare/sparql-compare.js",
+    "compare:logs": "node ./test/compare/logs-to-cases.js",
+    "compare:env": "./test/compare/orchestrate.sh"
   },
   "author": {
     "name": "Bruce W. Herr II",
@@ -68,6 +72,7 @@
     "mathjs": "^11.12.0",
     "md5": "^2.3.0",
     "mini-queue": "^0.0.14",
+    "n3": "^1.26.0",
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "nodeify-fetch": "^3.1.0",

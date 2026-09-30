@@ -1,7 +1,36 @@
 import { getSpatialGraph } from '../../shared/spatial/spatial-graph.js';
+import { sparqlBackend } from '../../shared/utils/sparql.js';
 import baseSubQuery from '../queries/base-subquery.rq';
 
-async function getFilterQuery(filter, endpoint) {
+const SUBQUERY_SELECT = 'SELECT DISTINCT ?donor ?block ?rui_location ?dataset ?section ?sectionDataset';
+const OPTIONAL_SUBQUERY_VARIABLES = ['?dataset', '?section', '?sectionDataset'];
+const DATASET_PATTERNS = /#\{\{DATASETS_START\}\}[\s\S]*#\{\{DATASETS_END\}\}/;
+
+// The optional dataset/section patterns of the filter subquery are only needed to filter them
+function hasDatasetFilters(filters) {
+  return filters.dataset.length > 0 || filters.sectionDataset.length > 0;
+}
+
+/**
+ * Only project the dataset/section variables of the filter subquery if the outer query uses them and
+ * there are dataset/section filters (e.g., technologies) that restrict them. Otherwise they do not restrict
+ * the results, and joining on these (often unbound) variables is very expensive in some triple stores
+ * (e.g., QLever).
+ */
+function subquerySelect(outerQuery, filters) {
+  const query = outerQuery.replace(/#[^\n]*/g, '');
+  const restricted = {
+    '?dataset': hasDatasetFilters(filters),
+    '?section': hasDatasetFilters(filters),
+    '?sectionDataset': hasDatasetFilters(filters),
+  };
+  const used = OPTIONAL_SUBQUERY_VARIABLES.filter(
+    (v) => restricted[v] && new RegExp(`\\${v}\\b`).test(query)
+  );
+  return ['SELECT DISTINCT ?donor ?block ?rui_location', ...used].join(' ');
+}
+
+async function getFilterQuery(filter, endpoint, outerQuery = '') {
   const {
     ontologyTerms,
     cellTypeTerms,
@@ -17,6 +46,8 @@ async function getFilterQuery(filter, endpoint) {
   const filters = {
     donor: [],
     rui_location: [],
+    // Patterns on other named graphs must not be nested inside the GRAPH DSGraphs: block
+    enrichments: [],
     dataset: [],
     sectionDataset: [],
   };
@@ -38,7 +69,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (ontologyTerms?.length > 0) {
     const terms = ontologyTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with ?anatomical_structure .
         FILTER(?anatomical_structure IN (${terms}))
@@ -46,7 +77,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (cellTypeTerms?.length > 0) {
     const terms = cellTypeTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with_ct ?cell_type .
         FILTER(?cell_type IN (${terms}))
@@ -54,7 +85,7 @@ async function getFilterQuery(filter, endpoint) {
   }
   if (biomarkerTerms?.length > 0) {
     const terms = biomarkerTerms.map((s) => `<${s}>`).join(', ');
-    filters.rui_location.push(`
+    filters.enrichments.push(`
       GRAPH DSGraphsExtra: {
         ?rui_location ccf:collides_with_bm ?biomarker .
         FILTER(?biomarker IN (${terms}))
@@ -104,15 +135,21 @@ async function getFilterQuery(filter, endpoint) {
   if (Object.values(filters).filter((s) => s.length > 0).length > 0) {
     const entityQuery = baseSubQuery
       .slice(baseSubQuery.indexOf('#START-SUBQUERY'))
+      .replace(SUBQUERY_SELECT, subquerySelect(outerQuery, filters))
+      .replace(DATASET_PATTERNS, (patterns) => (hasDatasetFilters(filters) ? patterns : ''))
       .replace('#{{FILTER}}', filters.donor.concat(filters.rui_location).join('\n'))
+      .replace('#{{GRAPH_FILTER}}', filters.enrichments.join('\n'))
       .replace('#{{DATASET_FILTER}}', filters.dataset.join('\n'))
       .replace('#{{SECTION_FILTER}}', filters.sectionDataset.join('\n'))
-      .replace('#hint:SubQuery', 'hint:SubQuery');
-    return `{
+      .replace('#hint:SubQuery', sparqlBackend() === 'blazegraph' ? 'hint:SubQuery' : '#hint:SubQuery');
+    return {
+      query: `{
       ${entityQuery}
-    }`;
+    }`,
+      datasetFilters: hasDatasetFilters(filters),
+    };
   } else {
-    return '';
+    return { query: '', datasetFilters: false };
   }
 }
 
@@ -132,7 +169,15 @@ function setDatasetGraph(filter, query) {
 }
 
 export async function filterSparqlQuery(sparqlQuery, filter = {}, endpoint = 'https://lod.humanatlas.io/sparql') {
-  const sparqlFilter = await getFilterQuery(filter, endpoint);
-  const filteredQuery = setDatasetGraph(filter, sparqlQuery.replace('#{{FILTER}}', sparqlFilter));
-  return filteredQuery;
+  const { query: sparqlFilter, datasetFilters } = await getFilterQuery(filter, endpoint, sparqlQuery);
+  let query = sparqlQuery;
+  if (!datasetFilters && query.includes('#{{EARLY_FILTER}}')) {
+    // Without dataset/section filters, the filter subquery only binds variables that are always bound by the
+    // required patterns before #{{EARLY_FILTER}}, so it can be joined before the OPTIONAL patterns (same
+    // results). Some triple stores (e.g., QLever) otherwise join it only after evaluating all optionals.
+    query = query.replace('#{{EARLY_FILTER}}', sparqlFilter).replace('#{{FILTER}}', '');
+  } else {
+    query = query.replace('#{{FILTER}}', sparqlFilter);
+  }
+  return setDatasetGraph(filter, query);
 }

@@ -36,8 +36,11 @@ function normalizeDonor(donor) {
   return donor;
 }
 
-function normalizeSections(sections) {
-  sections = sections.filter((section) => typeof section === 'object');
+function normalizeSections(sections, sectionLookup) {
+  // JSON-LD framing embeds a section only once; other references to it are just its IRI
+  sections = sections
+    .map((section) => (typeof section === 'object' ? section : structuredClone(sectionLookup.get(section))))
+    .filter((section) => typeof section === 'object');
   sections.forEach((section) => {
     section.sampleType = 'Tissue Section';
     delete section.sample_type;
@@ -53,12 +56,12 @@ function normalizeSpatialEntityId(spatialEntityId) {
   return spatialEntityId;
 }
 
-function normalizeBlock(block) {
+function normalizeBlock(block, sectionLookup) {
   const normalizedBlock = {};
   TISSUE_BLOCK_FIELDS.forEach((field) => (normalizedBlock[field] = block[field]));
   normalizedBlock['sampleType'] = 'Tissue Block';
   normalizedBlock['donor'] = normalizeDonor(block['donor']);
-  normalizedBlock['sections'] = normalizeSections(block['sections']);
+  normalizedBlock['sections'] = normalizeSections(block['sections'], sectionLookup);
   normalizedBlock['spatialEntityId'] = normalizeSpatialEntityId(block['rui_location']);
   renameField(normalizedBlock, 'section_count', 'sectionCount');
   renameField(normalizedBlock, 'section_size', 'sectionSize');
@@ -68,7 +71,15 @@ function normalizeBlock(block) {
 
 function reformatResponse(jsonld) {
   const data = normalizeJsonLd(ensureGraphArray(jsonld), ARRAY_FIELDS, undefined, SINGLE_VALUE_FIELDS);
-  return data.filter((block) => block['donor']).map(normalizeBlock);
+  const sectionLookup = new Map();
+  for (const block of data) {
+    for (const section of block['sections'] ?? []) {
+      if (typeof section === 'object' && section['@id'] && !sectionLookup.has(section['@id'])) {
+        sectionLookup.set(section['@id'], structuredClone(section));
+      }
+    }
+  }
+  return data.filter((block) => block['donor']).map((block) => normalizeBlock(block, sectionLookup));
 }
 
 /**

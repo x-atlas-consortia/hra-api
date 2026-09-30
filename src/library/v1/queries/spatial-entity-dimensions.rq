@@ -12,3 +12,5 @@ WHERE {
     ccf:z_dimension ?z ;
     ccf:dimension_unit ?units .
 }
+# Sort by all columns: duplicate (conflicting) values in the data are then resolved the same way on every triple store
+ORDER BY ?rui_location ?x ?y ?z ?units

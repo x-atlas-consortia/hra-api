@@ -8,6 +8,7 @@ CONSTRUCT {
   ?biomarker ccf:count ?count .
 }
 FROM DSGraphs:
+FROM NAMED DSGraphs:
 FROM NAMED DSGraphsExtra:
 WHERE {
   SELECT DISTINCT ?biomarker (COUNT(DISTINCT(?block)) AS ?count)
@@ -24,15 +25,6 @@ WHERE {
 
     ?block ccf:comes_from ?donor ;
       ccf:has_registration_location ?rui_location .
-    OPTIONAL {
-      ?block ccf:generates_dataset ?dataset .
-    }
-    OPTIONAL {
-      ?block ccf:subdivided_into_sections ?section .
-      OPTIONAL {
-        ?section ccf:generates_dataset ?sectionDataset .
-      }
-    }
 
     #{{FILTER}}
   }

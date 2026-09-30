@@ -6,6 +6,7 @@ import qs from 'qs';
 import { longCache, noCache } from './cache-middleware.js';
 import { activeQueryLimit } from './environment.js';
 import './fetch-polyfill.js';
+import './utils/async-errors.js';
 import browserRoute from './routes/browser.js';
 import dsGraphRoutes from './routes/ds-graph.js';
 import euiRoute from './routes/eui.js';
@@ -79,23 +80,22 @@ app.use('/', longCache, ruiRoute);
 app.use('/', longCache, ftuExplorerRoute);
 app.use('/', grlcRoutes);
 
-const processingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
+// Optionally limit the number of requests processed at once (the docker image queues requests in HAProxy instead)
+const activeLimit = activeQueryLimit();
+const processingQueue = activeLimit > 0 ? queue({ activeLimit, queuedLimit: -1 }) : (_req, _res, next) => next();
 app.use('/v1', processingQueue, v1Routes);
 app.use('/v1/sparql', noCache, sparqlRoute);
 app.use('/hra-pop', processingQueue, hraPopRoutes);
-app.use('/ds-graph', dsGraphRoutes);
-app.use('/kg', hraKgRoutes);
+app.use('/ds-graph', processingQueue, dsGraphRoutes);
+app.use('/kg', processingQueue, hraKgRoutes);
 
-// app.use(function (err, req, res, next) {
-//   const debugMode = req.app.get('env') === 'development';
-
-//   res.status(err.status || 500);
-
-//   if (debugMode) {
-//     res.json(err);
-//   } else {
-//     res.json({ message: 'error' });
-//   }
-// });
+// Report unexpected errors (e.g., failed SPARQL queries) instead of crashing or hanging the request
+app.use(function (err, req, res, next) {
+  console.error('Error handling', req.method, req.originalUrl, err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(err.status || 500).send('Internal Server Error');
+});
 
 export default app;

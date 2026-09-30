@@ -26,7 +26,6 @@ WHERE {
       }
     }
     ?child ccf:ccf_biomarker_type ?parent .
-    BIND (?parent_label AS ?parent)
   }
   UNION
   {
@@ -39,4 +38,4 @@ WHERE {
   BIND(STR(?synonymLabel1) as ?synonymLabel)
   FILTER(!CONTAINS(STR(?child), 'https://purl.humanatlas.io/asct-b/'))
 }
-ORDER BY ?label ?child
+ORDER BY ?label ?child ?parent

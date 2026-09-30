@@ -1,0 +1,24 @@
+# Qleverfile for the HRA API's embedded QLever triple store
+#
+# The index is built at docker build time by setup-qlever-index.sh, which downloads each
+# named graph and passes the list of inputs via --multi-input-json. The server is started
+# by entrypoint.sh (using the same settings, overridable via environment variables).
+
+[data]
+NAME        = hra
+DESCRIPTION = Human Reference Atlas (HRA) Knowledge Graph for the HRA API
+
+[index]
+INPUT_FILES      = input/*.ttl
+PARALLEL_PARSING = false
+SETTINGS_JSON    = { "ascii-prefixes-only": false, "num-triples-per-batch": 1000000 }
+STXXL_MEMORY     = 4G
+
+[server]
+PORT               = 8081
+MEMORY_FOR_QUERIES = 12G
+CACHE_MAX_SIZE     = 4G
+TIMEOUT            = 360s
+
+[runtime]
+SYSTEM = native

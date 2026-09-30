@@ -3,8 +3,16 @@ import { getQuads } from './fetch-linked-data.js';
 import { namedGraphs } from './named-graphs.js';
 import { update } from './sparql.js';
 
-export async function ensureNamedGraphs(graphsToCheck, endpoint) {
-  const graphs = new Set(await namedGraphs(endpoint));
+/**
+ * Ensures the given named graphs exist in the endpoint, loading any missing ones
+ * @param {string[]} graphsToCheck - graphs to check, as 'graph@@url' strings
+ * @param {string} endpoint - the SPARQL endpoint
+ * @param {string[]} [otherGraphs] - additional graphs to report the existence of (not loaded if missing)
+ * @returns {Promise<Set<string>>} the graphs that exist in the endpoint (from graphsToCheck and otherGraphs)
+ */
+export async function ensureNamedGraphs(graphsToCheck, endpoint, otherGraphs = []) {
+  const candidates = graphsToCheck.map((graphAndUrl) => graphAndUrl.split('@@')[0]).concat(otherGraphs);
+  const graphs = new Set(await namedGraphs(endpoint, candidates));
   let updateQuery = '';
   for (const graphAndUrl of graphsToCheck) {
     const graph = graphAndUrl.split('@@')[0];
@@ -18,12 +26,14 @@ LOAD <${url}> INTO GRAPH <${graph}>;
       graphs.add(graph);
     }
   }
-  await update(updateQuery, endpoint);
+  if (updateQuery) {
+    await update(updateQuery, endpoint);
+  }
   return graphs;
 }
 
 export async function ensureNamedGraphsInMemory(graphsToCheck, endpoint) {
-  const graphs = new Set(await namedGraphs(endpoint));
+  const graphs = new Set(await namedGraphs(endpoint, graphsToCheck));
   for (const graph of graphsToCheck) {
     if (!graphs.has(graph)) {
       console.log(new Date().toISOString(), 'Adding named graph:', graph);
