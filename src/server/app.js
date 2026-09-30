@@ -80,12 +80,14 @@ app.use('/', longCache, ruiRoute);
 app.use('/', longCache, ftuExplorerRoute);
 app.use('/', grlcRoutes);
 
-const processingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
+// Optionally limit the number of requests processed at once (the docker image queues requests in HAProxy instead)
+const activeLimit = activeQueryLimit();
+const processingQueue = activeLimit > 0 ? queue({ activeLimit, queuedLimit: -1 }) : (_req, _res, next) => next();
 app.use('/v1', processingQueue, v1Routes);
 app.use('/v1/sparql', noCache, sparqlRoute);
 app.use('/hra-pop', processingQueue, hraPopRoutes);
-app.use('/ds-graph', dsGraphRoutes);
-app.use('/kg', hraKgRoutes);
+app.use('/ds-graph', processingQueue, dsGraphRoutes);
+app.use('/kg', processingQueue, hraKgRoutes);
 
 // Report unexpected errors (e.g., failed SPARQL queries) instead of crashing or hanging the request
 app.use(function (err, req, res, next) {

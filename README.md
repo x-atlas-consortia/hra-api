@@ -20,6 +20,8 @@ Clients are published to NPM and PyPi:
 
 The HRA API docker image bundles the API server (Node.js) and an embedded [QLever](https://github.com/ad-freiburg/qlever)
 SPARQL triple store, both managed by [pm2](https://pm2.keymetrics.io/) (see `ecosystem.config.cjs`).
+The API runs as several processes behind [HAProxy](https://www.haproxy.org/), which queues the API requests
+(`/v1`, `/hra-pop`, `/kg` and `/ds-graph`) and passes each one to the next process with a free slot.
 QLever is installed natively from its [apt repository](https://docs.qlever.dev/quickstart/), and its index is
 built at image build time (`qlever/setup-qlever-index.sh`) from the HRA KG graphs on the CDN
 (`--build-arg CDN_URL=...`).
@@ -43,8 +45,13 @@ Environment variables (use `--env` on `docker run` to override):
 | `SPARQL_UPDATE_TOKEN` | random per container start | Access token for updates to the embedded QLever |
 | `SPARQL_ENDPOINT` | (embedded QLever) | Use an external SPARQL endpoint instead of the embedded QLever |
 | `SPARQL_BACKEND` | `blazegraph` for external endpoints | The type of an external endpoint: `qlever` or `blazegraph` |
+| `API_INSTANCES` | `4` | Number of API server processes behind HAProxy (on ports `PORT + 10` and up) |
+| `ACTIVE_QUERIES` | `1` | Maximum number of API requests processed at once by each API process; others wait in HAProxy's queue (`0` = no limit) |
+| `DATASET_BUILDS` | `1` | Maximum number of session-token datasets built at once by each API process (`2` when running the server directly) |
 
 When using the library (or running the server) against an external endpoint, set `SPARQL_BACKEND` to match it.
+When running the server directly (`node dist/server.js`, without HAProxy), requests are not limited unless
+`ACTIVE_QUERIES` is set, in which case the server queues them itself.
 The library works with both QLever and Blazegraph endpoints (e.g., <https://lod.humanatlas.io/sparql>).
 
 ### Comparing backends

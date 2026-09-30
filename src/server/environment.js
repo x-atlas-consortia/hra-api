@@ -20,16 +20,23 @@ export function shortCacheTimeout() {
   return process.env.CACHE_TIMEOUT || 3600;
 }
 
+/** Schedule for pruning expired session-token datasets (an empty string disables pruning) */
 export function pruningSchedule() {
-  return process.env.PRUNING_SCHEDULE || '0 6 * * *';
+  return process.env.PRUNING_SCHEDULE ?? '0 6 * * *';
 }
 
 export function longCacheTimeout() {
   return process.env.LONG_CACHE_TIMEOUT || shortCacheTimeout() * 24;
 }
 
+/** Maximum number of requests processed at once, others are queued (0 = no limit, e.g., behind a load balancer) */
 export function activeQueryLimit() {
-  return process.env.ACTIVE_QUERIES || 4;
+  return Number(process.env.ACTIVE_QUERIES || 0);
+}
+
+/** Maximum number of session-token datasets built at once */
+export function datasetBuildLimit() {
+  return Number(process.env.DATASET_BUILDS || 2);
 }
 
 export function cacheDir() {

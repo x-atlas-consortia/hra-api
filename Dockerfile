@@ -3,7 +3,7 @@ FROM node:22-bookworm-slim
 # Install QLever (native binaries + qlever CLI) from the official apt repository
 # See https://docs.qlever.dev/quickstart/
 ARG QLEVER_VERSION=0.6.0
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git gpg wget \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git gpg haproxy wget \
   && wget -qO - https://packages.qlever.dev/pub.asc | gpg --dearmor > /usr/share/keyrings/qlever.gpg \
   && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/qlever.gpg] https://packages.qlever.dev/ $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") main" > /etc/apt/sources.list.d/qlever.list \
   && apt-get update && apt-get install -y --no-install-recommends qlever=${QLEVER_VERSION} \

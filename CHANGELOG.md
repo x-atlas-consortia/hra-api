@@ -27,6 +27,13 @@ Changelog for the Human Reference Atlas API (HRA-API)
   rui-locations queries
 - Plain http connections (e.g., to the embedded triple store) are no longer kept alive, which added ~40ms per query with QLever
 - Filter subqueries are joined before optional patterns when possible (faster on QLever and Blazegraph)
+- The docker image runs the API server as multiple processes (`API_INSTANCES`, default 4) behind HAProxy, which
+  queues requests and passes each one to the next process with a free slot (`ACTIVE_QUERIES`, now 1 per process),
+  so large responses no longer block other requests
+- `/kg` and `/ds-graph` requests are now queued like the other API requests
+- `ACTIVE_QUERIES` no longer limits a directly run server by default (set it to queue requests in the server);
+  concurrent session-token dataset builds are limited by the new `DATASET_BUILDS` setting (per process; default 1 in the docker image, 2 otherwise)
+- `PRUNING_SCHEDULE` can be set to an empty string to disable pruning of session-token datasets
 - Add a Blazegraph vs QLever comparison harness (`test/compare`)
 
 ## 0.18.0 - 2026-01-09
