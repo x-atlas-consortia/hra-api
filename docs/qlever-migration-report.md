@@ -144,7 +144,7 @@ Each response is classified as:
 
 | Run | Cases | identical | order-only | different (reviewed) | baseline-error | error |
 |---|---|---|---|---|---|---|
-| Full, commit `fe870d4` (2026-09-26) | 3,093 | 2,748 | 323 | 19 | 3 | 0 |
+| Full, commit `4d6606e` (2026-09-26, before the keep-alive fix, which does not affect results) | 3,093 | 2,748 | 323 | 19 | 3 | 0 |
 | Curated, commit `6d96524` (2026-09-29, final image) | 645 | 591 | 50 | 1 | 3 | 0 |
 
 - **The 19 and 1 reviewed differences are all external.** `/v1/sparql` proxies to `lod.humanatlas.io` when the
@@ -411,8 +411,8 @@ These are deliberate changes, and all of them also apply when running against Bl
 1. **Decide on the performance gate** (§5.4).
 2. **Review the behaviour changes** in §6.2.
 3. **Your pm2 cluster-mode change** (`API_INSTANCES`, `ACTIVE_QUERIES` and `test/compare/load.js`, uncommitted
-   in the working tree) was not part of these measurements. The tested image runs one API process with 4 active
-   queries. Worth a load test with `test/compare/load.js`.
+   in the working tree) was not part of these measurements. The measured image (`6d96524`) runs one API process
+   with the default of 4 active queries (`ACTIVE_QUERIES`). Worth a load test with `test/compare/load.js`.
 4. **Re-run on reliable hardware**, given §8.3: `npm run compare:env -- all`, then `npm run compare` and
    `npm run compare -- --perf`. Also run the staging build (`CDN_URL=.../hra-kg--staging/`).
 5. **Optional:**
