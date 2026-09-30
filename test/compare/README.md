@@ -74,6 +74,28 @@ The gate is applied to uncached mode:
 - p95(B) ≤ 1.2 × p95(A) for every case (cases under 50ms are exempt);
 - the geometric mean of the p50 ratios must be ≤ 1.0.
 
+## Load tests of one server configuration
+
+`load.js` replays a fixed, shuffled request mix against a single API with a number of concurrent clients and reports
+latencies per route, to compare server configurations (e.g., `API_INSTANCES` and `ACTIVE_QUERIES`) on the same
+requests. Use the same `--seed` for every configuration, and a fresh container for each run.
+
+```bash
+# The perf cases (curated + most frequent log cases per route), each sent 3 times
+node test/compare/load.js --target http://localhost:28080/ --mix harness --concurrency 8 --out harness.json
+# Log cases sampled by production CloudFront misses per route (CSV with route,miss_n columns)
+node test/compare/load.js --target http://localhost:28080/ --mix production --weights misses.csv --requests 600
+```
+
+The weights for the production mix can be computed from the CloudFront logs with the `duckdb` CLI:
+
+```bash
+duckdb -csv -c "SELECT regexp_replace(cs_uri_stem, '^/api/', '') AS route, count(*) AS miss_n
+  FROM 'hra-api-logs.parquet' WHERE x_host_header = 'apps.humanatlas.io' AND cs_method = 'GET'
+    AND sc_status < 400 AND x_edge_result_type = 'Miss' AND regexp_matches(cs_uri_stem, '^/api/(v1|kg|hra-pop)/')
+  GROUP BY ALL" > misses.csv
+```
+
 ## SPARQL-level comparison
 
 To separate engine differences from the API's post-processing, capture the exact queries the API sends and
@@ -104,6 +126,7 @@ npm run compare -- --b http://localhost:48080/ --cases curated --reuse-datasets
 | `orchestrate.sh` | Snapshot, image builds, containers, capture proxy |
 | `run.js` | Main runner (datasets, correctness, performance, report) |
 | `logs-to-cases.js` | CloudFront logs (parquet, read with the `duckdb` CLI) to cases |
+| `load.js` | Load test of a single API with per-route latencies |
 | `sparql-proxy.js`, `sparql-compare.js` | SPARQL-level capture and replay |
 | `construct-check.js` | Checks that CONSTRUCT via N-Triples + `jsonld.fromRDF` matches Blazegraph's native JSON-LD |
 | `datasets.json` | Session-token datasets |
