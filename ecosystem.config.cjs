@@ -14,7 +14,7 @@ const SPARQL_BACKEND = USE_LOCAL_DB ? 'qlever' : process.env.SPARQL_BACKEND ?? '
 const SPARQL_UPDATE_TOKEN = process.env.SPARQL_UPDATE_TOKEN || (USE_LOCAL_DB ? randomBytes(32).toString('hex') : '');
 
 // Run several API processes behind HAProxy, so that building large responses (e.g., JSON-LD framing) does not
-// block other requests. HAProxy queues the API requests (/v1, /hra-pop, /kg, /ds-graph) and passes each one to the next
+// block other requests. HAProxy queues the API requests (/v1, /hra-pop, /ds-graph) and passes each one to the next
 // process with a free slot (ACTIVE_QUERIES per process, 0 = no limit), so the triple store sees up to
 // API_INSTANCES * ACTIVE_QUERIES queries. One request per process is fastest: two large responses in the same
 // process slow each other down.
@@ -80,7 +80,7 @@ defaults
 
 frontend api
   bind :${PORT}
-  use_backend queued if { path_beg /v1 /hra-pop /kg /ds-graph }
+  use_backend queued if { path_beg /v1 /hra-pop /ds-graph }
   default_backend direct
 
 backend queued

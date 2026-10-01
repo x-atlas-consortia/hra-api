@@ -21,7 +21,7 @@ Clients are published to NPM and PyPi:
 The HRA API docker image bundles the API server (Node.js) and an embedded [QLever](https://github.com/ad-freiburg/qlever)
 SPARQL triple store, both managed by [pm2](https://pm2.keymetrics.io/) (see `ecosystem.config.cjs`).
 The API runs as several processes behind [HAProxy](https://www.haproxy.org/), which queues the API requests
-(`/v1`, `/hra-pop`, `/kg` and `/ds-graph`) and passes each one to the next process with a free slot.
+(`/v1`, `/hra-pop` and `/ds-graph`) and passes each one to the next process with a free slot.
 QLever is installed natively from its [apt repository](https://docs.qlever.dev/quickstart/), and its index is
 built at image build time (`qlever/setup-qlever-index.sh`) from the HRA KG graphs on the CDN
 (`--build-arg CDN_URL=...`).

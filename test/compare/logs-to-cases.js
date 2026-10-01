@@ -61,14 +61,11 @@ const FILTERED_ROUTES = new Set([
   'v1/asctb-sheet-config',
   'v1/asctb-omap-sheet-config',
   'v1/ftu-illustrations',
-  'kg/do-search',
-  'kg/asctb-term-occurences',
 ]);
 // Routes where specific (non-filter) parameters matter
 const PARAM_ROUTES = {
   'v1/extraction-site': ['iri'],
   'v1/reference-organ-scene': ['organ-iri', 'token', 'sex'],
-  'kg/digital-objects': [],
   'hra-pop/supported-organs': [],
   'hra-pop/supported-reference-organs': [],
   'hra-pop/supported-tools': [],

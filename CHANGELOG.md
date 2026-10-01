@@ -3,6 +3,7 @@
 Changelog for the Human Reference Atlas API (HRA-API)
 
 ## Unreleased
+- Remove the `/kg` routes (`/kg/digital-objects`, `/kg/do-search` and `/kg/asctb-term-occurences`)
 - Replace the embedded Blazegraph triple store with QLever (installed natively via apt, index built at image build time)
 - CONSTRUCT queries now request N-Triples and convert to JSON-LD locally (works with both QLever and Blazegraph)
 - Add `SPARQL_BACKEND` and `SPARQL_UPDATE_TOKEN` settings; updates to the embedded QLever require an access token

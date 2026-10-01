@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { mkdir, writeFile } from 'fs/promises';
 import { resolve } from 'path';
-import { getDigitalObjects } from '../dist/operations/hra-kg.js';
 import {
   getAnatomicalSystemsTreeModel,
   getASCTBOmapSheetConfig,
@@ -40,7 +39,6 @@ const requests = [
   runAndCache(getASCTBOmapSheetConfig, 'asctb-omap-sheet-config.json'),
   runAndCache(getASCTBSheetConfig, 'asctb-sheet-config.json'),
   runAndCache(getFtuIllustrations, 'ftu-illustrations.json'),
-  runAndCache(getDigitalObjects, 'digital-objects.json', false),
 ];
 for (const request of requests) {
   await request();
