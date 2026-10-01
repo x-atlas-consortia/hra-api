@@ -2,8 +2,15 @@ description: Successful operation. 2D FTU Illustration Data.
 content:
   application/json:
     schema:
-      type: array
-      items:
-        type: object
-        additionalProperties:
-          true
+      title: FTU Illustrations JSON-LD response
+      type: object
+      required:
+        - '@graph'
+      properties:
+        '@context':
+          description: JSON-LD context (a context IRI, a context object, or an array of these)
+        '@graph':
+          type: array
+          items:
+            type: object
+            additionalProperties: true

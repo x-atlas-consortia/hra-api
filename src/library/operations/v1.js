@@ -27,6 +27,7 @@ export * from '../v1/operations/reference-organs.js';
 export * from '../v1/operations/rui-reference-data.js';
 export * from '../v1/operations/session-token.js';
 export * from '../v1/operations/scene.js';
+export * from '../v1/operations/sennet-rui-locations.js';
 export * from '../v1/operations/technology-names.js';
 export * from '../v1/operations/tissue-blocks.js';
 export * from '../v1/operations/tissue-provider-names.js';

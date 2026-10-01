@@ -329,8 +329,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /v1/gtex/rui_locations.jsonld:
     get:
-      summary: Get all GTEx rui locations (if enabled)
-      description: This option is only enabled if GTEX_ROUTES=true in the environment
+      summary: Get all GTEx rui locations
+      description: The GTEx tissue blocks with rui locations in the dataset graph, as JSON-LD (i.e., /v1/ds-graph filtered to the GTEx consortium)
       operationId: gtex-rui-locations
       tags:
         - v1
@@ -345,11 +345,11 @@ paths:
                 type: object
                 additionalProperties: true
         '404':
-          description: Not found due to option being disabled
+          description: Not found
   /v1/hubmap/rui_locations.jsonld:
     get:
-      summary: Get all hubmap rui locations (if enabled)
-      description: This option is only enabled if XCONSORTIA_ROUTES=true in the environment
+      summary: Get all HuBMAP rui locations
+      description: The HuBMAP tissue blocks with rui locations in the dataset graph, as JSON-LD (i.e., /v1/ds-graph filtered to the HuBMAP consortium)
       operationId: hubmap-rui-locations
       tags:
         - v1
@@ -365,7 +365,7 @@ paths:
                 type: object
                 additionalProperties: true
         '404':
-          description: Not found due to option being disabled
+          description: Not found
   /v1/mesh-3d-cell-population:
     post:
       summary: Given a reference organ, 3d scene node, and cell population,  generate cells in that distribution to fit in that 3d scene node.
@@ -524,8 +524,8 @@ paths:
           $ref: '#/components/responses/ErrorMessage'
   /v1/sennet/rui_locations.jsonld:
     get:
-      summary: Get all sennet rui locations (if enabled)
-      description: This option is only enabled if XCONSORTIA_ROUTES=true in the environment
+      summary: Get all SenNet rui locations
+      description: The SenNet tissue blocks with rui locations in the dataset graph, as JSON-LD (i.e., /v1/ds-graph filtered to the SenNet consortium)
       operationId: sennet-rui-locations
       tags:
         - v1
@@ -541,7 +541,7 @@ paths:
                 type: object
                 additionalProperties: true
         '404':
-          description: Not found due to option being disabled
+          description: Not found
   /v1/session-token:
     post:
       summary: Get a session token
@@ -2116,10 +2116,18 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: object
-              additionalProperties: true
+            title: FTU Illustrations JSON-LD response
+            type: object
+            required:
+              - '@graph'
+            properties:
+              '@context':
+                description: JSON-LD context (a context IRI, a context object, or an array of these)
+              '@graph':
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
     SpatialPlacement:
       description: Successful operation
       content:
@@ -2147,10 +2155,39 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: object
-              additionalProperties: true
+            title: RUI Reference Data
+            type: object
+            properties:
+              organIRILookup:
+                description: Reference organ IRIs keyed by "organ label|sex|side"
+                type: object
+                additionalProperties:
+                  type: string
+              organSpatialEntities:
+                description: Reference organ spatial entities keyed by reference organ IRI
+                type: object
+                additionalProperties: true
+              anatomicalStructures:
+                description: Anatomical structures (spatial entities) of each reference organ, keyed by reference organ IRI
+                type: object
+                additionalProperties: true
+              extractionSets:
+                description: Extraction sets of each reference organ, keyed by reference organ IRI
+                type: object
+                additionalProperties: true
+              sceneNodeLookup:
+                description: Scene nodes keyed by IRI
+                type: object
+                additionalProperties: true
+              simpleSceneNodeLookup:
+                description: Simplified scene nodes keyed by IRI
+                type: object
+                additionalProperties: true
+              placementPatches:
+                description: Direct placements onto the current reference organs for other (e.g., older) spatial entities, keyed by the source IRI
+                type: object
+                additionalProperties: true
+            additionalProperties: true
     SessionToken:
       description: Successful operation
       content:
