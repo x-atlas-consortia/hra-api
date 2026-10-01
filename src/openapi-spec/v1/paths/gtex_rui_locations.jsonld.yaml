@@ -1,6 +1,6 @@
 get:
-  summary: Get all GTEx rui locations (if enabled)
-  description: This option is only enabled if GTEX_ROUTES=true in the environment
+  summary: Get all GTEx rui locations
+  description: The GTEx tissue blocks with rui locations in the dataset graph, as JSON-LD (i.e., /v1/ds-graph filtered to the GTEx consortium)
   operationId: gtex-rui-locations
   tags: [v1]
   parameters:
@@ -15,5 +15,5 @@ get:
             additionalProperties:
               true
     '404':
-      description: Not found due to option being disabled
+      description: Not found
   

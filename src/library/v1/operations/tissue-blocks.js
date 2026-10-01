@@ -13,6 +13,7 @@ const SINGLE_VALUE_FIELDS = new Set([
   'donor',
   'rui_location',
   'section_size',
+  'section_units',
   // Donor-specific fields
   'provider_name',
   // Dataset-specific fields
@@ -56,9 +57,17 @@ function normalizeSpatialEntityId(spatialEntityId) {
   return spatialEntityId;
 }
 
+function normalizeSectionCount(sectionCount) {
+  // Blocks described by multiple data sources can have several section counts; use the largest one
+  return Array.isArray(sectionCount) ? Math.max(...sectionCount.map(Number)) : sectionCount;
+}
+
 function normalizeBlock(block, sectionLookup) {
   const normalizedBlock = {};
   TISSUE_BLOCK_FIELDS.forEach((field) => (normalizedBlock[field] = block[field]));
+  if (normalizedBlock['section_count'] !== undefined) {
+    normalizedBlock['section_count'] = normalizeSectionCount(normalizedBlock['section_count']);
+  }
   normalizedBlock['sampleType'] = 'Tissue Block';
   normalizedBlock['donor'] = normalizeDonor(block['donor']);
   normalizedBlock['sections'] = normalizeSections(block['sections'], sectionLookup);

@@ -18,6 +18,7 @@ import {
   getReferenceOrgans,
   getRuiReferenceData,
   getScene,
+  getSennetRuiLocations,
   getTissueBlocks,
   getTissueProviderNames,
 } from '../../../library/operations/v1.js';
@@ -45,8 +46,10 @@ function routes(app) {
     .get('/api/v1/ds-graph', forwardFilteredRequest(getDsGraph))
     .get('/api/v1/hubmap-rui-locations', forwardFilteredRequest(getHubmapRuiLocations))
     .get('/api/v1/gtex-rui-locations', forwardFilteredRequest(getGtexRuiLocations))
+    .get('/api/v1/sennet-rui-locations', forwardFilteredRequest(getSennetRuiLocations))
     .get('/api/v1/hubmap/rui_locations.jsonld', forwardFilteredRequest(getHubmapRuiLocations))
     .get('/api/v1/gtex/rui_locations.jsonld', forwardFilteredRequest(getGtexRuiLocations))
+    .get('/api/v1/sennet/rui_locations.jsonld', forwardFilteredRequest(getSennetRuiLocations))
     .get('/api/v1/reference-organ-scene', getReferenceOrganSceneHandler())
     .get('/api/v1/scene', forwardFilteredRequest(getScene))
     .post('/api/v1/get-spatial-placement', getSpatialPlacementHandler())

@@ -20,6 +20,7 @@ import {
   getReferenceOrgans,
   getRuiReferenceData,
   getScene,
+  getSennetRuiLocations,
   getTissueBlocks,
   getTissueProviderNames,
 } from '../../../library/operations/v1.js';
@@ -59,8 +60,10 @@ const routes = Router()
   .get('/ds-graph', shortCache, forwardFilteredRequest(getDsGraph))
   .get('/hubmap-rui-locations', shortCache, forwardFilteredRequest(getHubmapRuiLocations))
   .get('/gtex-rui-locations', shortCache, forwardFilteredRequest(getGtexRuiLocations))
+  .get('/sennet-rui-locations', shortCache, forwardFilteredRequest(getSennetRuiLocations))
   .get('/hubmap/rui_locations.jsonld', shortCache, forwardFilteredRequest(getHubmapRuiLocations))
   .get('/gtex/rui_locations.jsonld', shortCache, forwardFilteredRequest(getGtexRuiLocations))
+  .get('/sennet/rui_locations.jsonld', shortCache, forwardFilteredRequest(getSennetRuiLocations))
   .get('/reference-organ-scene', shortCache, getReferenceOrganSceneHandler())
   .get('/scene', shortCache, forwardFilteredRequest(getScene))
   .post('/session-token', noCache, getSessionTokenHandler())

@@ -11,6 +11,14 @@ export function expandIri(iri) {
 
 const DEFAULT_STRING_FIELDS = ['creator', 'creator_first_name', 'creator_last_name'];
 
+// Spatial entity and placement fields that must be numbers (some source data has them as string literals)
+const NUMERIC_FIELDS = new Set(
+  ['dimension', 'translation', 'rotation', 'scaling']
+    .flatMap((suffix) => ['x', 'y', 'z'].map((axis) => `${axis}_${suffix}`))
+    .concat(['rui_rank', 'slice_count', 'slice_thickness'])
+);
+const NUMBER_PATTERN = /^\s*[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?\s*$/;
+
 export function normalizeJsonLd(
   jsonld,
   arrayFields = new Set(),
@@ -26,6 +34,9 @@ export function normalizeJsonLd(
     }
     if (stringFields.has(key)) {
       value = ensureString(value);
+    }
+    if (NUMERIC_FIELDS.has(key) && typeof value === 'string' && NUMBER_PATTERN.test(value)) {
+      return Number(value);
     }
     if (
       typeof value === 'object' &&
