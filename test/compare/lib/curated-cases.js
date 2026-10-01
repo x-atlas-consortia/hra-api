@@ -76,9 +76,6 @@ export const STATIC_ROUTES = [
   'v1/asctb-omap-sheet-config',
   'v1/hubmap/rui_locations.jsonld',
   'v1/gtex/rui_locations.jsonld',
-  'kg/digital-objects',
-  'kg/do-search',
-  'kg/asctb-term-occurences',
   'hra-pop/supported-organs',
   'hra-pop/supported-reference-organs',
   'hra-pop/supported-tools',
@@ -215,18 +212,6 @@ export function curatedCases({ specFile, datasets }) {
     query: `iri=${encodeURIComponent('http://purl.org/ccf/1.5/00000000-0000-0000-0000-000000000000')}`,
   });
   add({ id: 'curated:v1/db-status:no-token', route: 'v1/db-status', path: 'v1/db-status', query: '' });
-  add({
-    id: 'curated:kg/do-search:hra-versions',
-    route: 'kg/do-search',
-    path: 'kg/do-search',
-    query: `ontology-terms=${encodeURIComponent(KIDNEY)}&hra-versions=v2.3`,
-  });
-  add({
-    id: 'curated:kg/asctb-term-occurences:terms',
-    route: 'kg/asctb-term-occurences',
-    path: 'kg/asctb-term-occurences',
-    query: `ontology-terms=${encodeURIComponent(KIDNEY)}&cell-type-terms=${encodeURIComponent(B_CELL)}`,
-  });
 
   return cases.concat(specCases(resolve(specFile)));
 }

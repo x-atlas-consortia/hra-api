@@ -1,5 +1,0 @@
-description: Successful operation
-content:
-  application/json:
-    schema:
-      $ref: ../schemas/DigitalObjectsJsonLd.yaml

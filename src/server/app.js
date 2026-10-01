@@ -12,7 +12,6 @@ import dsGraphRoutes from './routes/ds-graph.js';
 import euiRoute from './routes/eui.js';
 import ftuExplorerRoute from './routes/ftu-explorer.js';
 import grlcRoutes from './routes/grlc.js';
-import hraKgRoutes from './routes/hra-kg.js';
 import hraPopRoutes from './routes/hra-pop.js';
 import ruiRoute from './routes/rui.js';
 import sparqlRoute from './routes/sparql.js';
@@ -87,7 +86,6 @@ app.use('/v1', processingQueue, v1Routes);
 app.use('/v1/sparql', noCache, sparqlRoute);
 app.use('/hra-pop', processingQueue, hraPopRoutes);
 app.use('/ds-graph', processingQueue, dsGraphRoutes);
-app.use('/kg', processingQueue, hraKgRoutes);
 
 // Report unexpected errors (e.g., failed SPARQL queries) instead of crashing or hanging the request
 app.use(function (err, req, res, next) {

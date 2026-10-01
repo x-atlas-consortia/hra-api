@@ -92,7 +92,7 @@ The weights for the production mix can be computed from the CloudFront logs with
 ```bash
 duckdb -csv -c "SELECT regexp_replace(cs_uri_stem, '^/api/', '') AS route, count(*) AS miss_n
   FROM 'hra-api-logs.parquet' WHERE x_host_header = 'apps.humanatlas.io' AND cs_method = 'GET'
-    AND sc_status < 400 AND x_edge_result_type = 'Miss' AND regexp_matches(cs_uri_stem, '^/api/(v1|kg|hra-pop)/')
+    AND sc_status < 400 AND x_edge_result_type = 'Miss' AND regexp_matches(cs_uri_stem, '^/api/(v1|hra-pop)/')
   GROUP BY ALL" > misses.csv
 ```
 

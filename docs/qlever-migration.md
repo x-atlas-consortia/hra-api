@@ -101,7 +101,7 @@ These changes are standards-compliant SPARQL and give identical results on Blaze
 
 ## Findings outside the scope of the migration
 
-- `/hra-pop/*` and `/kg/digital-objects` always query `lod.humanatlas.io` instead of the configured endpoint.
+- `/hra-pop/*` always queries `lod.humanatlas.io` instead of the configured endpoint.
 - The GTEx portal's embedded EUI (~37k requests in the logs) loads data sources from `ccf-api.hubmapconsortium.org`,
   which no longer resolves.
 - Two tissue blocks in the ds-graphs data are registered to themselves (the block IRI equals the spatial entity
