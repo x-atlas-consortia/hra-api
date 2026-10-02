@@ -104,6 +104,60 @@ const REFERENCE_ORGANS = [
   'https://purl.humanatlas.io/ref-organ/does-not-exist/v1.0#primary',
 ];
 
+/** hra-pop cell summary report inputs (heart: from the OpenAPI example; kidney: CL: prefixed ids) */
+const HEART_CELLS_CSV = [
+  'cell_id,cell_label,count,percentage',
+  'http://purl.obolibrary.org/obo/CL_0002131,regular ventricular cardiac myocyte,49273.09543,0.332091136333487',
+  'http://purl.obolibrary.org/obo/CL_0000669,pericyte,24587.941957,0.16571797475566',
+  'http://purl.obolibrary.org/obo/CL_0002144,capillary endothelial cell,20134.675085,0.13570381706955',
+  'http://purl.obolibrary.org/obo/CL_0000057,fibroblast,14931.592835,0.10063604871118',
+  'http://purl.obolibrary.org/obo/CL_0000235,macrophage,3870.474525,0.0260862499491858',
+  'http://purl.obolibrary.org/obo/CL_0000236,B cell,239.189975,0.00161209418454692',
+].join('\n');
+const KIDNEY_CELLS_CSV = [
+  'cell_id,cell_label,count,percentage',
+  'CL:1001109,Cortical Thick Ascending Limb,458759.144483,0.16965778065620665',
+  'CL:1000547,Inner Medullary Collecting Duct,397029.401645,0.1468289579584576',
+  'CL:4030009,Proximal Tubule Epithelial Segment 1,227183.108136,0.08401659649175897',
+  'CL:4030016,Distal Convoluted Tubule Type 1,197929.982737,0.07319823920746954',
+  'CL:1000768,Connecting Tubule,157550.129453,0.05826500817813026',
+].join('\n');
+
+/** A RUI location in the left kidney (the OpenAPI example) */
+const KIDNEY_RUI_LOCATION = {
+  '@context': 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld',
+  '@id': 'http://purl.org/ccf/1.5/f7130161-ad0a-4801-b5a4-f6297e0f1869',
+  '@type': 'SpatialEntity',
+  creator: 'Bruce Herr',
+  creator_first_name: 'Bruce',
+  creator_last_name: 'Herr',
+  creation_date: '2022-04-27',
+  x_dimension: 11,
+  y_dimension: 12,
+  z_dimension: 13,
+  dimension_units: 'millimeter',
+  placement: {
+    '@context': 'https://hubmapconsortium.github.io/ccf-ontology/ccf-context.jsonld',
+    '@id': 'http://purl.org/ccf/1.5/f7130161-ad0a-4801-b5a4-f6297e0f1869_placement',
+    '@type': 'SpatialPlacement',
+    target: 'http://purl.org/ccf/latest/ccf.owl#VHFLeftKidneyV1.1',
+    placement_date: '2022-04-27',
+    x_scaling: 1,
+    y_scaling: 1,
+    z_scaling: 1,
+    scaling_units: 'ratio',
+    x_rotation: -61,
+    y_rotation: 50,
+    z_rotation: -84,
+    rotation_order: 'XYZ',
+    rotation_units: 'degree',
+    x_translation: 20.149,
+    y_translation: 109.963,
+    z_translation: 38.79,
+    translation_units: 'millimeter',
+  },
+};
+
 function joinQuery(...parts) {
   return parts.filter((p) => p && p.length > 0).join('&');
 }
@@ -212,6 +266,29 @@ export function curatedCases({ specFile, datasets }) {
     query: `iri=${encodeURIComponent('http://purl.org/ccf/1.5/00000000-0000-0000-0000-000000000000')}`,
   });
   add({ id: 'curated:v1/db-status:no-token', route: 'v1/db-status', path: 'v1/db-status', query: '' });
+
+  const popReport = 'hra-pop/cell-summary-report';
+  const addReport = (name, body, tags = []) =>
+    add({ id: `curated:${popReport}:${name}`, route: popReport, path: popReport, method: 'POST', body, tags });
+  addReport('heart', { csvString: HEART_CELLS_CSV }, ['perf']);
+  addReport('heart:organ', { csvString: HEART_CELLS_CSV, organ: HEART }, ['perf']);
+  addReport('heart:organ:tool', { csvString: HEART_CELLS_CSV, organ: HEART, tool: 'celltypist' });
+  addReport('heart-cells:kidney-organ', { csvString: HEART_CELLS_CSV, organ: KIDNEY });
+  addReport('kidney:organ', { csvString: KIDNEY_CELLS_CSV, organ: KIDNEY }, ['perf']);
+  addReport('kidney:tool', { csvString: KIDNEY_CELLS_CSV, tool: 'azimuth' });
+  addReport('unknown-cell', { csvString: 'cell_id,percentage\nCL:9999999,0.5' });
+  addReport('no-valid-rows', { csvString: 'cell_id,percentage\nCL:0000057,2\n,0.5' });
+  addReport('missing-csv', { organ: HEART });
+
+  const popSummary = 'hra-pop/rui-location-cell-summary';
+  const addSummary = (name, body, tags = []) =>
+    add({ id: `curated:${popSummary}:${name}`, route: popSummary, path: popSummary, method: 'POST', body, tags });
+  addSummary('kidney', KIDNEY_RUI_LOCATION, ['perf']);
+  addSummary('kidney:no-collisions', {
+    ...KIDNEY_RUI_LOCATION,
+    placement: { ...KIDNEY_RUI_LOCATION.placement, x_translation: 1000, y_translation: 1000, z_translation: 1000 },
+  });
+  addSummary('not-a-spatial-entity', { '@type': 'Sample' });
 
   return cases.concat(specCases(resolve(specFile)));
 }

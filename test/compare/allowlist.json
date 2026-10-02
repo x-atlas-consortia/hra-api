@@ -5,11 +5,6 @@
       "pattern": "^[a-z]+:((GET|POST):)?v1/sparql",
       "type": "external",
       "reason": "/v1/sparql proxies to the exposed endpoint (lod.humanatlas.io when the local store is writable) on both backends; the remote results are unordered and error pages contain request ids"
-    },
-    {
-      "pattern": "hra-pop/",
-      "type": "external",
-      "reason": "hra-pop operations are called without an endpoint and always query lod.humanatlas.io (not the embedded triple store); differences come from the remote service"
     }
   ]
 }

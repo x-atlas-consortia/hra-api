@@ -5,6 +5,7 @@ import {
   looksLikeJsonLd,
   normalizeLines,
   numbersClose,
+  numericLiteralsToNumbers,
   stableStringify,
   tolerantEqual,
 } from './normalize.js';
@@ -186,8 +187,8 @@ export function compareResponses(a, b, { volatile = [] } = {}) {
   const ja = tryParseJson(a.body);
   const jb = tryParseJson(b.body);
   if (ja.ok && jb.ok) {
-    ja.value = stripVolatile(ja.value, volatile);
-    jb.value = stripVolatile(jb.value, volatile);
+    ja.value = numericLiteralsToNumbers(stripVolatile(ja.value, volatile));
+    jb.value = numericLiteralsToNumbers(stripVolatile(jb.value, volatile));
     if (tolerantEqual(canonicalOrdered(ja.value), canonicalOrdered(jb.value))) {
       return { category: 'identical' };
     }

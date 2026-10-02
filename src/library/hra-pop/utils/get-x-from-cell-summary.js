@@ -9,7 +9,7 @@ function getCellSummariesQuery(cellWeights, organIri, tool) {
   const valString = `VALUES (?cell_id) { ${values} }`;
   let query = cellSummariesQuery.replaceAll('#{{VALUES}}', valString);
   if (organIri) {
-    const organValues = `VALUES (?organ_iri) { (<${organIri}>) }`;
+    const organValues = `VALUES (?organ_iri) { (<${organIri}>) } ?refOrganTerm ccf:ccf_part_of* ?organ_iri .`;
     query = query.replaceAll('#{{ORGAN_IRIs}}', organValues);
   }
   if (tool) {
@@ -43,7 +43,10 @@ function getSourceSimilarities(cellWeights, summaries) {
     delete source.cellWeights;
   }
 
-  return Object.values(sources).sort((a, b) => b.similarity - a.similarity);
+  // Ties are broken by id so that the order does not depend on the triple store's row order
+  return Object.entries(sources)
+    .sort(([idA, a], [idB, b]) => b.similarity - a.similarity || (idA < idB ? -1 : idA > idB ? 1 : 0))
+    .map(([_id, source]) => source);
 }
 
 export async function getSimilarCellSources(cellWeights, organIri, tool, endpoint = 'https://lod.humanatlas.io/sparql') {

@@ -33,6 +33,25 @@ function normalizeScalar(value) {
   return typeof value === 'string' ? normalizeString(value) : value;
 }
 
+const XSD = 'http://www.w3.org/2001/XMLSchema#';
+const NUMERIC_TYPES = new Set(['double', 'decimal', 'float', 'integer', 'int', 'long'].flatMap((t) => [`${XSD}${t}`, `xsd:${t}`]));
+
+/**
+ * Replaces the lexical form of numeric typed literals ({"@type": xsd:double, "@value": "1.0"}) with a number,
+ * so that the numeric tolerance applies to them (QLever and Blazegraph format doubles differently)
+ */
+export function numericLiteralsToNumbers(value) {
+  if (Array.isArray(value)) return value.map(numericLiteralsToNumbers);
+  if (value && typeof value === 'object') {
+    if (typeof value['@value'] === 'string' && NUMERIC_TYPES.has(value['@type']) && value['@value'].trim() !== '') {
+      const n = Number(value['@value']);
+      if (!Number.isNaN(n)) return { ...value, '@value': n };
+    }
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, numericLiteralsToNumbers(v)]));
+  }
+  return value;
+}
+
 /** Coarse rounding, only used for sort keys and fact sets (exact comparisons use numbersClose) */
 function coarseNumber(n) {
   if (!Number.isFinite(n) || Number.isInteger(n)) return n;
