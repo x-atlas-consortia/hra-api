@@ -9,13 +9,13 @@ FROM HRA:
 FROM HRApop:
 WHERE {
   {
-    SELECT ?tool ?modality ?cell_id (SAMPLE(?cell_label) AS ?cell_label) (sum(?weighted_cell_count) AS ?predicted_cell_count)
+    SELECT ?tool ?modality ?cell_id (MIN(?label) AS ?cell_label) (sum(?weighted_cell_count) AS ?predicted_cell_count)
     WHERE {
       #{{AS_WEIGHT_VALUES}}
       ?as ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ;
            ccf:modality ?modality ;
            ccf:has_cell_summary_row [ ccf:cell_id ?cell_id ;
-           ccf:cell_label ?cell_label ;
+           ccf:cell_label ?label ;
            ccf:cell_count ?cell_count ] ] .
       BIND (xsd:decimal(?cell_count) * xsd:decimal(?weight) AS ?weighted_cell_count)
     }

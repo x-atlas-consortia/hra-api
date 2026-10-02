@@ -7,18 +7,19 @@ import {
   getSupportedTools,
 } from '../../library/operations/hra-pop.js';
 import { longCache, noCache } from '../cache-middleware.js';
+import { sparqlEndpoint } from '../environment.js';
 
 const routes = Router()
   .get('/supported-organs', longCache, async function (_req, res) {
-    const organs = await getSupportedOrgans();
+    const organs = await getSupportedOrgans(sparqlEndpoint());
     res.json(organs);
   })
   .get('/supported-reference-organs', longCache, async function (_req, res) {
-    const organs = await getSupportedReferenceOrgans();
+    const organs = await getSupportedReferenceOrgans(sparqlEndpoint());
     res.json(organs);
   })
   .get('/supported-tools', longCache, async function (_req, res) {
-    const tools = await getSupportedTools();
+    const tools = await getSupportedTools(sparqlEndpoint());
     res.json(tools);
   })
   .post('/rui-location-cell-summary', noCache, async function (req, res) {
@@ -28,7 +29,7 @@ const routes = Router()
       return;
     }
 
-    const summary = await getCellSummary(ruiLocation);
+    const summary = await getCellSummary(ruiLocation, sparqlEndpoint());
     res.json(summary);
   })
   .post('/cell-summary-report', noCache, async function (req, res) {
@@ -38,7 +39,7 @@ const routes = Router()
       return;
     }
 
-    const report = await getSimilarCellSourcesReport(csvString, organ, tool);
+    const report = await getSimilarCellSourcesReport(csvString, organ, tool, sparqlEndpoint());
     res.json(report);
   });
 

@@ -14,13 +14,12 @@ WHERE {
   {
     #{{VALUES}}
     #{{TOOLS}}
-    ?cell_source ccf:has_cell_summary [ ccf:has_cell_summary_row [ ccf:cell_id ?cell_id ;
+    # The tool and modality must come from the same summary as the row (a cell source can have several summaries)
+    ?cell_source ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ;
+         ccf:modality ?modality ;
+         ccf:has_cell_summary_row [ ccf:cell_id ?cell_id ;
          ccf:cell_label ?cell_label ;
          ccf:percentage_of_total ?percentage ] ] .
-  }
-  OPTIONAL {
-    ?cell_source ccf:has_cell_summary [ ccf:cell_annotation_method ?tool ;
-         ccf:modality ?modality ] .
   }
   OPTIONAL {
     ?cell_source rdfs:label ?cell_source_label .
@@ -29,7 +28,6 @@ WHERE {
     ?cell_source ccf:url ?cell_source_link .
   }
   {
-    #{{ORGAN_IRIs}}
     # Anatomical Structure cell sources
     [] ccf:representation_of ?cell_source ;
        ccf:has_reference_organ ?refOrgan .
@@ -61,5 +59,7 @@ WHERE {
        ccf:placement_relative_to ?refOrgan .
     VALUES (?cell_source_type) { (ccf:SpatialEntity) }
   }
-  ?refOrgan ccf:representation_of [ ccf:ccf_part_of* ?organ_iri ] .
+  ?refOrgan ccf:representation_of ?refOrganTerm .
+  # Organ filter (applies to all cell source types)
+  #{{ORGAN_IRIs}}
 }
