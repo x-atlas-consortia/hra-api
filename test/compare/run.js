@@ -11,6 +11,9 @@
  *   --b-sparql <url>       Candidate QLever endpoint, used to clear its cache in uncached perf mode
  *                          (default http://localhost:28081/)
  *   --b-token <token>      QLever access token (default $SPARQL_UPDATE_TOKEN or harness-secret)
+ *   --a-sparql <url>       Baseline QLever endpoint (when the baseline also uses QLever, e.g. to compare QLever
+ *                          settings), used to clear its cache in uncached perf mode (default: not cleared)
+ *   --a-token <token>      Baseline QLever access token (default: the --b-token)
  *   --snapshot <url>       Snapshot server with the data sources used for session tokens
  *                          (default http://localhost:18900/)
  *   --snapshot-dir <dir>   Local snapshot directory (for inline data sources)
@@ -59,6 +62,7 @@ const opts = {
   b: withSlash(arg('--b', 'http://localhost:28080/')),
   bSparql: withSlash(arg('--b-sparql', 'http://localhost:28081/')),
   bToken: arg('--b-token', process.env.SPARQL_UPDATE_TOKEN ?? 'harness-secret'),
+  aSparql: arg('--a-sparql') ? withSlash(arg('--a-sparql')) : undefined,
   snapshot: withSlash(arg('--snapshot', 'http://localhost:18900/')),
   snapshotDir: arg('--snapshot-dir', resolve(HERE, '.snapshot')),
   cases: arg('--cases', 'curated,logs').split(','),
@@ -97,6 +101,7 @@ const VOLATILE = {
   'hra-pop/cell-summary-report': [/^sources\.similarity$/],
 };
 
+opts.aToken = arg('--a-token', opts.bToken);
 const BACKENDS = { a: opts.a, b: opts.b };
 const runId = new Date().toISOString().replace(/[:.]/g, '-');
 const outDir = resolve(opts.out, runId);
@@ -252,10 +257,10 @@ async function runCorrectness(cases, tokens, defaultDataset) {
 // Performance
 // ---------------------------------------------------------------------------------------------------------------
 
-async function clearQleverCache() {
-  const url = new URL(opts.bSparql);
+async function clearQleverCache(endpoint, token) {
+  const url = new URL(endpoint);
   url.searchParams.set('cmd', 'clear-cache-complete');
-  url.searchParams.set('access-token', opts.bToken);
+  url.searchParams.set('access-token', token);
   for (let attempt = 1; ; attempt++) {
     try {
       const resp = await fetch(url);
@@ -294,7 +299,9 @@ async function timeCase(testCase, mode) {
     for (const key of order) {
       if (i >= opts.perfWarmup + 3 && spent[key] > opts.perfBudgetMs) continue;
       if (mode === 'uncached' && key === 'b') {
-        await clearQleverCache();
+        await clearQleverCache(opts.bSparql, opts.bToken);
+      } else if (mode === 'uncached' && key === 'a' && opts.aSparql) {
+        await clearQleverCache(opts.aSparql, opts.aToken);
       }
       const r = await sendCase(BACKENDS[key], testCase);
       if (r.error || r.status >= 500) errors[key]++;

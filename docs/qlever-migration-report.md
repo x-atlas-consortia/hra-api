@@ -294,6 +294,7 @@ That is your decision.
 |---|---|
 | `enable-distributive-union=false` | Filtered queries: planning went from minutes to ~0.1 s |
 | `construct-deduplication=full` | Large CONSTRUCTs no longer exceed 512 MB |
+| `query-planning-budget=100` (evaluated, **not adopted**) | Same results for all 3,099 harness cases and 2,789 captured queries. Queries > 0.5 s: 5.4% faster (> 1 s: 8.5%), filtered biomarker occurrences 1.0 → 0.37 s. End to end the routes are unchanged (geomean p50 0.99x uncached and warm, same load-test throughput), as other costs dominate. Not worth the risk: more queries use the greedy planner, which produced the pathological rui-locations plan (see the per-star grouping row). It can still be set per deployment via `QLEVER_RUNTIME_PARAMETERS` |
 | Group each entity's patterns (`{ }` per star) | QLever's planner degrades steeply above ~10 patterns in one group. Examples: scene-organs 0.84 → 0.15 s; filtered scene 0.77 → 0.23 s; rui-locations > 5 min → 7 s |
 | Filter subquery projects only the variables it restricts | Joins on possibly unbound variables are very slow in QLever. Filtered term occurrences: 5.6 s → 0.09 s (Blazegraph 1.2 → 0.16 s) |
 | Drop the subquery's dataset OPTIONALs when there are no dataset filters | ~2× on filtered queries, on both engines |

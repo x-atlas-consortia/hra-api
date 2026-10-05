@@ -119,6 +119,18 @@ PORT=48080 SPARQL_ENDPOINT=http://localhost:18081/blazegraph/namespace/kb/sparql
 npm run compare -- --b http://localhost:48080/ --cases curated --reuse-datasets
 ```
 
+## Comparing QLever settings
+
+To compare two QLever configurations (e.g., runtime parameters), run the same image twice with different
+`QLEVER_RUNTIME_PARAMETERS` and pass both QLever endpoints, so that uncached mode clears both caches:
+
+```bash
+npm run compare -- --a http://localhost:28080/ --b http://localhost:38080/ \
+  --a-sparql http://localhost:28081/ --b-sparql http://localhost:38081/ --perf
+node test/compare/sparql-compare.js --a http://localhost:28081/ --a-qlever --a-token harness-secret \
+  --b http://localhost:38081/ --b-token harness-secret --queries captured.jsonl
+```
+
 ## Files
 
 | File | Purpose |

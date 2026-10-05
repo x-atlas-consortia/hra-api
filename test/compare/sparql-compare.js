@@ -6,6 +6,8 @@
  * Usage: node test/compare/sparql-compare.js [--a http://localhost:18081/blazegraph/namespace/kb/sparql]
  *          [--b http://localhost:28081/] [--queries test/compare/cases/sparql-queries.jsonl] [--out dir]
  *          [--runs 3] [--grep regex] [--concurrency 2] [--b-token token (clear QLever's cache before each run)]
+ *          [--a-qlever] [--a-token token]  (A is also QLever, e.g. to compare QLever settings; with --a-token its
+ *          cache is cleared before each run too)
  *
  * SELECT results are compared as multisets of CSV rows (numbers normalized); CONSTRUCT results as sets of
  * N-Triples (blank nodes normalized; QLever's xsd:int is compared as xsd:integer).
@@ -35,11 +37,13 @@ const opts = {
   concurrency: Number(arg('--concurrency', 2)),
   // If given, QLever's cache is cleared before each run (Blazegraph has no result cache)
   bToken: arg('--b-token'),
+  aQlever: process.argv.includes('--a-qlever'),
+  aToken: arg('--a-token'),
 };
 
-async function clearCache() {
-  if (opts.bToken) {
-    await fetch(`${opts.b}${opts.b.includes('?') ? '&' : '?'}cmd=clear-cache-complete&access-token=${opts.bToken}`);
+async function clearCache(endpoint = opts.b, token = opts.bToken) {
+  if (token) {
+    await fetch(`${endpoint}${endpoint.includes('?') ? '&' : '?'}cmd=clear-cache-complete&access-token=${token}`);
   }
 }
 
@@ -109,12 +113,13 @@ function diff(a, b) {
 
 async function compareQuery(entry) {
   const construct = isConstruct(entry.query);
-  const acceptA = construct ? 'text/plain' : 'text/csv';
+  const acceptA = construct ? (opts.aQlever ? 'application/n-triples' : 'text/plain') : 'text/csv';
   const acceptB = construct ? 'application/n-triples' : 'text/csv';
   const timings = { a: [], b: [] };
   let ra, rb;
   for (let i = 0; i < opts.runs; i++) {
-    ra = await run(opts.a, forBlazegraph(entry.query), acceptA);
+    if (opts.aQlever) await clearCache(opts.a, opts.aToken);
+    ra = await run(opts.a, opts.aQlever ? entry.query : forBlazegraph(entry.query), acceptA);
     await clearCache();
     rb = await run(opts.b, entry.query, acceptB);
     timings.a.push(ra.ms);
