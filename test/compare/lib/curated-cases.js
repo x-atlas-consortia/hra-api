@@ -266,6 +266,24 @@ export function curatedCases({ specFile, datasets }) {
     query: `iri=${encodeURIComponent('http://purl.org/ccf/1.5/00000000-0000-0000-0000-000000000000')}`,
   });
   add({ id: 'curated:v1/db-status:no-token', route: 'v1/db-status', path: 'v1/db-status', query: '' });
+  // Invalid request bodies
+  for (const route of ['v1/collisions', 'v1/corridor']) {
+    add({ id: `curated:${route}:not-a-spatial-entity`, route, path: route, method: 'POST', body: { '@type': 'Sample' } });
+  }
+  add({
+    id: 'curated:v1/get-spatial-placement:missing-target',
+    route: 'v1/get-spatial-placement',
+    path: 'v1/get-spatial-placement',
+    method: 'POST',
+    body: { rui_location: KIDNEY_RUI_LOCATION },
+  });
+  add({
+    id: 'curated:v1/mesh-3d-cell-population:missing-file',
+    route: 'v1/mesh-3d-cell-population',
+    path: 'v1/mesh-3d-cell-population',
+    method: 'POST',
+    body: { num_nodes: 100, node_distribution: {} },
+  });
 
   const popReport = 'hra-pop/cell-summary-report';
   const addReport = (name, body, tags = []) =>

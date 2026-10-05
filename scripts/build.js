@@ -41,7 +41,12 @@ const serviceWorker = {
   minify: true,
   sourcemap: 'linked',
   banner: {
-    js: `const SPARQL_ENDPOINT = '${process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql'}';`,
+    // Separate from SPARQL_ENDPOINT (the server's endpoint), so that the published sw.js keeps the public endpoint
+    js: [
+      `const SPARQL_ENDPOINT = '${process.env.SW_SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql'}';`,
+      // The HRA API that answers the routes the service worker does not compute (see src/service-worker/routes/v1/api-routes.js)
+      `const API_ENDPOINT = '${process.env.SW_API_ENDPOINT ?? 'https://apps.humanatlas.io/api'}';`,
+    ].join('\n'),
   },
 };
 

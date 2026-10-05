@@ -3,6 +3,29 @@
 Changelog for the Human Reference Atlas API (HRA-API)
 
 ## Unreleased
+- QLever health check: QLever is restarted automatically when it has not answered queries for longer than the
+  query timeout (`QLEVER_HEALTH_*` settings, `QLEVER_HEALTH_CHECK=false` disables it)
+- Session-token datasets survive QLever restarts (`QLEVER_PERSIST_UPDATES` now defaults to `true`); expired and failed
+  ones are still deleted by the daily pruning
+- Session-token datasets whose build was interrupted are reported as failed after an hour without progress, and
+  rebuilt from scratch on the next request (leftovers of an interrupted build are no longer reported as ready)
+- The hra-pop routes use the configured SPARQL endpoint (the embedded QLever) instead of lod.humanatlas.io
+- Fix `hra-pop/rui-location-cell-summary` failing on standards compliant triple stores (re-bound variable)
+- Fix `hra-pop/cell-summary-report`: the organ filter only applied to anatomical structure sources; the RUI
+  locations of every sectioned tissue block were returned; tools and modalities were mixed up between the cell
+  summaries of a source; deterministic labels and ordering; faster on QLever
+- Service worker fixes: error responses and POST request bodies (collisions, corridor, spatial placement,
+  mesh-3d-cell-population) failed; `hra-pop/supported-tools` was registered without its `/api/hra-pop/` prefix;
+  `hra-pop/cell-summary-report` ignored its JSON body; `mesh-3d-cell-population` was not registered correctly;
+  JSON-encoded query parameters were not decoded; status codes now match the server's
+- Service worker: add `consortium-names` and `session-token` (always the default dataset); the filter-independent
+  routes (tree models, reference organs, rui-reference-data, ASCT+B sheet configs, FTU illustrations) are forwarded to
+  the HRA API (`SW_API_ENDPOINT`), as their queries time out on lod.humanatlas.io
+- The service worker's SPARQL endpoint is set with `SW_SPARQL_ENDPOINT` at build time (instead of `SPARQL_ENDPOINT`)
+- `sw-loader.js` registers the service worker relative to the page (not the document base) and reloads once it takes
+  control, instead of reloading until it does
+- Update the EUI service worker example (`eui-client-side`) to the current EUI; add service worker tests
+  (`npm run test:sw`)
 - Remove the `/kg` routes (`/kg/digital-objects`, `/kg/do-search` and `/kg/asctb-term-occurences`)
 - Replace the embedded Blazegraph triple store with QLever (installed natively via apt, index built at image build time)
 - CONSTRUCT queries now request N-Triples and convert to JSON-LD locally (works with both QLever and Blazegraph)

@@ -1,33 +1,31 @@
 import { getMesh3dCellPopulation } from '../../../../library/v1/operations/mesh-3d-cell-population.js';
+import { getJsonBody, handler } from '../../../utils/request.js';
 
 /**
- * Create an Express route handler that generates a cell population.
- *
- * @param {Object} req - The Express request object containing the file, num_nodes, and node_distribution in the request body.
- * @param {Object} res - The Express response object used to send the generated spatial placement JSON.
- * @param {function} _next - The Express next middleware function (not used in this context).
+ * Creates a route handler that generates a cell population (CSV) for the file, num_nodes, and node_distribution in
+ * the request body.
  */
 export function getMesh3dCellPopulationHandler() {
-  return async (req, res, _next) => {
-    const { file, num_nodes, node_distribution } = req.body;
-
+  return handler(async (req, res) => {
+    const request = await getJsonBody(req);
+    const { file, num_nodes, node_distribution } = request ?? {};
     if (!file) {
-      res.status(404).send('Must provide a file in the request body');
+      res.text('Must provide a file in the request body', { status: 400 });
       return;
     }
     if (!num_nodes) {
-      res.status(404).send('Must provide a num_nodes in the request body');
+      res.text('Must provide a num_nodes in the request body', { status: 400 });
       return;
     }
     if (!node_distribution) {
-      res.status(404).send('Must provide a node_distribution in the request body');
+      res.text('Must provide a node_distribution in the request body', { status: 400 });
       return;
     }
-    const result = await getMesh3dCellPopulation(req.body);
+    const result = await getMesh3dCellPopulation(request);
     if (!result) {
-      res.status(404).json({ error: 'Error generating cell population' });
+      res.json({ error: 'Error generating cell population' }, { status: 404 });
     } else {
-      res.type('text/csv').send(result);
+      res.send(result, { type: 'text/csv' });
     }
-  };
+  });
 }
