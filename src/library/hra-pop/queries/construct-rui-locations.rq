@@ -6,231 +6,87 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX HRApop: <https://purl.humanatlas.io/graph/hra-pop>
 PREFIX HRA: <https://purl.humanatlas.io/collection/hra-api>
 
+# The entities (tissue blocks, donors, RUI locations, placements, sections, datasets) are found first, and then their
+# properties are looked up with a single pattern. Blazegraph is too slow with this query and uses
+# construct-rui-locations-blazegraph.rq instead (one large join, which takes QLever longer to plan than to run). The
+# result is the same, except that entities missing a property that construct-rui-locations-blazegraph.rq requires are
+# included here (with the properties they have) instead of dropped.
 CONSTRUCT {
-    ?block rdf:type ccf:Sample ;
-            rdfs:label ?sampleLabel ;
-            rdfs:comment ?sampleDescription ;
-            ccf:url ?sampleLink ;
-            ccf:sample_type ?sampleType ;
-            ccf:generates_dataset ?dataset ;
-            ccf:has_registration_location ?rui_location ;
-            ccf:comes_from ?donor ;
-            ccf:subdivided_into_sections ?section ;
-            ccf:section_count ?sectionCount ;
-            ccf:section_size ?sectionSize ;
-            ccf:section_size_unit ?sectionUnits ;
-  .
-  ?donor rdf:type ccf:Donor ;
-         rdfs:label ?donorLabel ;
-         rdfs:comment ?donorDescription ;
-         ccf:url ?donorLink ;
-         ccf:sex ?sex ;
-         ccf:age ?age ;
-         ccf:bmi ?bmi ;
-         ccf:consortium_name ?consortium ;
-         ccf:tissue_provider_name ?provider ;
-         ccf:tissue_provider_uuid ?provider_uuid ;
-  .
-  ?rui_location rdf:type ccf:SpatialEntity ;
-                dcterms:created ?creation_date ;
-                dcterms:creator ?creator ;
-                ccf:creator_first_name ?creator_first_name ;
-                ccf:creator_last_name ?creator_last_name ;
-                ccf:dimension_unit ?dimension_units ;
-                ccf:x_dimension ?x_dimension ;
-                ccf:y_dimension ?y_dimension ;
-                ccf:z_dimension ?z_dimension ;
-                ccf:collides_with ?anatomical_structure ;
-                ccf:slice_count ?slice_count ;
-                ccf:slice_thickness ?slice_thickness ;
-  .
-  ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
-                    dcterms:created ?placement_date ;
-                    ccf:x_scaling ?x_scaling ;
-                    ccf:y_scaling ?y_scaling ;
-                    ccf:z_scaling ?z_scaling ;
-                    ccf:scaling_unit ?scaling_units ;
-                    ccf:x_rotation ?x_rotation ;
-                    ccf:y_rotation ?y_rotation ;
-                    ccf:z_rotation ?z_rotation ;
-                    ccf:rotation_order ?rotation_order ;
-                    ccf:rotation_unit ?rotation_units ;
-                    ccf:x_translation ?x_translation ;
-                    ccf:y_translation ?y_translation ;
-                    ccf:z_translation ?z_translation ;
-                    ccf:translation_unit ?translation_units ;
-                    ccf:placement_relative_to ?target ;
-                    ccf:placement_for ?rui_location ;
-  .
-  ?section rdf:type ccf:Sample ;
-           rdfs:label ?sectionLabel ;
-           rdfs:comment ?sectionDescription ;
-           ccf:url ?sectionLink ;
-           ccf:sample_type ?sectionType ;
-           ccf:generates_dataset ?sectionDataset ;
-           ccf:section_number ?sectionNumber ;
-  .
-  ?dataset rdf:type ccf:Dataset ;
-           rdfs:label ?datasetLabel ;
-           rdfs:comment ?datasetDescription ;
-           ccf:url ?datasetLink ;
-           ccf:technology ?technology ;
-           ccf:thumbnail ?thumbnail ;
-  .
-  ?sectionDataset rdf:type ccf:Dataset ;
-                  rdfs:label ?sectionDatasetLabel ;
-                  rdfs:comment ?sectionDatasetDescription ;
-                  ccf:url ?sectionDatasetLink ;
-                  ccf:technology ?sectionTechnology ;
-                  ccf:thumbnail ?sectionThumbnail ;
-  .
+  ?s rdf:type ?type .
+  ?s ?p ?o .
 }
 FROM HRA:
 FROM HRApop:
 WHERE {
-    {
-    SELECT ?rui_location ?dataset
+  {
+    SELECT DISTINCT ?s ?type
     WHERE {
-      # Applies to both branches of the UNION
-      #{{DATASET_VALUES}}
-      {
-        ?block ccf:has_registration_location ?rui_location .
-        ?block ccf:generates_dataset ?dataset .
+        {
+        SELECT ?rui_location ?dataset
+        WHERE {
+          # Applies to both branches of the UNION
+          #{{DATASET_VALUES}}
+          {
+            ?block ccf:has_registration_location ?rui_location .
+            ?block ccf:generates_dataset ?dataset .
+          }
+          UNION
+          {
+            ?block ccf:subdivided_into_sections ?section .
+            ?block ccf:has_registration_location ?rui_location .
+            ?section ccf:generates_dataset ?dataset .
+          }
+        }
       }
       UNION
       {
+        SELECT ?rui_location ?dataset
+        WHERE {
+          # Applies to both branches of the UNION
+          #{{RUI_LOCATION_VALUES}}
+          {
+            ?block ccf:has_registration_location ?rui_location .
+            ?block ccf:generates_dataset ?dataset .
+          }
+          UNION
+          {
+            ?block ccf:subdivided_into_sections ?section .
+            ?block ccf:has_registration_location ?rui_location .
+            ?section ccf:generates_dataset ?dataset .
+          }
+        }
+      }
+      ?block ccf:has_registration_location ?rui_location ;
+        ccf:comes_from ?donor ;
+        ccf:sample_type ?sampleType .
+      FILTER(?sampleType = "Tissue Block")
+      ?SpatialPlacement ccf:placement_for ?rui_location .
+      OPTIONAL {
         ?block ccf:subdivided_into_sections ?section .
-        ?block ccf:has_registration_location ?rui_location .
-        ?section ccf:generates_dataset ?dataset .
+        OPTIONAL { ?section ccf:generates_dataset ?sectionDataset . }
       }
-    }
-  }
-  UNION
-  {
-    SELECT ?rui_location ?dataset
-    WHERE {
-      # Applies to both branches of the UNION
-      #{{RUI_LOCATION_VALUES}}
-      {
-        ?block ccf:has_registration_location ?rui_location .
-        ?block ccf:generates_dataset ?dataset .
-      }
-      UNION
-      {
-        ?block ccf:subdivided_into_sections ?section .
-        ?block ccf:has_registration_location ?rui_location .
-        ?section ccf:generates_dataset ?dataset .
-      }
-    }
-  }
-  # Each entity's patterns are grouped so that query planners join each "star" first
-  {
-    ?block rdf:type ccf:Sample ;
-            rdfs:label ?sampleLabel ;
-            rdfs:comment ?sampleDescription ;
-            # skos:prefLabel ?sampleLabel ;
-            # dcterms:description ?sampleDescription ;
-            ccf:url ?sampleLink ;
-            ccf:sample_type ?sampleType ;
-            ccf:has_registration_location ?rui_location ;
-            ccf:comes_from ?donor ;
-    .
-  }
-  {
-    ?donor rdf:type ccf:Donor ;
-           rdfs:label ?donorLabel ;
-           rdfs:comment ?donorDescription ;
-           #  skos:prefLabel ?donorLabel ;
-           #  dcterms:description ?donorDescription ;
-           ccf:url ?donorLink ;
-           ccf:sex ?sex ;
-           ccf:consortium_name ?consortium ;
-           ccf:tissue_provider_name ?provider ;
-           ccf:tissue_provider_uuid ?provider_uuid ;
-    .
-  }
-  OPTIONAL { ?donor ccf:age ?age . }
-  OPTIONAL { ?donor ccf:bmi ?bmi . }
-  {
-    ?rui_location rdf:type ccf:SpatialEntity ;
-                  dcterms:creator ?creator ;
-                  ccf:creator_first_name ?creator_first_name ;
-                  ccf:creator_last_name ?creator_last_name ;
-                  dcterms:created ?creation_date ;
-                  ccf:x_dimension ?x_dimension ;
-                  ccf:y_dimension ?y_dimension ;
-                  ccf:z_dimension ?z_dimension ;
-                  ccf:dimension_unit ?dimension_units ;
-    .
-  }
-  # Outside of the star: the multi-valued property makes QLever's query planning much slower
-  ?rui_location ccf:collides_with ?anatomical_structure .
-  OPTIONAL {
-    ?rui_location ccf:slice_count ?slice_count ;
-                  ccf:slice_thickness ?slice_thickness ;
-  }
-  {
-    ?SpatialPlacement rdf:type ccf:SpatialPlacement ;
-                      dcterms:created ?placement_date ;
-                      ccf:x_scaling ?x_scaling ;
-                      ccf:y_scaling ?y_scaling ;
-                      ccf:z_scaling ?z_scaling ;
-                      ccf:scaling_unit ?scaling_units ;
-                      ccf:x_rotation ?x_rotation ;
-                      ccf:y_rotation ?y_rotation ;
-                      ccf:z_rotation ?z_rotation ;
-                      ccf:rotation_order ?rotation_order ;
-                      ccf:rotation_unit ?rotation_units ;
-                      ccf:x_translation ?x_translation ;
-                      ccf:y_translation ?y_translation ;
-                      ccf:z_translation ?z_translation ;
-                      ccf:translation_unit ?translation_units ;
-                      ccf:placement_relative_to ?target ;
-                      ccf:placement_for ?rui_location ;
-    .
-  }
-  OPTIONAL {
-    ?block ccf:section_count ?sectionCount ;
-            ccf:section_size ?sectionSize ;
-            ccf:section_size_unit ?sectionUnits .
-  }
-  OPTIONAL {
-    ?block ccf:subdivided_into_sections ?section .
-    ?section rdf:type ccf:Sample ;
-             rdfs:label ?sectionLabel ;
-             rdfs:comment ?sectionDescription ;
-            #  skos:prefLabel ?sectionLabel ;
-            #  dcterms:description ?sectionDescription ;
-             ccf:url ?sectionLink ;
-             ccf:sample_type ?sectionType ;
-             ccf:section_number ?sectionNumber ;
-    .
-    OPTIONAL {
-      ?section ccf:generates_dataset ?sectionDataset .
-      ?sectionDataset rdf:type ccf:Dataset ;
-                      rdfs:label ?sectionDatasetLabel ;
-                      rdfs:comment ?sectionDatasetDescription ;
-                      # skos:prefLabel ?sectionDatasetLabel ;
-                      # dcterms:description ?sectionDatasetDescription ;
-                      ccf:url ?sectionDatasetLink ;
-                      ccf:technology ?sectionTechnology ;
-                      ccf:thumbnail ?sectionThumbnail ;
-      .
-    }
-  }
-  OPTIONAL {
-    ?block ccf:generates_dataset ?dataset .
-    ?dataset rdf:type ccf:Dataset ;
-             rdfs:label ?datasetLabel ;
-             rdfs:comment ?datasetDescription ;
-            #  skos:prefLabel ?datasetLabel ;
-            #  dcterms:description ?datasetDescription ;
-             ccf:url ?datasetLink ;
-             ccf:technology ?technology ;
-             ccf:thumbnail ?thumbnail ;
-    .
-  }
+      OPTIONAL { ?block ccf:generates_dataset ?blockDataset . }
 
-  #{{FILTER}}
-  FILTER (?sampleType = "Tissue Block")
+      # One row per entity and its type
+      VALUES (?role ?type) {
+        (1 ccf:Sample) (2 ccf:Donor) (3 ccf:SpatialEntity) (4 ccf:SpatialPlacement)
+        (5 ccf:Sample) (6 ccf:Dataset) (7 ccf:Dataset)
+      }
+      BIND(IF(?role = 1, ?block, IF(?role = 2, ?donor, IF(?role = 3, ?rui_location, IF(?role = 4, ?SpatialPlacement,
+        IF(?role = 5, ?section, IF(?role = 6, ?blockDataset, ?sectionDataset)))))) AS ?s)
+      FILTER(BOUND(?s))
+    }
+  }
+  # The properties in the CONSTRUCT template of construct-rui-locations-blazegraph.rq
+  VALUES ?p {
+    rdfs:label rdfs:comment ccf:url ccf:sample_type ccf:generates_dataset ccf:has_registration_location
+    ccf:comes_from ccf:subdivided_into_sections ccf:section_count ccf:section_size ccf:section_size_unit
+    ccf:sex ccf:age ccf:bmi ccf:consortium_name ccf:tissue_provider_name ccf:tissue_provider_uuid
+    dcterms:created dcterms:creator ccf:creator_first_name ccf:creator_last_name ccf:dimension_unit
+    ccf:x_dimension ccf:y_dimension ccf:z_dimension ccf:collides_with ccf:slice_count ccf:slice_thickness
+    ccf:x_scaling ccf:y_scaling ccf:z_scaling ccf:scaling_unit ccf:x_rotation ccf:y_rotation ccf:z_rotation
+    ccf:rotation_order ccf:rotation_unit ccf:x_translation ccf:y_translation ccf:z_translation ccf:translation_unit
+    ccf:placement_relative_to ccf:placement_for ccf:section_number ccf:technology ccf:thumbnail
+  }
+  ?s ?p ?o .
 }

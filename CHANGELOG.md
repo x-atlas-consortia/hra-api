@@ -3,6 +3,11 @@
 Changelog for the Human Reference Atlas API (HRA-API)
 
 ## Unreleased
+- `hra-pop/cell-summary-report` is about 2x faster on QLever (a new query for its RUI locations; QLever took longer
+  to plan the previous query than to run it, which is kept for Blazegraph as `construct-rui-locations-blazegraph.rq`)
+- Fix `hra-pop/cell-summary-report` RUI locations: tissue blocks were linked to the datasets of their sections, and
+  only the dataset a block was found by was included; sections (and their datasets) were missing because the HRApop
+  sections have no section numbers
 - QLever health check: QLever is restarted automatically when it has not answered queries for longer than the
   query timeout (`QLEVER_HEALTH_*` settings, `QLEVER_HEALTH_CHECK=false` disables it)
 - Session-token datasets survive QLever restarts (`QLEVER_PERSIST_UPDATES` now defaults to `true`); expired and failed
