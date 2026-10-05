@@ -40,7 +40,7 @@ Environment variables (use `--env` on `docker run` to override):
 | `QLEVER_TIMEOUT` | `360s` | Default query timeout |
 | `QLEVER_READONLY` | `false` | If `true`, updates are disabled and session tokens (custom datasets) are not supported |
 | `QLEVER_PERSIST_UPDATES` | `false` | Persist runtime updates (session-token datasets) across QLever restarts |
-| `QLEVER_RUNTIME_PARAMETERS` | `enable-distributive-union=false` | Space separated QLever runtime parameters |
+| `QLEVER_RUNTIME_PARAMETERS` | `enable-distributive-union=false construct-deduplication=full` | Space separated QLever runtime parameters |
 | `QLEVER_PORT` | `8081` | Port of the QLever SPARQL endpoint |
 | `SPARQL_UPDATE_TOKEN` | random per container start | Access token for updates to the embedded QLever |
 | `SPARQL_ENDPOINT` | (embedded QLever) | Use an external SPARQL endpoint instead of the embedded QLever |
