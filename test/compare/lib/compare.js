@@ -10,6 +10,19 @@ import {
   tolerantEqual,
 } from './normalize.js';
 
+/** Paths (per route) whose values legitimately differ between runs or backends, removed before comparing */
+export const VOLATILE = {
+  // Composed placements get a random @id and today's date (see SpatialGraph.matrixToSpatialPlacement)
+  'v1/rui-reference-data': [/^placementPatches\..+\.(@id|placement_date)$/],
+  // Load times and timestamps of session-token datasets
+  'v1/db-status': [/^(loadTime|startTime|timestamp)$/],
+  // Computed placements get a random @id and today's date
+  'v1/get-spatial-placement': [/^(@id|placement_date)$/],
+  // Sources with several summaries per tool and modality (e.g., one per sex) or repeated cell ids are merged
+  // in row order, so their similarity depends on the triple store (the set of sources is still compared)
+  'hra-pop/cell-summary-report': [/^sources\.similarity$/],
+};
+
 export const CATEGORIES = ['identical', 'order-only', 'embedding-only', 'different', 'error', 'baseline-error'];
 
 /** Categories that count as a pass without needing review */

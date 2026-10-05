@@ -27,7 +27,8 @@
     "compare": "node ./test/compare/run.js",
     "compare:sparql": "node ./test/compare/sparql-compare.js",
     "compare:logs": "node ./test/compare/logs-to-cases.js",
-    "compare:env": "./test/compare/orchestrate.sh"
+    "compare:env": "./test/compare/orchestrate.sh",
+    "test:sw": "./test/service-worker/run.sh"
   },
   "author": {
     "name": "Bruce W. Herr II",
@@ -89,6 +90,7 @@
     "@redocly/cli": "^2.14.3",
     "esbuild": "^0.27.2",
     "nodemon": "^3.1.11",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "playwright": "1.56.0"
   }
 }

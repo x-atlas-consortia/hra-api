@@ -1,25 +1,21 @@
-import { getCollisions } from '../../../../library/operations/v1';
+import { getCollisions } from '../../../../library/operations/v1.js';
+import { getJsonBody, handler } from '../../../utils/request.js';
 
 /**
- * Create an Express route handler that generates mesh-based collisions for a given rui_location.
- *
- * @param {Object} req - The Express request object containing the rui_location in the request body.
- * @param {Object} res - The Express response object used to send the generated collisions JSON.
- * @param {function} _next - The Express next middleware function (not used in this context).
+ * Creates a route handler that generates mesh-based collisions for the rui_location in the request body.
  */
 export function getCollisionsHandler() {
-  return async (req, res, _next) => {
-    const rui_location = req.body;
-
-    if (rui_location?.['@type'] !== 'SpatialEntity') {
-      res.status(404).send('Must provide a rui_location in the request body');
+  return handler(async (req, res) => {
+    const ruiLocation = await getJsonBody(req);
+    if (ruiLocation?.['@type'] !== 'SpatialEntity') {
+      res.text('Must provide a rui_location in the request body', { status: 400 });
       return;
     }
-    const result = await getCollisions(rui_location);
+    const result = await getCollisions(ruiLocation);
     if (!result) {
-      res.status(404).json({ error: 'Error getting collisions' });
+      res.json({ error: 'Error getting collisions' }, { status: 404 });
     } else {
       res.json(result);
     }
-  };
+  });
 }

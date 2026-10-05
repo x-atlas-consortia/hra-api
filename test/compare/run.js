@@ -37,7 +37,7 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { compareResponses, NON_FAILING, PASSING } from './lib/compare.js';
+import { compareResponses, NON_FAILING, PASSING, VOLATILE } from './lib/compare.js';
 import { curatedCases } from './lib/curated-cases.js';
 import { mapLimit, sendCase } from './lib/http.js';
 import { writeReport } from './lib/report.js';
@@ -89,17 +89,6 @@ const PERF_RATIO_LIMIT = 1.2;
 const PERF_MIN_MS = 50;
 
 // Values that differ on every call by design (per route)
-const VOLATILE = {
-  // Composed placements get a random @id and today's date (see SpatialGraph.matrixToSpatialPlacement)
-  'v1/rui-reference-data': [/^placementPatches\..+\.(@id|placement_date)$/],
-  // Load times and timestamps of session-token datasets
-  'v1/db-status': [/^(loadTime|startTime|timestamp)$/],
-  // Computed placements get a random @id and today's date
-  'v1/get-spatial-placement': [/^(@id|placement_date)$/],
-  // Sources with several summaries per tool and modality (e.g., one per sex) or repeated cell ids are merged
-  // in row order, so their similarity depends on the triple store (the set of sources is still compared)
-  'hra-pop/cell-summary-report': [/^sources\.similarity$/],
-};
 
 opts.aToken = arg('--a-token', opts.bToken);
 const BACKENDS = { a: opts.a, b: opts.b };

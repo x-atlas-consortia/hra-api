@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>HRA Exploration User Interface</title>
+  <title>Human Reference Atlas Exploration User Interface (EUI)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/gh/hubmapconsortium/ccf-ui@staging/styles.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/gh/hubmapconsortium/ccf-ui@staging/wc.js" async></script>
+  <!-- Registers the HRA API service worker (before <base>, so that it is loaded from this directory) -->
   <script src="sw-loader.js"></script>
+  <base href="https://cdn.humanatlas.io/ui/ccf-eui/">
+  <link href="https://cdn.humanatlas.io/ui/ccf-eui/styles.css" rel="stylesheet">
+  <script src="https://cdn.humanatlas.io/ui/ccf-eui/wc.js" type="module"></script>
 </head>
 <body>
-  <ccf-eui use-remote-api="true" remote-api-endpoint="/api/v1"
-    base-href="https://cdn.jsdelivr.net/gh/hubmapconsortium/ccf-ui@staging/"
-    home-url="." hubmap-data-url="" login-disabled="true" logo-tooltip=""></ccf-eui>
+  <ccf-eui login-disabled="true" logo-tooltip=""></ccf-eui>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const eui = document.querySelector('ccf-eui');
+      eui.homeUrl = location.href;
+      // The service worker answers the API requests to <origin>/api/...
+      eui.remoteApiEndpoint = location.origin + '/api';
+    });
+  </script>
 </body>
 </html>
