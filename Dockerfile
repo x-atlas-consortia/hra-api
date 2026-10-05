@@ -22,7 +22,7 @@ ENV QLEVER_MEMORY=12G
 ENV QLEVER_CACHE=4G
 ENV QLEVER_TIMEOUT=360s
 ENV QLEVER_READONLY=false
-ENV QLEVER_PERSIST_UPDATES=false
+ENV QLEVER_PERSIST_UPDATES=true
 ENV QLEVER_PORT=8081
 ENV QLEVER_RUNTIME_PARAMETERS="enable-distributive-union=false construct-deduplication=full"
 ENV QLEVER_DIR=/data/qlever
@@ -34,13 +34,14 @@ ARG CDN_URL=https://cdn.humanatlas.io/digital-objects/
 
 # Setup qlever index with default graphs pre-loaded
 RUN /qlever/setup-qlever-index.sh $QLEVER_DIR
+ADD ./qlever/healthcheck.sh /qlever/healthcheck.sh
 
 # Setup hra-api
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --include=dev
 COPY . .
-RUN nohup bash -c "QLEVER_READONLY=true /qlever/entrypoint.sh &" \
+RUN nohup bash -c "QLEVER_READONLY=true QLEVER_PERSIST_UPDATES=false /qlever/entrypoint.sh &" \
   && timeout 120 bash -c 'until curl -sf "http://localhost:${QLEVER_PORT}/?query=ASK%7B%7D" > /dev/null; do sleep 1; done' \
   && mkdir -p file-cache \
   && SPARQL_ENDPOINT="http://localhost:${QLEVER_PORT}/" SPARQL_BACKEND=qlever npm run build \

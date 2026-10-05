@@ -17,6 +17,8 @@ export const DEFAULT_GRAPHS = [
 ];
 
 export async function initializeDatasetGraph(token, _request, endpoint) {
+  // Remove what a failed or interrupted build left behind (it survives restarts with QLEVER_PERSIST_UPDATES)
+  await deleteGraphs([`urn:hra-api:${token}:ds-graph`, `urn:hra-api:${token}:ds-graph-enrichments`], endpoint);
   const updateQuery = initializeQuery
     .replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`)
     .replace('urn:hra-api:TOKEN:ds-graph', `urn:hra-api:${token}:ds-graph`);
@@ -32,6 +34,9 @@ export async function updateDatasetInfo(status, message, token, endpoint) {
   return update(updateQuery, endpoint);
 }
 
+/** A dataset still loading without progress for this long was abandoned (e.g., its API process restarted) */
+const STALE_LOADING_MS = 60 * 60 * 1000;
+
 export async function getDatasetInfo(token, endpoint) {
   const infoQuery = getInfoQuery.replace('urn:hra-api:TOKEN:ds-info', `urn:hra-api:${token}:ds-info`);
   const status = await select(infoQuery, endpoint);
@@ -45,6 +50,14 @@ export async function getDatasetInfo(token, endpoint) {
           loadTime: 22594,
           timestamp: new Date().toISOString(),
         };
+
+  // Session-token datasets survive restarts (QLEVER_PERSIST_UPDATES), including those whose build was interrupted.
+  // Report them as failed, so that clients stop waiting and the next session-token request rebuilds them.
+  if (results.status === 'Loading' && Date.now() - new Date(results.timestamp) > STALE_LOADING_MS) {
+    results.status = 'Error';
+    results.message = 'The dataset build was interrupted, please try again';
+    results.checkback = 3600000;
+  }
 
   results.loadTime =
     results.loadTime ||

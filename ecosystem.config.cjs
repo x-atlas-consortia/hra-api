@@ -109,6 +109,14 @@ const QLEVER = {
   cron_restart: '0 7 * * *',
 };
 
+// Restarts QLever when it stops answering queries for longer than the query timeout (see qlever/healthcheck.sh)
+const QLEVER_HEALTH = {
+  name: 'qlever-health',
+  script: '/qlever/healthcheck.sh',
+  interpreter: 'none',
+};
+const USE_HEALTH_CHECK = USE_LOCAL_DB && process.env.QLEVER_HEALTH_CHECK !== 'false';
+
 module.exports = {
-  apps: [...API_APPS, HAPROXY, ...(USE_LOCAL_DB ? [QLEVER] : [])],
+  apps: [...API_APPS, HAPROXY, ...(USE_LOCAL_DB ? [QLEVER] : []), ...(USE_HEALTH_CHECK ? [QLEVER_HEALTH] : [])],
 };
