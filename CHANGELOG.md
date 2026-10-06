@@ -2,7 +2,7 @@
 
 Changelog for the Human Reference Atlas API (HRA-API)
 
-## Unreleased
+## 0.20.0 - 2026-10-06
 - `hra-pop/cell-summary-report` is about 2x faster on QLever (a new query for its RUI locations; QLever took longer
   to plan the previous query than to run it, which is kept for Blazegraph as `construct-rui-locations-blazegraph.rq`)
 - Fix `hra-pop/cell-summary-report` RUI locations: tissue blocks were linked to the datasets of their sections, and
@@ -67,6 +67,27 @@ Changelog for the Human Reference Atlas API (HRA-API)
   concurrent session-token dataset builds are limited by the new `DATASET_BUILDS` setting (per process; default 1 in the docker image, 2 otherwise)
 - `PRUNING_SCHEDULE` can be set to an empty string to disable pruning of session-token datasets
 - Add a Blazegraph vs QLever comparison harness (`test/compare`)
+
+- Fix API responses and spec mismatches found by the generated clients: tissue blocks return a single section count
+  and unit; numeric spatial entity and placement fields are numbers; `ftu-illustrations` and `rui-reference-data`
+  return objects; implement the documented `sennet/rui_locations.jsonld` and `sennet-rui-locations` routes; the Python
+  client deserializes `oneOf` fields of plain dict request bodies
+- Decode JSON-encoded string query parameters (as sent by the angular client)
+- Tree models prefer `rdfs:label` over the SME label (which becomes a synonym); the ontology tree includes the
+  epiploic appendage of transverse colon and the omentum
+- RUI locations without collisions and spatial placements without optional fields are no longer dropped (rui-locations,
+  extraction-site); `ds-graph` x/y/z values are never arrays
+- `ftu-illustrations` keeps full UBERON IRIs; the FTU explorer works behind other base URLs
+- The dataset graph generator supports the `donors` and `sources` attributes of x-atlas sources
+- Raise the JSON request body limit to 50 MB; docker images are published to the GitHub Container Registry
+- Update npm dependencies
+
+## 0.19.0 - 2026-02-12
+- Handle JSON-encoded enum values and session tokens in query parameters
+- The `age`, `bmi` and `spatial` query parameters are no longer typed as strings in the OpenAPI spec
+- Fix the data shapes of tissue blocks, aggregate results and collisions to match the OpenAPI spec
+- Update the OpenAPI generator and add client template overrides
+- Save JSON files in UTF-8
 
 ## 0.18.0 - 2026-01-09
 - Update npm dependencies
