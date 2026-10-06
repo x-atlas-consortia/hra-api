@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
- * Replays captured SPARQL queries (see sparql-proxy.js) directly against both triple stores and compares the
- * results. This isolates engine differences from the API's post-processing.
+ * Replays captured SPARQL queries (see sparql-proxy.js) directly against two triple stores and compares the
+ * results and timings. This isolates triple store differences (data, settings, engine) from the API's processing.
  *
- * Usage: node test/compare/sparql-compare.js [--a http://localhost:18081/blazegraph/namespace/kb/sparql]
- *          [--b http://localhost:28081/] [--queries test/compare/cases/sparql-queries.jsonl] [--out dir]
- *          [--runs 3] [--grep regex] [--concurrency 2] [--b-token token (clear QLever's cache before each run)]
- *          [--a-qlever] [--a-token token]  (A is also QLever, e.g. to compare QLever settings; with --a-token its
- *          cache is cleared before each run too)
+ * Usage: node test/compare/sparql-compare.js [--a http://localhost:18081/] [--b http://localhost:28081/]
+ *          [--queries test/compare/cases/sparql-queries.jsonl] [--out dir] [--runs 3] [--grep regex]
+ *          [--concurrency 2] [--a-token token] [--b-token token]
+ *          [--a-blazegraph]  (A is a Blazegraph endpoint, e.g. http://host/blazegraph/namespace/kb/sparql)
+ *
+ * QLever's cache is cleared before each run with the access tokens (default $SPARQL_UPDATE_TOKEN or harness-secret;
+ * '' to keep the cache). Blazegraph has no result cache.
  *
  * SELECT results are compared as multisets of CSV rows (numbers normalized); CONSTRUCT results as sets of
  * N-Triples (blank nodes normalized; QLever's xsd:int is compared as xsd:integer).
@@ -35,10 +37,9 @@ const opts = {
   runs: Number(arg('--runs', 3)),
   grep: arg('--grep') ? new RegExp(arg('--grep')) : undefined,
   concurrency: Number(arg('--concurrency', 2)),
-  // If given, QLever's cache is cleared before each run (Blazegraph has no result cache)
-  bToken: arg('--b-token'),
-  aQlever: process.argv.includes('--a-qlever'),
-  aToken: arg('--a-token'),
+  bToken: arg('--b-token', process.env.SPARQL_UPDATE_TOKEN ?? 'harness-secret'),
+  aToken: arg('--a-token', process.env.SPARQL_UPDATE_TOKEN ?? 'harness-secret'),
+  aBlazegraph: process.argv.includes('--a-blazegraph'),
 };
 
 async function clearCache(endpoint = opts.b, token = opts.bToken) {
@@ -51,7 +52,7 @@ function isConstruct(query) {
   return /^\s*CONSTRUCT\b/im.test(query.replace(/^\s*(PREFIX|BASE)\b.*$/gim, ''));
 }
 
-/** The captured queries come from the QLever side; re-enable Blazegraph's query hint for a faithful baseline */
+/** The captured queries come from a QLever-backed API; re-enable Blazegraph's query hint (as the library does for it) */
 function forBlazegraph(query) {
   return query.replace('#hint:SubQuery hint:runOnce true', 'hint:SubQuery hint:runOnce true');
 }
@@ -113,13 +114,13 @@ function diff(a, b) {
 
 async function compareQuery(entry) {
   const construct = isConstruct(entry.query);
-  const acceptA = construct ? (opts.aQlever ? 'application/n-triples' : 'text/plain') : 'text/csv';
+  const acceptA = construct ? (opts.aBlazegraph ? 'text/plain' : 'application/n-triples') : 'text/csv';
   const acceptB = construct ? 'application/n-triples' : 'text/csv';
   const timings = { a: [], b: [] };
   let ra, rb;
   for (let i = 0; i < opts.runs; i++) {
-    if (opts.aQlever) await clearCache(opts.a, opts.aToken);
-    ra = await run(opts.a, opts.aQlever ? entry.query : forBlazegraph(entry.query), acceptA);
+    if (!opts.aBlazegraph) await clearCache(opts.a, opts.aToken);
+    ra = await run(opts.a, opts.aBlazegraph ? forBlazegraph(entry.query) : entry.query, acceptA);
     await clearCache();
     rb = await run(opts.b, entry.query, acceptB);
     timings.a.push(ra.ms);
