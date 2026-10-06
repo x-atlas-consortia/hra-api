@@ -1,9 +1,9 @@
-# Blazegraph vs. QLever comparison harness
+# HRA API comparison harness
 
-This harness checks that the QLever-based HRA API (candidate, **B**) returns the same results as the
-Blazegraph-based HRA API (baseline, **A**) for every API call, and that it is not markedly slower.
+This harness checks that a candidate HRA API (**B**, usually the working tree of a branch) returns the same results
+as a baseline HRA API (**A**, usually built from `main`) for every API call, and that it is not markedly slower.
 
-Both images are built from the **same data snapshot**, so any difference comes from the engine or the code.
+Both images are built from the **same data snapshot**, so any difference comes from the code (or the configuration).
 
 ## Quick start
 
@@ -22,12 +22,20 @@ npm run compare -- --perf
 npm run compare:env -- down
 ```
 
+The baseline runs on port 18080 (its QLever on 18081) and the candidate on 28080 (QLever on 28081). Use
+`BASELINE_REF=<ref>` to build the baseline from another branch, tag or commit. After changing the working tree, run
+`npm run compare:env -- build up` again: it rebuilds both images (the unchanged baseline comes from docker's build
+cache) and restarts both containers.
+
 The report is written to `test/compare/report/<run id>/report.md` (plus `results.json`). The command exits
 non-zero if there are unreviewed differences, dataset pipeline failures, or performance gate failures.
 
+To refresh the data snapshot, move `test/compare/.snapshot` away and run `npm run compare:env -- snapshot` again
+(it only downloads missing files).
+
 ## What is compared
 
-- **Session-token datasets** (`datasets.json`): each dataset is created on both backends via
+- **Session-token datasets** (`datasets.json`): each dataset is created on both APIs via
   `POST /v1/session-token`, and the harness times the pipeline end to end until `db-status` is `Ready`.
   The datasets include the request bodies of the most frequent production tokens, which were recovered
   from the access logs by matching the md5 token against candidate bodies, plus an inline JSON-LD source and
@@ -39,7 +47,8 @@ non-zero if there are unreviewed differences, dataset pipeline failures, or perf
     routes;
   - token-scoped variants for every dataset;
   - reference organ scenes;
-  - edge cases;
+  - hra-pop cell summary reports and RUI location cell summaries;
+  - edge cases and invalid requests;
   - every request example in the OpenAPI spec.
 - **Log replay** (`logs-to-cases.js`): production GET requests are deduplicated by their *parsed* meaning,
   using the server's own query parsing. The most frequent requests plus a deterministic sample of the rest are
@@ -50,24 +59,28 @@ non-zero if there are unreviewed differences, dataset pipeline failures, or perf
 | Category | Meaning |
 |---|---|
 | `identical` | Deep-equal JSON (key order ignored), or identical text |
-| `order-only` | Equal when arrays and lines are compared as multisets (e.g., QLever sorts strings with a locale-aware collation; Blazegraph uses code point order) |
+| `order-only` | Equal when arrays and lines are compared as multisets (e.g., the order of rows the triple store returns) |
 | `embedding-only` | Framed JSON-LD that is equal once flattened into (node, property, value) facts. Framing embeds a node once and references it by `@id` elsewhere, and *where* depends on triple order |
 | `different` | A real difference. The report lists records and facts that are only in A or only in B |
 | `error` | A request to the candidate failed |
-| `baseline-error` | Only the baseline failed (e.g., Blazegraph timed out); listed for review, not a failure |
+| `baseline-error` | Only the baseline failed (e.g., it timed out); listed for review, not a failure |
 
-Numbers are compared to 9 significant digits (values below 1e-9 count as 0), and blank node labels are ignored. Reviewed and accepted
-differences are recorded in `allowlist.json`, with a reason and a type (`improvement`, `intentional-fix`,
-`nondeterministic`, `external`).
+Numbers are compared to 9 significant digits (values below 1e-9 count as 0), numeric JSON-LD literals are compared as
+numbers, and blank node labels are ignored. Values that legitimately differ between runs (e.g., generated ids and
+timestamps) are removed first (`VOLATILE` in `lib/compare.js`). Reviewed and accepted differences are recorded in
+`allowlist.json`, with a reason and a type (`improvement`, `intentional-fix`, `nondeterministic`, `external`).
+
+A branch that intentionally changes responses shows those changes as `different`: review them in the report, and
+add an allowlist entry if they should not be flagged again.
 
 ## Performance (`--perf`)
 
 The performance tests use the curated cases tagged `perf` plus the most frequent log cases per route.
 
 - Each case gets warm-up runs, then timed runs, alternating A and B to cancel drift.
-- In **uncached** mode QLever's query cache is cleared before every B request, which makes it the fair
-  comparison because Blazegraph has no result cache. **Warm** mode shows what production traffic sees.
-- A load test runs the same cases with concurrency 8 against each backend in turn.
+- In **uncached** mode the QLever query cache of each API is cleared before every request (`--a-sparql`,
+  `--b-sparql`). **Warm** mode shows what production traffic sees.
+- A load test runs the same cases with concurrency 8 against each API in turn.
 
 The gate is applied to uncached mode:
 
@@ -98,38 +111,33 @@ duckdb -csv -c "SELECT regexp_replace(cs_uri_stem, '^/api/', '') AS route, count
 
 ## SPARQL-level comparison
 
-To separate engine differences from the API's post-processing, capture the exact queries the API sends and
+To separate triple store differences from the API's processing, capture the exact queries the API sends and
 replay them directly against both triple stores:
 
 ```bash
 npm run compare:env -- capture                     # local API (working tree) behind a logging proxy
 npm run compare -- --b http://localhost:28083/     # exercise the API; queries are logged
-npm run compare:sparql                             # replay the captured queries against both engines
-```
-
-## Checking the code changes against Blazegraph
-
-The library must keep working with Blazegraph endpoints (e.g., lod.humanatlas.io). Run the working tree
-against the baseline's Blazegraph with `SPARQL_BACKEND=blazegraph` and compare it with the baseline API.
-Every case should be `identical`:
-
-```bash
-PORT=48080 SPARQL_ENDPOINT=http://localhost:18081/blazegraph/namespace/kb/sparql SPARQL_BACKEND=blazegraph \
-  SPARQL_WRITABLE=true FILE_CACHE_DIR=/tmp/no-file-cache node dist/server.js &
-npm run compare -- --b http://localhost:48080/ --cases curated --reuse-datasets
+npm run compare:sparql                             # replay the captured queries against both QLevers
 ```
 
 ## Comparing QLever settings
 
 To compare two QLever configurations (e.g., runtime parameters), run the same image twice with different
-`QLEVER_RUNTIME_PARAMETERS` and pass both QLever endpoints, so that uncached mode clears both caches:
+`QLEVER_RUNTIME_PARAMETERS`, and compare the two APIs and their QLevers:
 
 ```bash
 npm run compare -- --a http://localhost:28080/ --b http://localhost:38080/ \
   --a-sparql http://localhost:28081/ --b-sparql http://localhost:38081/ --perf
-node test/compare/sparql-compare.js --a http://localhost:28081/ --a-qlever --a-token harness-secret \
-  --b http://localhost:38081/ --b-token harness-secret --queries captured.jsonl
+node test/compare/sparql-compare.js --a http://localhost:28081/ --b http://localhost:38081/ --queries captured.jsonl
 ```
+
+## Checking Blazegraph compatibility
+
+The library must keep working with Blazegraph endpoints (e.g., lod.humanatlas.io, which the service worker uses).
+The service worker tests (`npm run test:sw`, see `test/service-worker/README.md`) check the library against lod.
+To compare against another Blazegraph endpoint with the same data, run the working tree against it with
+`SPARQL_BACKEND=blazegraph` and compare it with the baseline API (`--a-sparql ''` if the baseline does not use QLever);
+`sparql-compare.js --a-blazegraph` replays captured queries against a Blazegraph endpoint.
 
 ## Files
 
@@ -139,7 +147,7 @@ node test/compare/sparql-compare.js --a http://localhost:28081/ --a-qlever --a-t
 | `run.js` | Main runner (datasets, correctness, performance, report) |
 | `logs-to-cases.js` | CloudFront logs (parquet, read with the `duckdb` CLI) to cases |
 | `load.js` | Load test of a single API with per-route latencies |
-| `diff-url.js` | Compares a single request between both backends and prints the differences |
+| `diff-url.js` | Compares a single request between both APIs and prints the differences |
 | `sparql-proxy.js`, `sparql-compare.js` | SPARQL-level capture and replay |
 | `construct-check.js` | Checks that CONSTRUCT via N-Triples + `jsonld.fromRDF` matches Blazegraph's native JSON-LD |
 | `datasets.json` | Session-token datasets |

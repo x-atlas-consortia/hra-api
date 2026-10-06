@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Blazegraph vs. QLever comparison harness for the HRA API.
+ * Comparison harness for the HRA API: the baseline (A, e.g., built from main) vs the candidate (B, e.g., a branch).
  *
  * Sends the same requests to two running HRA API instances (A = baseline, B = candidate), compares the responses
  * (correctness), and optionally measures latency (performance). See test/compare/README.md.
@@ -11,8 +11,8 @@
  *   --b-sparql <url>       Candidate QLever endpoint, used to clear its cache in uncached perf mode
  *                          (default http://localhost:28081/)
  *   --b-token <token>      QLever access token (default $SPARQL_UPDATE_TOKEN or harness-secret)
- *   --a-sparql <url>       Baseline QLever endpoint (when the baseline also uses QLever, e.g. to compare QLever
- *                          settings), used to clear its cache in uncached perf mode (default: not cleared)
+ *   --a-sparql <url>       Baseline QLever endpoint, used to clear its cache in uncached perf mode
+ *                          (default http://localhost:18081/; '' if the baseline does not use QLever)
  *   --a-token <token>      Baseline QLever access token (default: the --b-token)
  *   --snapshot <url>       Snapshot server with the data sources used for session tokens
  *                          (default http://localhost:18900/)
@@ -62,7 +62,7 @@ const opts = {
   b: withSlash(arg('--b', 'http://localhost:28080/')),
   bSparql: withSlash(arg('--b-sparql', 'http://localhost:28081/')),
   bToken: arg('--b-token', process.env.SPARQL_UPDATE_TOKEN ?? 'harness-secret'),
-  aSparql: arg('--a-sparql') ? withSlash(arg('--a-sparql')) : undefined,
+  aSparql: arg('--a-sparql', 'http://localhost:18081/') ? withSlash(arg('--a-sparql', 'http://localhost:18081/')) : undefined,
   snapshot: withSlash(arg('--snapshot', 'http://localhost:18900/')),
   snapshotDir: arg('--snapshot-dir', resolve(HERE, '.snapshot')),
   cases: arg('--cases', 'curated,logs').split(','),
@@ -83,7 +83,7 @@ const opts = {
   out: resolve(arg('--out', resolve(HERE, 'report'))),
 };
 
-// Performance gate (see the migration plan): p95 within 1.2x of the baseline (cases faster than 50ms are exempt)
+// Performance gate: p95 within 1.2x of the baseline (cases faster than 50ms are exempt)
 // and the geometric mean of the p50 ratios must not be worse
 const PERF_RATIO_LIMIT = 1.2;
 const PERF_MIN_MS = 50;

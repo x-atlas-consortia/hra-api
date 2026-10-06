@@ -1,5 +1,5 @@
 #!/bin/bash
-# Orchestrates a Blazegraph (baseline) vs QLever (candidate) comparison of the HRA API.
+# Orchestrates a comparison of the HRA API: baseline (A, built from main) vs candidate (B, built from the working tree).
 #
 # Usage: test/compare/orchestrate.sh <command>...
 #   snapshot   Download the CDN graphs and session-token data sources into $SNAPSHOT_DIR (once)
@@ -13,8 +13,8 @@
 #
 # Environment (defaults):
 #   SNAPSHOT_DIR=test/compare/.snapshot  SNAPSHOT_PORT=18900  BASELINE_REF=main
-#   BASELINE_IMAGE=hra-api:blazegraph-baseline  CANDIDATE_IMAGE=hra-api:qlever
-#   A_PORT=18080 (baseline API; Blazegraph on 18081)  B_PORT=28080 (candidate API; QLever on 28081)
+#   BASELINE_IMAGE=hra-api:compare-baseline  CANDIDATE_IMAGE=hra-api:compare-candidate
+#   A_PORT=18080 (baseline API; QLever on 18081)  B_PORT=28080 (candidate API; QLever on 28081)
 #   SPARQL_UPDATE_TOKEN=harness-secret
 set -e
 
@@ -25,8 +25,8 @@ SNAPSHOT_PORT=${SNAPSHOT_PORT:-18900}
 SNAPSHOT_URL="http://localhost:${SNAPSHOT_PORT}/"
 CDN_URL=${CDN_URL:-https://cdn.humanatlas.io/digital-objects/}
 BASELINE_REF=${BASELINE_REF:-main}
-BASELINE_IMAGE=${BASELINE_IMAGE:-hra-api:blazegraph-baseline}
-CANDIDATE_IMAGE=${CANDIDATE_IMAGE:-hra-api:qlever}
+BASELINE_IMAGE=${BASELINE_IMAGE:-hra-api:compare-baseline}
+CANDIDATE_IMAGE=${CANDIDATE_IMAGE:-hra-api:compare-candidate}
 A_PORT=${A_PORT:-18080}
 B_PORT=${B_PORT:-28080}
 SPARQL_UPDATE_TOKEN=${SPARQL_UPDATE_TOKEN:-harness-secret}
@@ -81,7 +81,8 @@ build() {
 up() {
   docker rm -f hra-compare-a hra-compare-b > /dev/null 2>&1 || true
   docker run -d --name hra-compare-a --network host \
-    -e PORT=$A_PORT -e BLAZEGRAPH_PORT=$((A_PORT + 1)) -e FILE_CACHE_DIR=/tmp/no-file-cache $BASELINE_IMAGE > /dev/null
+    -e PORT=$A_PORT -e QLEVER_PORT=$((A_PORT + 1)) -e SPARQL_UPDATE_TOKEN=$SPARQL_UPDATE_TOKEN \
+    -e FILE_CACHE_DIR=/tmp/no-file-cache $BASELINE_IMAGE > /dev/null
   docker run -d --name hra-compare-b --network host \
     -e PORT=$B_PORT -e QLEVER_PORT=$((B_PORT + 1)) -e SPARQL_UPDATE_TOKEN=$SPARQL_UPDATE_TOKEN \
     -e FILE_CACHE_DIR=/tmp/no-file-cache $CANDIDATE_IMAGE > /dev/null

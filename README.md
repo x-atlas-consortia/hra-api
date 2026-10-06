@@ -68,11 +68,11 @@ When running the server directly (`node dist/server.js`, without HAProxy), reque
 `ACTIVE_QUERIES` is set, in which case the server queues them itself.
 The library works with both QLever and Blazegraph endpoints (e.g., <https://lod.humanatlas.io/sparql>).
 
-### Comparing backends
+### Comparing changes
 
-`test/compare` contains a harness that checks the QLever-based API against the previous Blazegraph-based API
-for correctness and performance. See [test/compare/README.md](./test/compare/README.md) and the migration results in
-[docs/qlever-migration.md](./docs/qlever-migration.md).
+`test/compare` contains a harness that checks a branch against `main` (or any other baseline) for correctness and
+performance, on the same data snapshot. See [test/compare/README.md](./test/compare/README.md). It was first used for
+the migration from Blazegraph to QLever, see [docs/qlever-migration.md](./docs/qlever-migration.md).
 
 ## Using HRA-API from Python Notebooks
 

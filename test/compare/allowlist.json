@@ -1,10 +1,10 @@
 {
-  "description": "Reviewed differences between the Blazegraph baseline (A) and QLever (B). Each entry matches case ids by regex (and optionally a category) and records why the difference is acceptable. type: improvement | intentional-fix | nondeterministic | external",
+  "description": "Reviewed differences between the baseline (A, e.g., main) and the candidate (B, e.g., a branch). Each entry matches case ids by regex (and optionally a category) and records why the difference is acceptable. type: improvement | intentional-fix | nondeterministic | external",
   "entries": [
     {
       "pattern": "^[a-z]+:((GET|POST):)?v1/sparql",
       "type": "external",
-      "reason": "/v1/sparql proxies to the exposed endpoint (lod.humanatlas.io when the local store is writable) on both backends; the remote results are unordered and error pages contain request ids"
+      "reason": "/v1/sparql proxies to the exposed endpoint (lod.humanatlas.io when the local store is writable) on both APIs; the remote results are unordered and error pages contain request ids"
     }
   ]
 }
